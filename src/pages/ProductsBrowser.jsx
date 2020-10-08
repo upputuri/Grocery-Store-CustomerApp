@@ -8,6 +8,7 @@ import { cartOutline as cartOutlineIcon} from 'ionicons/icons'
 import { RouteComponentProps } from 'react-router-dom';
 import Client, { Resource } from 'ketting';
 import ProductList from './ProductList';
+import { CartContext } from '../App';
 
 const serviceBaseURL = "http://localhost:8080/groc";
 
@@ -126,8 +127,10 @@ class ProductsBrowser extends React.Component {
                         Products
                     </IonTitle>
                     <IonButtons slot="primary">
-                        <IonButton className="top-cart" color="primary">
-                            <IonBadge color="primary">3</IonBadge>
+                        <IonButton href="/customer/cart" className="top-cart" color="primary">
+                            <IonBadge color="primary">
+                                <CartContext.Consumer>{(context) => context.itemCount}</CartContext.Consumer>
+                            </IonBadge>
                             <IonIcon slot="start" icon={cartOutlineIcon}></IonIcon>
                         </IonButton>
                     </IonButtons>

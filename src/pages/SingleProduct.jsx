@@ -1,9 +1,9 @@
-import { IonBadge, IonButton, IonChip, IonContent, IonIcon, IonLabel, IonSlide, IonSlides, IonText } from '@ionic/react';
+import { IonBadge, IonButton, IonContent, IonIcon, IonSlide, IonSlides, IonText } from '@ionic/react';
+import { checkmarkCircle as checkMarkIcon, star as starIcon } from 'ionicons/icons';
 import Client from 'ketting';
-import { resourceUsage } from 'process';
 import React from 'react';
 import { withRouter } from "react-router-dom";
-import { star as starIcon, checkmarkCircle as checkMarkIcon} from 'ionicons/icons'
+import { CartContext } from '../App';
 
 const serviceBaseURL = "http://localhost:8080/groc";
 
@@ -25,7 +25,7 @@ class SingleProduct extends React.Component {
     {
         const { productId } = this.props.match.params;
         if (this.state.productId && this.state.productId === productId)
-            return; //do nothing as the resource is already loaded
+        return; //do nothing as the resource is already loaded
         this.setState({productId: productId});
         this.loadSingleProduct(productId);
     }
@@ -67,6 +67,11 @@ class SingleProduct extends React.Component {
     variantSelected(index) 
     {
         this.setState({variantIndex: index});
+    }
+
+    addToCart()
+    {
+        this.context.addToCart(this.state.productId, this, 1);
     }
 
     render() {
@@ -124,7 +129,13 @@ class SingleProduct extends React.Component {
                                     <IonIcon color="tertiary" icon={starIcon}></IonIcon>
                                     4.4
                                 </div>
-                                <IonButton color="secondary" shape="round">Add</IonButton>
+                                <CartContext.Consumer>
+                                    {context =>
+                                    <IonButton 
+                                        onClick={() => context.addItem(this.state.productId, this.state.data.variations[this.state.variantIndex].id, 1)} 
+                                        color="secondary" shape="round">Add</IonButton>
+                                    }
+                                </CartContext.Consumer>
                                 {/* <!-- <div className="input-group shop-cart-value">
                                     <span className="input-group-btn"><button disabled="disabled" className="btn btn-sm" type="button">-</button></span>
                                     <input type="text" max="10" min="1" value="1" className="form-control border-form-control form-control-sm input-number bg-black text-white" name="quant[1]">

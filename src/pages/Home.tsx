@@ -6,6 +6,7 @@ import { cartOutline as cartOutlineIcon, createOutline as createOutlineIcon } fr
 import Slider from '../components/Slider/Slider';
 import ListingSection from '../components/Listing/ListingSection';
 import ItemListing1 from '../components/Listing/ItemListing1';
+import { CartContext } from '../App';
 
 const Home: React.FC = () => {
   return (
@@ -20,8 +21,10 @@ const Home: React.FC = () => {
               <IonIcon icon={createOutlineIcon}></IonIcon>
           </IonTitle>
           <IonButtons slot="primary">
-              <IonButton class="top-cart" color="primary">
-                <IonBadge color="primary">3</IonBadge>
+              <IonButton href="/customer/cart" class="top-cart" color="primary">
+                <IonBadge color="primary">
+                <CartContext.Consumer>{(context) => context.itemCount}</CartContext.Consumer>
+                </IonBadge>
                 <IonIcon slot="start" icon={cartOutlineIcon}></IonIcon>
               </IonButton>
           </IonButtons>
