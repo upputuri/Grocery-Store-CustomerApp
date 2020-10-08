@@ -31,7 +31,7 @@ p {
 font-size: 13px;
 line-height: 22px;
 }
-.shop-homepage-item .price ion-badge {
+.shop-homepage-item .price IonBadge {
   position: absolute;
   top: 8px;
   right: 8px;
@@ -40,24 +40,24 @@ line-height: 22px;
 .shop-homepage-item {
   position: relative;
 }
-.osahan-nav ion-toolbar {
+.osahan-nav IonToolbar {
 --background: #00a859 !important;
 --color: #fff;
 --background-color: #00a859 !important;
 --ion-color-base: transparent !important;
 }
-ion-item.selected ion-ripple-effect {
+IonItem.selected IonRippleEffect {
   --background: rgba(233, 97, 37, 0.09) !important;
 }
 .osahan-nav{
 background: #00a859 !important;
 }
-.osahan-nav ion-title {
+.osahan-nav IonTitle {
 font-size: 16px;
 line-height: 18px;
 padding: 0 6px;
 }
-.osahan-nav ion-title small {
+.osahan-nav IonTitle small {
 font-size: 12px;
 }
 .shop-cart-item, .shop-cart-item-bottom {
@@ -71,7 +71,7 @@ flex: none;
 .shop-cart-right {
 width: 100%;
 }
-.top-cart ion-badge {
+.top-cart IonBadge {
 position: absolute;
 padding: 2px;
 font-size: 11px;
@@ -82,7 +82,7 @@ height: 15px;
 border-radius: 50px;
 text-align: center;
 }
-.top-cart ion-icon {
+.top-cart IonIcon {
 font-size: 27px !important;
 color: #fff;
 }
@@ -101,7 +101,7 @@ font-size: 1.25rem;
 .price span {
 font-size: 12px;
 }
-.price ion-badge {
+.price IonBadge {
 font-size: 9px;
 padding: 3px 4px;
 vertical-align: middle;
@@ -145,13 +145,13 @@ border: none !important;
 overflow: hidden !important;
 background: #000;
 }
-ion-card{
+IonCard{
 --box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 --border-radius: 8px !important;
 --border: none !important;
 --overflow: hidden !important;
 }
-ion-searchbar{
+IonSearchBar{
 --border-radius: 8px !important;
 --box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 }
@@ -161,7 +161,7 @@ border-radius: 0px !important;
 font-size: 17px !important;
 padding: 14px 15px !important;
 }
-.fix-btn ion-icon {
+.fix-btn IonIcon {
 vertical-align: -2px;
 }
 .bg-primary, .fix-btn{
@@ -172,15 +172,15 @@ background: -webkit-linear-gradient(-45deg,  #e3641d 0%,#e96127 100%); /* Chrome
 background: linear-gradient(135deg,  #e3641d 0%,#e96127 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e3641d', endColorstr='#e96127',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
-.faq-card ion-card-title {
+.faq-card IonCardTitle {
 font-size: 16px;
 color: #e96125
 }
-.faq-card ion-card-content {
+.faq-card IonCardContent {
 font-size: 13px;
 line-height: 21px;
 }
-.faq-card ion-card-header {
+.faq-card IonCardHeader {
 padding-bottom: 9px;
 }
 .my-profile-page .list-group-item {

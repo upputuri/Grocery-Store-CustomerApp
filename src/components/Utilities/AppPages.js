@@ -7,7 +7,7 @@ const AppPages =
     },
     {
       title: 'Categories',
-      url: '/categories',
+      url: '/products/categories',
       icon: 'list'
     },
     {

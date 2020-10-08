@@ -30,7 +30,17 @@ const Login = (props) =>
     const loginRequestHandler = () =>
     {
         const result = checkInput();
-        result === true && loginContext.login(userIdState, passwordState);
+        if (result === true){
+
+          let loginResult = loginContext.login(userIdState, passwordState);
+          loginResult.then((result) => {
+            if (!result.hasResponse)
+              setError("Server unreachable! Please try after some time.")
+            else if (result.hasResponse && !result.isResponseOk)
+              setError(result.responseObject.message);
+          })
+          setError("Please wait...");
+        }
         
     }
 

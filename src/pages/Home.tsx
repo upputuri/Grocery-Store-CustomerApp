@@ -1,6 +1,5 @@
 import { IonBadge, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
-import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
 import { cartOutline as cartOutlineIcon, createOutline as createOutlineIcon } from 'ionicons/icons'
 
@@ -14,7 +13,7 @@ const Home: React.FC = () => {
       <IonHeader class="osahan-nav">
         <IonToolbar>
           <IonButtons slot="start">
-              <IonMenuButton slot="start"/>
+              <IonMenuButton/>
           </IonButtons>
           <IonTitle>
               <div><small>Delivery Location</small></div>Bengaluru, India
