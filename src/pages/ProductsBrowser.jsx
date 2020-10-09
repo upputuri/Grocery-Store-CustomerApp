@@ -1,4 +1,4 @@
-import { IonBadge, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonRouterLink, IonSearchbar, IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
+import { IonBadge, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonRouterLink, IonRouterOutlet, IonSearchbar, IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
 import React from 'react';
 import { Route } from 'react-router';
 import ProductCard from '../components/Cards/ProductCard';
@@ -8,7 +8,9 @@ import { cartOutline as cartOutlineIcon} from 'ionicons/icons'
 import { RouteComponentProps } from 'react-router-dom';
 import Client, { Resource } from 'ketting';
 import ProductList from './ProductList';
-import { CartContext } from '../App';
+import { CartContext, LoginContext } from '../App';
+import Cart from './Cart';
+import BaseToolbar from '../components/Menu/BaseToolbar';
 
 const serviceBaseURL = "http://localhost:8080/groc";
 
@@ -117,42 +119,22 @@ class ProductsBrowser extends React.Component {
 
     render() {
         return (
-            <IonPage>
-            <IonHeader className="osahan-nav">
-                <IonToolbar>
-                    <IonButtons slot="start">
-                        <IonMenuButton/>
-                    </IonButtons>
-                    <IonTitle>
-                        Products
-                    </IonTitle>
-                    <IonButtons slot="primary">
-                        <IonButton href="/customer/cart" className="top-cart" color="primary">
-                            <IonBadge color="primary">
-                                <CartContext.Consumer>{(context) => context.itemCount}</CartContext.Consumer>
-                            </IonBadge>
-                            <IonIcon slot="start" icon={cartOutlineIcon}></IonIcon>
-                        </IonButton>
-                    </IonButtons>
-                </IonToolbar> 
-                <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>      
-            </IonHeader>
+        <IonRouterOutlet>
+                    <Route path="/products/categories" render={
+                                                        (props)=><Categories 
+                                                                items={this.state.categories.data} 
+                                                                categoryClickHandler={this.listProductsOfCategory}/>} exact={true} /> 
 
-            <IonContent>
-                <Route path="/products/categories" render={
-                                                    (props)=><Categories 
-                                                            items={this.state.categories.data} 
-                                                            categoryClickHandler={this.listProductsOfCategory}/>} exact={true} /> 
+                    <Route path="/products/list" render={
+                                                        (props)=><ProductList
+                                                                items={this.state.products}
+                                                                productClickHandler={this.viewProductDetail}/>} exact={true} />  
 
-                <Route path="/products/list" render={
-                                                    (props)=><ProductList
-                                                            items={this.state.products}
-                                                            productClickHandler={this.viewProductDetail}/>} exact={true} />  
+                    <Route path="/products/single/:productId" component={SingleProduct} exact={true} />
 
-                <Route path="/products/single/:productId" component={SingleProduct} exact={true} />
+                    <Route path="/products/cart/:customerId" component={Cart} exact={true} />
 
-            </IonContent>
-        </IonPage>
+        </IonRouterOutlet>
         )
     }
 }

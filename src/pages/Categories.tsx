@@ -1,6 +1,7 @@
-import { IonContent } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonSearchbar } from '@ionic/react';
 import React from 'react';
 import CategoryCard from '../components/Cards/CategoryCard';
+import BaseToolbar from '../components/Menu/BaseToolbar';
 
 interface MyProps {
     categoryClickHandler: Function
@@ -16,6 +17,12 @@ class Categories extends React.Component<MyProps, MyState> {
     
     render(){
         return (
+            <IonPage>
+                <IonHeader className="osahan-nav">
+                    <BaseToolbar title="Categories"/>
+                    <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>      
+                </IonHeader>
+
                 <IonContent className="ion-padding my-address-page" color="dark">
                     {this.props.items && this.props.items.map(
                         (category: any) => {
@@ -34,6 +41,7 @@ class Categories extends React.Component<MyProps, MyState> {
                     )}
                 {/* <Route path="/categories/products:" component={Login} exact={true} />   */}
                 </IonContent>
+            </IonPage>
         );
     }
 }

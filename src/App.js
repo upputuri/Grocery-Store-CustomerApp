@@ -178,7 +178,7 @@ class App extends React.Component {
                 {/* <Route path="/products" component={Products} productClickHandler={this.viewProductDetail} exact={true}/> */}
                 {/* <Route path="/products/:id" component={SingleProduct} /> */}
                 <Route path="/login" component={Login} exact={true} />  
-                <Route path="/customer/cart" render={(props)=><Cart customerId={this.state.customer.id}></Cart>} exact={true} />                          
+                {/* <Route path="/customer/cart" render={(props)=><Cart customerId={this.state.customer.id}></Cart>} exact={true} />                           */}
                 <Route exact path="/" render={() => <Redirect to="/home" />} />
               </IonRouterOutlet>
             </IonSplitPane>
