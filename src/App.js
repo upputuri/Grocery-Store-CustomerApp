@@ -27,8 +27,7 @@ import Login from './pages/Login';
 import ProductsBrowser from './pages/ProductsBrowser';
 /* Theme variables */
 import './theme/variables.css';
-
-const serviceBaseURL = "http://localhost:8080/groc";
+import { serviceBaseURL } from './components/Utilities/ServiceCaller.ts'
 
 const LoginContext = React.createContext(
   {

@@ -131,3 +131,4 @@ class ServiceRequest {
 }
 
 export default ServiceRequest;
+export {serviceBaseURL};

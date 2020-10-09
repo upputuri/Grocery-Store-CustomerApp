@@ -5,8 +5,7 @@ import React from 'react';
 import { withRouter } from "react-router-dom";
 import { CartContext } from '../App';
 import BaseToolbar from '../components/Menu/BaseToolbar';
-
-const serviceBaseURL = "http://localhost:8080/groc";
+import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts'
 
 class SingleProduct extends React.Component {
     state = {

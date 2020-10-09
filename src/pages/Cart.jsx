@@ -6,8 +6,8 @@ import { withRouter } from "react-router-dom";
 import CartItemTile from '../components/Cards/CartItemTile';
 import BaseToolbar from '../components/Menu/BaseToolbar';
 import { chevronForwardOutline as nextIcon } from 'ionicons/icons'
+import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts'
 
-const serviceBaseURL = "http://localhost:8080/groc";
 
 class Cart extends React.Component{
     state = {

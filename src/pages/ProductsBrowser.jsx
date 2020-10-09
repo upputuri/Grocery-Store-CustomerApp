@@ -11,8 +11,7 @@ import ProductList from './ProductList';
 import { CartContext, LoginContext } from '../App';
 import Cart from './Cart';
 import BaseToolbar from '../components/Menu/BaseToolbar';
-
-const serviceBaseURL = "http://localhost:8080/groc";
+import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts'
 
 // interface MyProps extends RouteComponentProps {
 
