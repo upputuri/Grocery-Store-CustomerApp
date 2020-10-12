@@ -3,6 +3,7 @@ import { Client } from 'ketting'
 
 // Login 
 
+// const serviceBaseURL = "https://grocservicecustomer-env.eba-bpju9vw3.ap-south-1.elasticbeanstalk.com/groc";
 const serviceBaseURL = "http://localhost:8080/groc";
 interface UserCredentials{
     loginId: string,

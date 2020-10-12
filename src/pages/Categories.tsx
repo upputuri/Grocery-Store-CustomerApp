@@ -14,7 +14,13 @@ type MyState = {
 
 class Categories extends React.Component<MyProps, MyState> {
 
+    componentDidMount(){
+        console.log("Categories component mounted")
+    }
     
+    componentDidUpdate(){
+        console.log("Categories component updated")
+    }
     render(){
         return (
             <IonPage>

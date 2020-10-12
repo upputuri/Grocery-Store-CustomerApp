@@ -1,17 +1,11 @@
-import { IonBadge, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonRouterLink, IonRouterOutlet, IonSearchbar, IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
+import Client from 'ketting';
 import React from 'react';
-import { Route } from 'react-router';
-import ProductCard from '../components/Cards/ProductCard';
-import Categories from './Categories';
-import SingleProduct from './SingleProduct';
-import { cartOutline as cartOutlineIcon} from 'ionicons/icons'
-import { RouteComponentProps } from 'react-router-dom';
-import Client, { Resource } from 'ketting';
-import ProductList from './ProductList';
-import { CartContext, LoginContext } from '../App';
+import { Route, Switch } from 'react-router';
+import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts';
 import Cart from './Cart';
-import BaseToolbar from '../components/Menu/BaseToolbar';
-import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts'
+import Categories from './Categories';
+import ProductList from './ProductList';
+import SingleProduct from './SingleProduct';
 
 // interface MyProps extends RouteComponentProps {
 
@@ -26,11 +20,7 @@ import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts'
 
 class ProductsBrowser extends React.Component {
 
-    state = {
-        resource: null,
-        products: [],
-        query: 'category=all',
-        
+    state = {        
         categories: {
             data: [],
             resource: {},
@@ -38,36 +28,8 @@ class ProductsBrowser extends React.Component {
     }
 
     componentDidMount(){
+        console.log("ProductBrowser component mounted")
         this.loadCategories();
-    }
-
-    componentDidUpdate(){
-        //Fetch products using query
-        this.loadProducts();
-    }
-    
-    async loadProducts(){
-        const path = serviceBaseURL+'/products?'+this.state.query;
-        if (this.state.resource !== null && path.localeCompare(this.state.resource.uri) === 0)
-            return;
-
-        const client = new Client(path);
-        const resource = client.go();
-        let productListState;
-        try{
-            productListState = await resource.get();
-        }
-        catch(e)
-        {
-            console.log("Service call failed with - "+e);
-            return;
-        }
-        const products = productListState.getEmbedded().map((productState) => productState.data);
-        // alert(JSON.stringify(products));
-        this.setState({
-            products: products,
-            resource: resource
-        })
     }
     
     async loadCategories(){
@@ -103,22 +65,12 @@ class ProductsBrowser extends React.Component {
     listProductsOfCategory= (id) =>
     {
         // alert("listing products in categ: "+id);
-        this.props.history.push('/products/list');
-        let newQuery = 'category='+id;
-        if (this.state.query.localeCompare(newQuery) != 0)
-        {
-            this.setState({query: newQuery});
-        }
-    }
-
-    viewProductDetail = (id) =>
-    {   
-        this.props.history.push('/products/single/'+id);
+        this.props.history.push('/products/list?category='+id);
     }
 
     render() {
         return (
-        <IonRouterOutlet>
+        <Switch>
                     <Route path="/products/categories" render={
                                                         (props)=><Categories 
                                                                 items={this.state.categories.data} 
@@ -130,10 +82,10 @@ class ProductsBrowser extends React.Component {
                                                                 productClickHandler={this.viewProductDetail}/>} exact={true} />  
 
                     <Route path="/products/single/:productId" component={SingleProduct} exact={true} />
-
+                    
                     <Route path="/products/cart/:customerId" component={Cart} exact={true} />
 
-        </IonRouterOutlet>
+        </Switch>
         )
     }
 }

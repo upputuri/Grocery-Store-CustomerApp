@@ -1,6 +1,5 @@
-import { IonBadge, IonButton, IonLabel, IonNote, IonText } from '@ionic/react'
-import { attachProps } from '@ionic/react/dist/types/components/utils';
-import React from 'react'
+import { IonButton, IonText } from '@ionic/react';
+import React from 'react';
 
 type ProductCardProps = {
     id: string,

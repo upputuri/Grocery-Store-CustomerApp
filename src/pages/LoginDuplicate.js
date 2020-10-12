@@ -1,6 +1,7 @@
-import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { IonBadge, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useContext, useState } from 'react';
 import { Redirect, useHistory } from 'react-router';
+import { validateLocaleAndSetLanguage } from 'typescript';
 import { LoginContext } from '../App';
 
 const Login = (props) =>
@@ -37,8 +38,6 @@ const Login = (props) =>
               setError("Server unreachable! Please try after some time.")
             else if (result.hasResponse && !result.isResponseOk)
               setError(result.responseObject.message);
-            else 
-              history.goBack();
           })
           setError("Please wait...");
         }
@@ -47,7 +46,7 @@ const Login = (props) =>
 
     const checkInput = () =>
     {
-      if(userIdState === "") {
+      if(userIdState == "") {
         setError("Username cannot be blank!");
         return false;
       }
@@ -57,12 +56,12 @@ const Login = (props) =>
         return false;
       }
   
-      if(passwordState !== "") {
+      if(passwordState != "") {
         if(passwordState.length < 6) {
           setError("Password must contain at least six characters!");
           return false;
         }
-        if(passwordState === userIdState) {
+        if(passwordState == userIdState) {
           setError("Password must be different from Username!");
           return false;
         }

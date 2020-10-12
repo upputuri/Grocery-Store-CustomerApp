@@ -3,7 +3,7 @@ import { checkmarkCircle as checkMarkIcon, star as starIcon } from 'ionicons/ico
 import Client from 'ketting';
 import React from 'react';
 import { withRouter } from "react-router-dom";
-import { CartContext } from '../App';
+import { CartContext, LoginContext } from '../App';
 import BaseToolbar from '../components/Menu/BaseToolbar';
 import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts'
 
@@ -69,9 +69,15 @@ class SingleProduct extends React.Component {
         this.setState({variantIndex: index});
     }
 
-    addToCart()
+    addToCart(loginContext, cartContext, productId, variantId, qty)
     {
-        this.context.addToCart(this.state.productId, this, 1);
+        if (!loginContext.isAuthenticated)
+        {
+            let { history } = this.props;
+            history.push("/login");
+            return;
+        }
+        cartContext.addItem(productId, variantId, qty);
     }
 
     render() {
@@ -133,13 +139,17 @@ class SingleProduct extends React.Component {
                                             <IonIcon color="tertiary" icon={starIcon}></IonIcon>
                                             4.4
                                         </div>
-                                        <CartContext.Consumer>
-                                            {context =>
-                                            <IonButton 
-                                                onClick={() => context.addItem(this.state.productId, this.state.data.variations[this.state.variantIndex].id, 1)} 
-                                                color="secondary" shape="round">Add</IonButton>
+                                        <LoginContext.Consumer>
+                                            {loginContext => 
+                                                <CartContext.Consumer>
+                                                    {cartContext =>
+                                                    <IonButton 
+                                                        onClick={() => this.addToCart(loginContext, cartContext, this.state.productId, this.state.data.variations[this.state.variantIndex].id, 1)} 
+                                                        color="secondary" shape="round">Add</IonButton>
+                                                    }
+                                                </CartContext.Consumer>
                                             }
-                                        </CartContext.Consumer>
+                                        </LoginContext.Consumer>
                                         {/* <!-- <div className="input-group shop-cart-value">
                                             <span className="input-group-btn"><button disabled="disabled" className="btn btn-sm" type="button">-</button></span>
                                             <input type="text" max="10" min="1" value="1" className="form-control border-form-control form-control-sm input-number bg-black text-white" name="quant[1]">

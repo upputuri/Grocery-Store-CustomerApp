@@ -1,5 +1,5 @@
 import React from 'react'
-import { IonAvatar, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote } from "@ionic/react"
+import { IonAvatar, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterLink } from "@ionic/react"
 import { paperPlane as paperPlanceIcon, cafe as cafeIcon} from 'ionicons/icons'
 import { home, list, grid, pricetag, basket, card, person, location, create, heart, mail, help, sad} from 'ionicons/icons';
 import { LoginContext } from '../../App';
@@ -59,12 +59,14 @@ const GrocMenu = (props) => {
             {props.entries.map((entry) =>
             {
               return (
-                      // <IonMenuToggle auto-hide="false" >
-                        <IonItem key={entry.title} lines="none" detail="false" href={entry.url}>
-                          {menuIcons[`${entry.icon}`]}
-                          <IonLabel>{entry.title}</IonLabel>
-                        </IonItem>
-                      // </IonMenuToggle>
+                      <IonRouterLink key={entry.title} routerLink={entry.url}>
+                        <IonMenuToggle auto-hide="false" >
+                          <IonItem lines="none" detail="false">
+                            {menuIcons[`${entry.icon}`]}
+                            <IonLabel>{entry.title}</IonLabel>
+                          </IonItem>
+                        </IonMenuToggle>
+                      </IonRouterLink>
               );
             })}
 

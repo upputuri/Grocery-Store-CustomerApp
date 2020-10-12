@@ -15,23 +15,21 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/typography.css';
 import Client from 'ketting';
 import React from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
 import { GrocMenu } from "./components/Menu/Menu";
 import AppPages from './components/Utilities/AppPages';
-import ServiceRequest from './components/Utilities/ServiceCaller.ts';
+import ServiceRequest, { serviceBaseURL } from './components/Utilities/ServiceCaller.ts';
 import './global.css';
-import Cart from './pages/Cart';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import ProductsBrowser from './pages/ProductsBrowser';
 /* Theme variables */
 import './theme/variables.css';
-import { serviceBaseURL } from './components/Utilities/ServiceCaller.ts'
 
 const LoginContext = React.createContext(
   {
-    isAuthenticated: 'false',
+    isAuthenticated: false,
     customer: {
       id: '',
       fname: '',
@@ -102,7 +100,7 @@ class App extends React.Component {
         email: serviceRequest.responseObject.customer.email,
         image: serviceRequest.responseObject.customer.image
       }
-      alert(JSON.stringify(fetchedCustomer));
+      // alert(JSON.stringify(fetchedCustomer));
       this.setState({
         isAuthenticated: true,
         customer: fetchedCustomer
@@ -123,8 +121,9 @@ class App extends React.Component {
 
   async addItemToCart(productId, variationId, qty)
   {
-    // alert('adding to cart'+productId+variationId+qty);
+    //alert('adding to cart'+productId+variationId+qty);
     // alert(JSON.stringify(this.state.customer));
+
     let path = serviceBaseURL + '/customers/'+this.state.customer.id+'/cart';
 
     const client = new Client(path);
@@ -172,13 +171,12 @@ class App extends React.Component {
             <IonSplitPane contentId="main-content">
               <GrocMenu entries={appPages}/>
               <IonRouterOutlet id="main-content">
-                <Route path="/home" component={Home} exact={true} />               
-                <Route path="/products" component={ProductsBrowser} />
-                {/* <Route path="/products" component={Products} productClickHandler={this.viewProductDetail} exact={true}/> */}
-                {/* <Route path="/products/:id" component={SingleProduct} /> */}
-                <Route path="/login" component={Login} exact={true} />  
-                {/* <Route path="/customer/cart" render={(props)=><Cart customerId={this.state.customer.id}></Cart>} exact={true} />                           */}
-                <Route exact path="/" render={() => <Redirect to="/home" />} />
+                <Switch>
+                  <Route path="/home" component={Home} exact={true} />
+                  <Route path="/products" component={ProductsBrowser} />
+                  <Route path="/login" component={Login} exact={true} />  
+                  <Route exact path="/" render={() => <Redirect to="/home" />} />
+                </Switch>
               </IonRouterOutlet>
             </IonSplitPane>
           </IonApp>

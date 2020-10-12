@@ -1,12 +1,11 @@
-import { IonBadge, IonButton, IonButtons, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonMenuButton, IonPage, IonRow, IonSearchbar, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonPage, IonRow, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
+import { chevronForwardOutline as nextIcon } from 'ionicons/icons';
 import Client from 'ketting';
-import React, { useContext } from 'react';
-import { LoginContext } from '../App';
+import React from 'react';
 import { withRouter } from "react-router-dom";
 import CartItemTile from '../components/Cards/CartItemTile';
 import BaseToolbar from '../components/Menu/BaseToolbar';
-import { chevronForwardOutline as nextIcon } from 'ionicons/icons'
-import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts'
+import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts';
 
 
 class Cart extends React.Component{
