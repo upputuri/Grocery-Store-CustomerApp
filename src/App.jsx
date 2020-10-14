@@ -24,6 +24,7 @@ import './global.css';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import ProductsBrowser from './pages/ProductsBrowser';
+import Registration from './pages/Registration';
 /* Theme variables */
 import './theme/variables.css';
 
@@ -37,7 +38,8 @@ const LoginContext = React.createContext(
       email: '',
       image: '',
     },
-    login: ()=> {}                                       
+    login: () => {},
+    register: () => {}                                    
 });
 
 const CartContext = React.createContext(
@@ -56,7 +58,7 @@ class App extends React.Component {
     {
       isAuthenticated: false,
       customer: {
-        id: 618,
+        id: '',
         fname: '',
         lname: '',
         email: '',
@@ -67,25 +69,7 @@ class App extends React.Component {
       }
   }
 
-  // constructor(props)
-  // {
-  //   super(props);
-  //   this.state = {
-  //     isAuthenticated: false,
-  //     customer: {
-  //       id: '',
-  //       fname: '',
-  //       lname: '',
-  //       email: '',
-  //       image: '',
-  //     },
-  //     cart: {
-  //       itemCount: 0,
-  //     }
-  //   };
-  // }
-
-  loginHandler = async (user, password)=>
+  loginHandler = async (user, password) =>
   {
     let serviceRequest = new ServiceRequest();
     await serviceRequest.loginRequest({loginId: user, password: password});
@@ -117,6 +101,22 @@ class App extends React.Component {
       // alert("Failed to make service call!!")
       return serviceRequest;
     }
+  }
+
+  logoutHandler = () => {
+    this.setState( {
+      isAuthenticated: false,
+      customer: {
+        id: '',
+        fname: '',
+        lname: '',
+        email: '',
+        image: '',
+      },
+      cart: {
+        itemCount: 0,
+      }
+    });
   }
 
   async addItemToCart(productId, variationId, qty)
@@ -151,21 +151,56 @@ class App extends React.Component {
         itemCount: this.state.cart.itemCount + qty
       }
     });
-    // alert(this.state.cart.itemCount);
-    //const product = receivedState.data;
-    // alert(JSON.stringify(products));
-    // this.setState({
-    //     data: product,
-    //     resource: resource
-    // })  
   }
 
+  async registerNewUserWithEmail(emailId, fName, lName, password)
+  {
+    console.log("Sending registration request for: "+emailId+","+fName+","+lName+",");
+    let path = serviceBaseURL + '/customers';
 
+    const client = new Client(path);
+    const resource = client.go();
+    let receivedState;
+    try{
+        receivedState = await resource.post(
+          {
+            data: {
+              email: emailId,
+              password: password,
+              fname: fName,
+              lname: lName
+            }
+          }
+        );
+    }
+    catch(e)
+    {
+        console.log("Service call failed with - "+e);
+        alert(JSON.stringify(e));
+        return Promise.resolve(e.status);
+    }
+    const receivedData = receivedState.data;
+    this.setState({
+      isAuthenticated: true,
+      customer: {
+        id: receivedData.id,
+        fname: receivedData.fname,
+        lname: receivedData.lname,
+        email: receivedData.email,
+      }
+    });
+    return Promise.resolve(200);
+  }
 
   render(){
     return (
     <IonReactRouter>
-      <LoginContext.Provider value={{isAuthenticated: this.state.isAuthenticated, customer: this.state.customer, login: (u, p)=>this.loginHandler(u, p)}}>
+      <LoginContext.Provider value={{isAuthenticated: this.state.isAuthenticated, 
+                                    customer: this.state.customer, 
+                                    login: (u, p)=>this.loginHandler(u, p),
+                                    logout: this.logoutHandler, 
+                                    register: this.registerNewUserWithEmail.bind(this)
+                                    }}>
         <CartContext.Provider value={{itemCount: this.state.cart.itemCount, addItem: (pId, vId, qty)=>this.addItemToCart(pId, vId, qty)}}>
           <IonApp>
             <IonSplitPane contentId="main-content">
@@ -174,6 +209,7 @@ class App extends React.Component {
                 <Switch>
                   <Route path="/home" component={Home} exact={true} />
                   <Route path="/products" component={ProductsBrowser} />
+                  <Route path="/register" component={Registration} />
                   <Route path="/login" component={Login} exact={true} />  
                   <Route exact path="/" render={() => <Redirect to="/home" />} />
                 </Switch>

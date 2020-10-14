@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider } from '@ionic/react';
 import React, { useContext, useState } from 'react';
 import { Redirect, useHistory } from 'react-router';
 import { LoginContext } from '../App';
@@ -37,8 +37,10 @@ const Login = (props) =>
               setError("Server unreachable! Please try after some time.")
             else if (result.hasResponse && !result.isResponseOk)
               setError(result.responseObject.message);
-            else 
+            else{ 
               history.goBack();
+              return;
+            }
           })
           setError("Please wait...");
         }
@@ -53,35 +55,11 @@ const Login = (props) =>
       }
       let re = /([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])/;
       if(!re.test(userIdState)) {
-        setError("Username must be a valid email Id!");
+        setError("Invalid credentials!");
         return false;
       }
   
-      if(passwordState !== "") {
-        if(passwordState.length < 6) {
-          setError("Password must contain at least six characters!");
-          return false;
-        }
-        if(passwordState === userIdState) {
-          setError("Password must be different from Username!");
-          return false;
-        }
-        re = /[0-9]/;
-        if(!re.test(passwordState)) {
-          setError("password must contain at least one number (0-9)!");
-          return false;
-        }
-        re = /[a-z]/;
-        if(!re.test(passwordState)) {
-          setError("password must contain at least one lowercase letter (a-z)!");
-          return false;
-        }
-        re = /[A-Z]/;
-        if(!re.test(passwordState)) {
-          setError("password must contain at least one uppercase letter (A-Z)!");
-          return false;
-        }
-      } else {
+      if(passwordState === "") {
         setError("Please enter your password!");
         return false;
       }
@@ -140,9 +118,11 @@ const Login = (props) =>
                     </form>
                 </div>
                 <div className="p-3 border-top">
-                    <IonButton color="secondary" routerDirection="forward" expand="block" onClick={loginRequestHandler} className="ion-no-margin">Next</IonButton>
+                    <IonButton color="secondary" routerDirection="forward" expand="block" onClick={loginRequestHandler} className="ion-no-margin">Submit</IonButton>
                     <div className='ion-text-center m-3'>or</div>
-                    <IonButton color="secondary" routerDirection="forward" expand="block" className="ion-no-margin">Login with OTP</IonButton>
+                    <IonButton color="secondary" routerDirection="forward" expand="block" className="ion-no-margin">Login with Phone</IonButton>
+                    <div className='ion-text-center m-3'>New User?</div>
+                    <IonButton color="secondary" routerDirection="forward" expand="block" onClick={()=>history.push('/register')} className="ion-no-margin">Sign Up</IonButton>                    
                 </div>
             </div>
             </IonContent>

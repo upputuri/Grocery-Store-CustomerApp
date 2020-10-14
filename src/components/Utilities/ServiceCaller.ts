@@ -26,13 +26,16 @@ interface ServiceRespose{
 //     return error.reason;
 // }
 
-const buildPostBody = (data: object) =>
+const buildBody = (method: string, data: any, headers: any) =>
 {
-    return {
-        method: 'POST', 
+    return method === 'GET' ? {
+        method: 'GET', 
+        headers: headers
+    } : {
+        method: method, 
         body: JSON.stringify(data), 
-        headers: getDefaultHeaders()
-    };
+        headers: headers
+    }
 }
 
 const getDefaultHeaders = () =>
@@ -55,7 +58,11 @@ class ServiceRequest {
     {
         let response;
         try{
-            response = await fetch(serviceBaseURL + '/me', buildPostBody(creds))
+            const authHeaderBase64Value = btoa(creds.loginId+':'+creds.password);
+            const loginHeaders = new Headers();
+            loginHeaders.append("Content-Type", "application/json");
+            loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);
+            response = await fetch(serviceBaseURL + '/me', buildBody('GET', {}, loginHeaders));
             let result = await response.json();
             if (response.ok)
             {

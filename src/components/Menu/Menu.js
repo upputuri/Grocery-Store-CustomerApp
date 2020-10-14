@@ -38,51 +38,65 @@ const SampleMenu = () => {
 }
 
 const GrocMenu = (props) => {
-    return (
-        <IonMenu contentId="main-content" type="overlay">
-        <IonContent>
-          <IonList id="inbox-list">
-            <LoginContext.Consumer>
-              {(context)=>{
-                return (
-                  context.isAuthenticated ? 
-                  (
-                    <div>           
-                      <IonAvatar class="ion-margin-start ios hydrated mb-2"><img alt="img" src="assets/user.jpg"></img></IonAvatar>
-                      <IonListHeader>{context.customer.fname}</IonListHeader>
-                      <IonNote>{context.customer.email}</IonNote>
-                    </div>   
-                  ) : <IonItem button href="/login"><IonLabel>Login</IonLabel></IonItem>
-                );
-              }}
-            </LoginContext.Consumer>
-            {props.entries.map((entry) =>
-            {
+
+  return (
+      <IonMenu contentId="main-content" type="overlay">
+      <IonContent>
+        <IonList id="inbox-list">
+          <LoginContext.Consumer>
+            {(context)=>{
               return (
-                      <IonRouterLink key={entry.title} routerLink={entry.url}>
+                context.isAuthenticated ? 
+                (
+                  <div>           
+                    <IonAvatar class="ion-margin-start ios hydrated mb-2"><img alt="img" src="assets/user.jpg"></img></IonAvatar>
+                    <IonListHeader>{context.customer.fname}</IonListHeader>
+                    <IonNote>{context.customer.email}</IonNote>
+
+                    <IonMenuToggle auto-hide="false" >
+                      <IonItem onClick={context.logout} detail="false">
+                        <IonLabel>Logout</IonLabel>
+                      </IonItem>
+                    </IonMenuToggle>
+
+                  </div>   
+                ) : ( <IonRouterLink routerLink="/login">
                         <IonMenuToggle auto-hide="false" >
-                          <IonItem lines="none" detail="false">
-                            {menuIcons[`${entry.icon}`]}
-                            <IonLabel>{entry.title}</IonLabel>
+                          <IonItem detail="false">
+                            <IonLabel>Login</IonLabel>
                           </IonItem>
                         </IonMenuToggle>
-                      </IonRouterLink>
+                      </IonRouterLink>)
               );
-            })}
+            }}
+          </LoginContext.Consumer>
+          {props.entries.map((entry) =>
+          {
+            return (
+                    <IonRouterLink key={entry.title} routerLink={entry.url}>
+                      <IonMenuToggle auto-hide="false" >
+                        <IonItem lines="none" detail="false">
+                          {menuIcons[`${entry.icon}`]}
+                          <IonLabel>{entry.title}</IonLabel>
+                        </IonItem>
+                      </IonMenuToggle>
+                    </IonRouterLink>
+            );
+          })}
 
-          </IonList>
-  
-          <IonList id="labels-list">
-            <IonListHeader>Trending</IonListHeader>
-  
-            <IonItem lines="none">
-              <IonIcon slot="start" ios="trending-up-outline" md="trending-up-outline"></IonIcon>
-                <IonLabel>{}</IonLabel>
-            </IonItem>
-          </IonList>
-        </IonContent>
-      </IonMenu>
-    )
+        </IonList>
+
+        <IonList id="labels-list">
+          <IonListHeader>Trending</IonListHeader>
+
+          <IonItem lines="none">
+            <IonIcon slot="start" ios="trending-up-outline" md="trending-up-outline"></IonIcon>
+              <IonLabel>{}</IonLabel>
+          </IonItem>
+        </IonList>
+      </IonContent>
+    </IonMenu>
+  )
 }
 
 
