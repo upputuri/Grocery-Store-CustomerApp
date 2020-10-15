@@ -13,7 +13,8 @@ import '@ionic/react/css/structure.css';
 import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/typography.css';
-import Client from 'ketting';
+import Client, { basicAuth } from 'ketting';
+import { getMaxListeners } from 'process';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
@@ -62,6 +63,7 @@ class App extends React.Component {
         fname: '',
         lname: '',
         email: '',
+        password: '',
         image: '',
       },
       cart: {
@@ -84,10 +86,14 @@ class App extends React.Component {
         email: serviceRequest.responseObject.customer.email,
         image: serviceRequest.responseObject.customer.image
       }
+
       // alert(JSON.stringify(fetchedCustomer));
       this.setState({
         isAuthenticated: true,
-        customer: fetchedCustomer
+        customer: {...fetchedCustomer, password: password},
+        cart: {
+          itemCount: serviceRequest.responseObject.cartItemCount
+        }
       });
 
       return serviceRequest;
@@ -111,6 +117,8 @@ class App extends React.Component {
         fname: '',
         lname: '',
         email: '',
+        password: '',
+        password: '',
         image: '',
       },
       cart: {
@@ -125,18 +133,25 @@ class App extends React.Component {
     // alert(JSON.stringify(this.state.customer));
 
     let path = serviceBaseURL + '/customers/'+this.state.customer.id+'/cart';
-
+    // alert(this.state.customer.email+","+this.state.customer.password);
     const client = new Client(path);
+
     const resource = client.go();
     let receivedState;
     try{
+        console.log("Making service call: "+resource.uri);  
+        const authHeaderBase64Value = btoa(this.state.customer.email+':'+this.state.customer.password);
+        const loginHeaders = new Headers();
+        loginHeaders.append("Content-Type", "application/json");
+        loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);
         receivedState = await resource.post(
           {
             data: {
               productId: productId,
               variationId: variationId,
               qty: qty
-            }
+            },
+            headers: loginHeaders
           }
         );
     }
@@ -145,7 +160,7 @@ class App extends React.Component {
         console.log("Service call failed with - "+e);
         return;
     }
-    
+    console.log("Received response from service call: "+resource.uri);
     this.setState({
       cart: {
         itemCount: this.state.cart.itemCount + qty
@@ -187,6 +202,7 @@ class App extends React.Component {
         fname: receivedData.fname,
         lname: receivedData.lname,
         email: receivedData.email,
+        password: password
       }
     });
     return Promise.resolve(200);

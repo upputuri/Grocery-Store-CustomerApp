@@ -13,6 +13,7 @@
 firebase.json
 .firebaserc
 hosting.*
+android/*
 
 # misc
 .DS_Store

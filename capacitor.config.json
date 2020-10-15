@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "Grocery-Store-CustomerApp",
+  "appId": "com.dolittletech.retail.vegitcustomer",
+  "appName": "Vegit",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",

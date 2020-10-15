@@ -16,6 +16,7 @@ const BaseToolbar = (props)=>{
             return;
         }
         history.push("/products/cart/"+customerId);
+        return;
     }
 
     return (

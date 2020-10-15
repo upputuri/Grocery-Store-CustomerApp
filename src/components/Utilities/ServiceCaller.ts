@@ -3,7 +3,7 @@ import { Client } from 'ketting'
 
 // Login 
 
-// const serviceBaseURL = "https://grocservicecustomer-env.eba-bpju9vw3.ap-south-1.elasticbeanstalk.com/groc";
+// const serviceBaseURL = "http://grocservicecustomer-env.eba-bpju9vw3.ap-south-1.elasticbeanstalk.com/groc";
 const serviceBaseURL = "http://localhost:8080/groc";
 interface UserCredentials{
     loginId: string,
@@ -136,6 +136,25 @@ class ServiceRequest {
         const categories = categoriesListState.map((categoryState) => categoryState.data)
         return categories;
     }
+
+    // getCartItemsRequest = async (customerId: any, userName: any, password: any) =>
+    // {
+    //     const client = new Client(serviceBaseURL+'/customers/'+customerId+'/cart/items');
+    //     const resource = client.go();
+    //     let cartItemsState;
+    //     const authHeaderBase64Value = btoa(userName+':'+password);
+    //     const loginHeaders = new Headers();
+    //     loginHeaders.append("Content-Type", "application/json");
+    //     loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);
+    //     try{
+    //         cartItemsState = await resource.get();
+    //     }
+    //     catch(e)
+    //     {
+    //         console.log('Service call failed with - '+e);
+    //         return;
+    //     }
+    // }
 }
 
 export default ServiceRequest;

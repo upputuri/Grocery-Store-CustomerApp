@@ -40,6 +40,7 @@ class ProductsBrowser extends React.Component {
         const resource = client.go();
         let categoriesState;
         try{
+            console.log("Making service call: "+resource.uri);
             categoriesState = await resource.get();
         }
         catch(e)
@@ -48,6 +49,7 @@ class ProductsBrowser extends React.Component {
             return;
         }
         // alert(JSON.stringify(categoriesState));
+        console.log("Received response from service call: "+resource.uri);
         const categoriesListState = categoriesState.getEmbedded();
         const categories = categoriesListState.map((categoryState) => categoryState.data)
         categories && (

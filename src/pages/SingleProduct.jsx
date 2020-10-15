@@ -73,10 +73,12 @@ class SingleProduct extends React.Component {
     {
         if (!loginContext.isAuthenticated)
         {
+            console.log("Customer is not authenticated, hence redirecting to login page");
             let { history } = this.props;
             history.push("/login");
             return;
         }
+        console.log("Invoking add Item on cart context");
         cartContext.addItem(productId, variantId, qty);
     }
 
