@@ -62,9 +62,10 @@ const ProductList = () => {
                     {data && data.map(
                         (product) =>{
                             return <ProductCard 
-                                    id={product.id}
+                                    productId={product.id}
                                     key={product.id}
                                     name={product.name}
+                                    variationId={product.variations[0].id}
                                     originalPrice={product.variations[0].mrp}
                                     discountPrice={product.variations[0].price}
                                     discount={product.discount}

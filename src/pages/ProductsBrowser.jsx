@@ -78,10 +78,7 @@ class ProductsBrowser extends React.Component {
                                                                 items={this.state.categories.data} 
                                                                 categoryClickHandler={this.listProductsOfCategory}/>} exact={true} /> 
 
-                    <Route path="/products/list" render={
-                                                        (props)=><ProductList
-                                                                items={this.state.products}
-                                                                productClickHandler={this.viewProductDetail}/>} exact={true} />  
+                    <Route path="/products/list" component={ProductList} exact={true} />  
 
                     <Route path="/products/single/:productId" component={SingleProduct} exact={true} />
                     

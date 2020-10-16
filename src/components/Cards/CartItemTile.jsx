@@ -1,11 +1,19 @@
-import { IonButton, IonButtons, IonCard, IonCol, IonRow, IonText } from '@ionic/react'
+import { IonButton, IonButtons, IonCard, IonCol, IonIcon, IonicSafeString, IonRow, IonText } from '@ionic/react'
 import React from 'react'
 import { CartContext } from '../../App'
+import { addCircle as addIcon, removeCircle as removeIcon, trash as trashIcon } from 'ionicons/icons';
+import { useHistory } from 'react-router';
 
 const CartItemTile = (props) =>
 {
+    const history = useHistory();
+
+    const viewProduct = (productId) => {
+        history.push('/products/single/'+productId);
+    }
+
     return (
-        <IonCard className="bg-black">
+        <IonCard onClick={viewProduct.bind(this, props.productId)} className="bg-black">
             <IonRow>
                 <IonCol size="auto">
                     <img alt="img" className="not-found-img m-2" width="70px" height="70px" src="assets/item/9.jpg"/>
@@ -26,14 +34,23 @@ const CartItemTile = (props) =>
                         <CartContext.Consumer>
                             {context =>                            
                             <IonCol>
-                                <IonButton size="small" shape="round" color='danger'>-</IonButton>
-                                    <IonText className="m-2 text-white">{props.qty}</IonText>
-                                <IonButton onClick={() => 
+                                <IonIcon size="large" icon={props.qty>1 ? removeIcon: trashIcon} onClick={(event) => 
                                                 {
-                                                    context.addItem(props.productId, props.variationId, 1)
+                                                    context.addItem(props.productId, props.variationId, -1);
                                                     props.qtyChangeHandler();
+                                                    event.stopPropagation();
                                                 }} 
-                                            size="small" shape="round" color="secondary">+</IonButton>
+                                            color='danger'>
+                                                </IonIcon>
+                                    <IonText className="m-2 text-white ion-text-center">{props.qty}</IonText>
+                                <IonIcon size="large" icon={addIcon} onClick={(event) => 
+                                                {
+                                                    context.addItem(props.productId, props.variationId, 1);
+                                                    props.qtyChangeHandler();
+                                                    event.stopPropagation();
+                                                }} 
+                                            color="secondary">
+                                                </IonIcon>
                             </IonCol>
                             }
                         </CartContext.Consumer>   

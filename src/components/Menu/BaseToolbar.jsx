@@ -3,21 +3,23 @@ import React, { useContext } from 'react';
 import { useHistory, withRouter } from 'react-router';
 import { LoginContext, CartContext } from '../../App';
 import { cartOutline as cartOutlineIcon } from 'ionicons/icons';
+import CartButton from './CartButton';
 
 const BaseToolbar = (props)=>{
     let history = useHistory();
     let loginContext = useContext(LoginContext);
     
-    const viewCart = (customerId) =>
-    {
-        if (!loginContext.isAuthenticated)
-        {
-            history.push("/login");
-            return;
-        }
-        history.push("/products/cart/"+customerId);
-        return;
-    }
+    // const viewCart = (customerId) =>
+    // {
+    //     console.log(loginContext.isAuthenticated+","+customerId);
+    //     if (!loginContext.isAuthenticated)
+    //     {
+    //         history.push("/login");
+    //         return;
+    //     }
+    //     history.push("/products/cart/"+customerId);
+    //     return;
+    // }
 
     return (
         <IonToolbar>
@@ -27,7 +29,7 @@ const BaseToolbar = (props)=>{
             <IonTitle>
                 {props.title}
             </IonTitle>
-            <IonButtons slot="primary">
+            {/* <IonButtons slot="primary">
                 <LoginContext.Consumer>
                     {(context) => 
                         (
@@ -40,7 +42,8 @@ const BaseToolbar = (props)=>{
                         )
                     }
                 </LoginContext.Consumer>
-            </IonButtons>
+            </IonButtons> */}
+            <CartButton/>
         </IonToolbar> 
     )
 }

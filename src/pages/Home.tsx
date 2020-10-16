@@ -1,12 +1,12 @@
-import { IonBadge, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButtons, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
+import { createOutline as createOutlineIcon } from 'ionicons/icons';
 import React from 'react';
-import './Home.css';
-import { cartOutline as cartOutlineIcon, createOutline as createOutlineIcon } from 'ionicons/icons'
-
-import Slider from '../components/Slider/Slider';
-import ListingSection from '../components/Listing/ListingSection';
 import ItemListing1 from '../components/Listing/ItemListing1';
-import { CartContext } from '../App';
+import ListingSection from '../components/Listing/ListingSection';
+import CartButton from '../components/Menu/CartButton';
+import Slider from '../components/Slider/Slider';
+import './Home.css';
+
 
 const Home: React.FC = () => {
   return (
@@ -20,14 +20,15 @@ const Home: React.FC = () => {
               <div><small>Delivery Location</small></div>Bengaluru, India
               <IonIcon icon={createOutlineIcon}></IonIcon>
           </IonTitle>
-          <IonButtons slot="primary">
+          {/* <IonButtons slot="primary">
               <IonButton href="/customer/cart" class="top-cart" color="primary">
                 <IonBadge color="primary">
                 <CartContext.Consumer>{(context) => context.itemCount}</CartContext.Consumer>
                 </IonBadge>
                 <IonIcon slot="start" icon={cartOutlineIcon}></IonIcon>
               </IonButton>
-          </IonButtons>
+          </IonButtons> */}
+          <CartButton/>
         </IonToolbar>
         <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>        
       </IonHeader>

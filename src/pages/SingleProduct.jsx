@@ -1,19 +1,29 @@
-import { IonBadge, IonButton, IonContent, IonHeader, IonIcon, IonPage, IonSearchbar, IonSlide, IonSlides, IonText } from '@ionic/react';
+import { IonAlert, IonBadge, IonButton, IonContent, IonHeader, IonIcon, IonLoading, IonPage, IonSearchbar, IonSlide, IonSlides, IonText } from '@ionic/react';
 import { checkmarkCircle as checkMarkIcon, star as starIcon } from 'ionicons/icons';
 import Client from 'ketting';
-import React from 'react';
-import { withRouter } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useHistory, withRouter } from "react-router-dom";
 import { CartContext, LoginContext } from '../App';
+import AddToCartButton from '../components/Menu/AddToCartButton';
 import BaseToolbar from '../components/Menu/BaseToolbar';
 import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts'
 
-class SingleProduct extends React.Component {
-    state = {
-        productId: null,
-        resource: null,
-        data: null,
-        variantIndex: 0,
-    }
+const SingleProduct = (props) => {
+    const [productState, setProductState] = useState(null);
+    const [variantIndexState, setVariantIndexState] = useState(0);
+    const [resourceState, setResourceState] = useState(null);
+    const [loadingState, setLoadingState] = useState(false);
+    const [alertState, setAlertState] = useState({show: false, msg: ''});
+    const [retryState, setRetryState] = useState(false);
+    const history = useHistory();
+
+
+    // state = {
+    //     productId: null,
+    //     resource: null,
+    //     data: null,
+    //     variantIndex: 0,
+    // }
 
     // shouldComponentUpdate()
     // {
@@ -21,76 +31,87 @@ class SingleProduct extends React.Component {
     //     this.state.resource !== null && 
     //     this.state.data !== null;
     // }
-    componentDidMount()
-    {
-        const { productId } = this.props.match.params;
-        if (this.state.productId && this.state.productId === productId)
-        return; //do nothing as the resource is already loaded
-        this.setState({productId: productId});
-        this.loadSingleProduct(productId);
-    }
-
-    componentDidUpdate()
-    {
-        const { productId } = this.props.match.params;
-        if (this.state.productId && this.state.productId === productId)
+    useEffect(() =>{
+        const { productId } = props.match.params;
+        if (productState && productState.id === productId)
             return; //do nothing as the resource is already loaded
-        this.setState({productId: productId});
-        this.loadSingleProduct(productId);
-    }
+        loadSingleProduct(productId);
+        setRetryState(false);
+    }, [retryState]);
+    // const componentDidMount = () =>
+    // {
+    //     const { productId } = props.match.params;
+    //     if (productState && productState.id === productId)
+    //         return; //do nothing as the resource is already loaded
+    //     this.loadSingleProduct(productId);
+    // }
 
-    async loadSingleProduct(id)
+    // const componentDidUpdate = () =>
+    // {
+    //     const { productId } = props.match.params;
+    //     if (productState && productState.id === productId)
+    //         return; //do nothing as the resource is already loaded
+    //     this.loadSingleProduct(productId);
+    // }
+
+    const loadSingleProduct = async (id) =>
     {
         let path = serviceBaseURL + '/products/'+id;
-        if (this.state.resource !== null && path.localeCompare(this.state.resource.uri) === 0)
+        if (resourceState !== null && path.localeCompare(resourceState.uri) === 0)
             return;
 
         const client = new Client(path);
         const resource = client.go();
         let receivedState;
+        console.log("setting to true");
+        setLoadingState(true);
         try{
             receivedState = await resource.get();
         }
         catch(e)
         {
             console.log("Service call failed with - "+e);
+            console.log("clearing");
+            setLoadingState(false);
+            setAlertState({show: true, msg: e.toString()});
             return;
         }
         const product = receivedState.data;
         // alert(JSON.stringify(products));
-        this.setState({
-            data: product,
-            resource: resource
-        })        
+        setProductState(product);
+        setResourceState(resource);
+        console.log("clearing");   
+        setLoadingState(false);  
     }
 
-    variantSelected(index) 
+    const variantSelected = (index) => 
     {
-        this.setState({variantIndex: index});
+        setVariantIndexState(index);
     }
 
-    addToCart(loginContext, cartContext, productId, variantId, qty)
+    // const addToCart = (loginContext, cartContext, productId, variantId, qty) =>
+    // {
+    //     if (!loginContext.isAuthenticated)
+    //     {
+    //         console.log("Customer is not authenticated, hence redirecting to login page");
+    //         history.push("/login");
+    //         return;
+    //     }
+    //     console.log("Invoking add Item on cart context");
+    //     cartContext.addItem(productId, variantId, qty);
+    // }
+    if (productState !== null)
     {
-        if (!loginContext.isAuthenticated)
-        {
-            console.log("Customer is not authenticated, hence redirecting to login page");
-            let { history } = this.props;
-            history.push("/login");
-            return;
-        }
-        console.log("Invoking add Item on cart context");
-        cartContext.addItem(productId, variantId, qty);
-    }
-
-    render() {
         return (
+
             <IonPage>
                 <IonHeader className="osahan-nav">
                     <BaseToolbar title="Product Detail"/>
                     <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>      
-                </IonHeader>                
+                </IonHeader>
+                <IonLoading isOpen={loadingState}/>                
                 <IonContent color="dark">
-                    {this.state.data && 
+                    {productState && 
                     <div>
                         <IonSlides pager="true">
                             <IonSlide>
@@ -108,7 +129,7 @@ class SingleProduct extends React.Component {
                                 <div>
                                 <div className="single-page-shop">
                                     <IonText color="primary">
-                                        <h6 className="mb-1">{this.state.data.name}</h6>
+                                        <h6 className="mb-1">{productState.name}</h6>
                                     </IonText>
 
 
@@ -117,9 +138,9 @@ class SingleProduct extends React.Component {
                                     <IonBadge color="success">25% OFF</IonBadge>
                                     </p> */}
                                     <div className="font-weight-normal mb-2 price">
-                                        <span><IonText><h5 className="mb-2 text-white">{'₹'+this.state.data.variations[this.state.variantIndex].price}
+                                        <span><IonText><h5 className="mb-2 text-white">{'₹'+productState.variations[variantIndexState].price}
                                             <span>
-                                            <IonText color="success">  {this.state.data.discount > 0 ? this.state.data.discount+'% OFF':''}</IonText></span></h5></IonText>
+                                            <IonText color="success">  {productState.discount > 0 ? productState.discount+'% OFF':''}</IonText></span></h5></IonText>
                                         </span>  
                                     </div>
                                     <small className="text-secondary">
@@ -128,11 +149,11 @@ class SingleProduct extends React.Component {
                                             Available in - 
                                         </strong>
                                         <span>
-                                            {this.state.data.variations.map((v, index) => {
+                                            {productState.variations.map((v, index) => {
                                                 
                                                 return <IonBadge color={
-                                                    index === this.state.variantIndex? 'red':'tertiary'
-                                                }className='ml-1' key={v.id} onClick={this.variantSelected.bind(this, index)}>{v.name}</IonBadge>
+                                                    index === variantIndexState? 'red':'tertiary'
+                                                }className='ml-1' key={v.id} onClick={variantSelected.bind(this, index)}>{v.name}</IonBadge>
                                             })}
                                         </span>
                                     </small>                                                      
@@ -141,17 +162,7 @@ class SingleProduct extends React.Component {
                                             <IonIcon color="tertiary" icon={starIcon}></IonIcon>
                                             4.4
                                         </div>
-                                        <LoginContext.Consumer>
-                                            {loginContext => 
-                                                <CartContext.Consumer>
-                                                    {cartContext =>
-                                                    <IonButton 
-                                                        onClick={() => this.addToCart(loginContext, cartContext, this.state.productId, this.state.data.variations[this.state.variantIndex].id, 1)} 
-                                                        color="secondary" shape="round">Add</IonButton>
-                                                    }
-                                                </CartContext.Consumer>
-                                            }
-                                        </LoginContext.Consumer>
+                                        <AddToCartButton productId={productState.id} variationId={productState.variations[variantIndexState].id}/>
                                         {/* <!-- <div className="input-group shop-cart-value">
                                             <span className="input-group-btn"><button disabled="disabled" className="btn btn-sm" type="button">-</button></span>
                                             <input type="text" max="10" min="1" value="1" className="form-control border-form-control form-control-sm input-number bg-black text-white" name="quant[1]">
@@ -164,13 +175,13 @@ class SingleProduct extends React.Component {
                             </div>
                             <div className="mb-2 card p-3 single-page-info">
                                 <div className="short-description">
-                                <small className="float-right">Availability: <span className="badge badge-success">{this.state.data.inStock ? 'In Stock': 'Out of Stock'}</span></small>
+                                <small className="float-right">Availability: <span className="badge badge-success">{productState.inStock ? 'In Stock': 'Out of Stock'}</span></small>
                                 <h6 className="font-weight-bold mb-3">
                                     Quick Overview  
                                 </h6>
-                                <p className="text-secondary">{this.state.data.description}
+                                <p className="text-secondary">{productState.description}
                                 </p>
-                                <p className="mb-0 text-secondary">{this.state.data.variations[this.state.variantIndex].description}</p>
+                                <p className="mb-0 text-secondary">{productState.variations[variantIndexState].description}</p>
                                 </div>
                             </div>
                         </div>
@@ -181,6 +192,28 @@ class SingleProduct extends React.Component {
 
         )
     }
+    else{
+        return (
+        <IonPage>
+            <IonHeader className="osahan-nav">
+                <BaseToolbar title="Product Detail"/>
+                <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>      
+            </IonHeader>
+            <IonLoading isOpen={loadingState}/>                
+            <IonContent color="dark">
+                <IonAlert
+                    isOpen={alertState.show}
+                    onDidDismiss={() => setAlertState({show: false, msg: ''})}
+                    header={'Error'}
+                    subHeader={alertState.msg}
+                    message={'Failed to load'}
+                    buttons={[{text: 'Cancel', handler: ()=>{history.push('/home')}}, {text: 'Retry', handler: ()=>{setRetryState(true)}}]}
+                />
+            </IonContent>
+        </IonPage>
+    )
+    }
+
 }
 
 export default withRouter(SingleProduct);

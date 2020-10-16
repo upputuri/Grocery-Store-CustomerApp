@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonPage, IonRow, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonLoading, IonPage, IonRow, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
 import { chevronForwardOutline as nextIcon } from 'ionicons/icons';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
@@ -16,10 +16,16 @@ const Cart = (props) =>{
         cartTotal: 0.0
     });
 
+    const [showLoading, setShowLoading] = useState(false);
+
     useEffect(()=>{
         if (cartItemsState.data === null)
+        {
             loadCart();        
+            setShowLoading(true);
+        }
     });
+
 
     const loginContext = useContext(LoginContext);
     const history = useHistory();
@@ -73,7 +79,8 @@ const Cart = (props) =>{
             data: items,
             resource: resource,
             cartTotal: cartTotal
-        });   
+        });
+        setShowLoading(false);   
     }
 
     const qtyChangeHandler = () =>
@@ -112,6 +119,7 @@ const Cart = (props) =>{
                     }
                 )}
             </IonContent>
+            <IonLoading isOpen={showLoading}/>
             <IonFooter>
                 <IonToolbar color="secondary">
                     <IonRow>

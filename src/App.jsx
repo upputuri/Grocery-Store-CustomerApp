@@ -1,4 +1,4 @@
-import { IonApp, IonRouterOutlet, IonSplitPane } from '@ionic/react';
+import { IonApp, IonLoading, IonRouterOutlet, IonSplitPane, IonToast } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -13,8 +13,7 @@ import '@ionic/react/css/structure.css';
 import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/typography.css';
-import Client, { basicAuth } from 'ketting';
-import { getMaxListeners } from 'process';
+import Client from 'ketting';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
@@ -26,6 +25,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import ProductsBrowser from './pages/ProductsBrowser';
 import Registration from './pages/Registration';
+
 /* Theme variables */
 import './theme/variables.css';
 
@@ -57,18 +57,21 @@ class App extends React.Component {
 
   state =
     {
-      isAuthenticated: false,
+      isAuthenticated: true,
       customer: {
-        id: '',
-        fname: '',
-        lname: '',
-        email: '',
-        password: '',
+        id: 618,
+        fname: 'Srikanth',
+        lname: 'Upputuri',
+        email: 'usrikanth@gmail.com',
+        password: 'Password123',
         image: '',
       },
       cart: {
         itemCount: 0,
-      }
+      },
+      showToast: false,
+      toastMsg: 'Happy shopping!',
+      showLoading: false
   }
 
   loginHandler = async (user, password) =>
@@ -93,9 +96,11 @@ class App extends React.Component {
         customer: {...fetchedCustomer, password: password},
         cart: {
           itemCount: serviceRequest.responseObject.cartItemCount
-        }
+        },
+        toastMsg: 'Login Successful!',
+        showToast: true
       });
-
+      
       return serviceRequest;
     }
     else if (serviceRequest.hasResponse){
@@ -123,7 +128,9 @@ class App extends React.Component {
       },
       cart: {
         itemCount: 0,
-      }
+      },
+      showToast: true,
+      toastMsg: 'You are logged out!'
     });
   }
 
@@ -191,7 +198,7 @@ class App extends React.Component {
     catch(e)
     {
         console.log("Service call failed with - "+e);
-        alert(JSON.stringify(e));
+        // alert(JSON.stringify(e));
         return Promise.resolve(e.status);
     }
     const receivedData = receivedState.data;
@@ -230,6 +237,13 @@ class App extends React.Component {
                   <Route exact path="/" render={() => <Redirect to="/home" />} />
                 </Switch>
               </IonRouterOutlet>
+              <IonToast
+                  isOpen={this.state.showToast}
+                  onDidDismiss={() => this.setState({showToast: false})}
+                  message={this.state.toastMsg}
+                  duration={500}
+                />
+              <IonLoading isOpen={this.state.showLoading}/>
             </IonSplitPane>
           </IonApp>
         </CartContext.Provider>
