@@ -36,7 +36,6 @@ const SingleProduct = (props) => {
         if (productState && productState.id === productId)
             return; //do nothing as the resource is already loaded
         loadSingleProduct(productId);
-        setRetryState(false);
     }, [retryState]);
     // const componentDidMount = () =>
     // {
@@ -63,15 +62,14 @@ const SingleProduct = (props) => {
         const client = new Client(path);
         const resource = client.go();
         let receivedState;
-        console.log("setting to true");
         setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
         try{
             receivedState = await resource.get();
         }
         catch(e)
         {
             console.log("Service call failed with - "+e);
-            console.log("clearing");
             setLoadingState(false);
             setAlertState({show: true, msg: e.toString()});
             return;
@@ -80,7 +78,6 @@ const SingleProduct = (props) => {
         // alert(JSON.stringify(products));
         setProductState(product);
         setResourceState(resource);
-        console.log("clearing");   
         setLoadingState(false);  
     }
 
@@ -203,11 +200,11 @@ const SingleProduct = (props) => {
             <IonContent color="dark">
                 <IonAlert
                     isOpen={alertState.show}
-                    onDidDismiss={() => setAlertState({show: false, msg: ''})}
                     header={'Error'}
                     subHeader={alertState.msg}
                     message={'Failed to load'}
-                    buttons={[{text: 'Cancel', handler: ()=>{history.push('/home')}}, {text: 'Retry', handler: ()=>{setRetryState(true)}}]}
+                    buttons={[{text: 'Cancel', handler: ()=>{history.push('/home')}}, 
+                                {text: 'Retry', handler: ()=>{setAlertState({show: false, msg: ''}); setRetryState(!retryState)}}]}
                 />
             </IonContent>
         </IonPage>

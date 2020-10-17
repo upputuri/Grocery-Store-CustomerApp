@@ -25,6 +25,9 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import ProductsBrowser from './pages/ProductsBrowser';
 import Registration from './pages/Registration';
+import Account from './pages/userdata/Account';
+import AddressList from './pages/userdata/address/AddressList';
+import Profile from './pages/userdata/Profile';
 
 /* Theme variables */
 import './theme/variables.css';
@@ -233,7 +236,16 @@ class App extends React.Component {
                   <Route path="/home" component={Home} exact={true} />
                   <Route path="/products" component={ProductsBrowser} />
                   <Route path="/register" component={Registration} />
-                  <Route path="/login" component={Login} exact={true} />  
+                  <Route path="/login" component={Login} exact={true} />
+                  {this.state.isAuthenticated?
+                  <Switch>
+                    <Route path="/account" component={Account} exact={true} />
+                    <Route path="/account/profile" component={Profile} exact={true} />
+                    <Route path="/account/addresslist" component={AddressList} exact={true} />
+                  </Switch>
+                  :
+                  <Redirect to="/login"/>
+                  }
                   <Route exact path="/" render={() => <Redirect to="/home" />} />
                 </Switch>
               </IonRouterOutlet>

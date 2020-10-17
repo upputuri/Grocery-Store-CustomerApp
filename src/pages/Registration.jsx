@@ -138,7 +138,7 @@ const Registration = () =>
             </IonHeader>
             <IonContent className="ion-padding shop-cart-page" color="dark">
             <div className="card mb-2">
-                <div className="border-bottom text-center p-3">VEGIT Login</div>
+                <div className="border-bottom text-center p-3">VEGIT Registration</div>
                 <div className="p-3">
                     <form className="card">
                     <IonList lines="full" className="ion-no-margin ion-no-padding">

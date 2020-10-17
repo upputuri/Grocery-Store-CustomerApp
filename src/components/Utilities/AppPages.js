@@ -1,7 +1,7 @@
 const AppPages = 
 [
     {
-      title: 'Homepage',
+      title: 'Home',
       url: '/home',
       icon: 'home'
     },
@@ -9,16 +9,6 @@ const AppPages =
       title: 'Categories',
       url: '/products/categories',
       icon: 'list'
-    },
-    {
-      title: 'Shop List',
-      url: '/shoplist',
-      icon: 'grid'
-    },
-    {
-      title: 'Single Product',
-      url: '/singleproduct',
-      icon: 'pricetag'
     },
     {
       title: 'Shopping Cart',
@@ -31,13 +21,18 @@ const AppPages =
       icon: 'card'
     },
     {
-      title: 'My Profile',
-      url: '/myprofile',
+      title: 'My Account',
+      url: '/account',
+      icon: 'person'
+    },
+    {
+      title: 'Profile',
+      url: '/account/profile',
       icon: 'person'
     },
     {
       title: 'My Address',
-      url: '/myaddress',
+      url: '/account/addresslist',
       icon: 'location'
     },
     {
@@ -59,11 +54,6 @@ const AppPages =
       title: 'FAQ',
       url: '/faq',
       icon: 'help'
-    },
-    {
-      title: '404 Not Found',
-      url: '/notfound',
-      icon: 'sad'
     }
 ];
 

@@ -9,6 +9,15 @@
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;900&display=swap");
+.ion-color-night {
+  --ion-color-base: var(--ion-color-night);
+  --ion-color-base-rgb: var(--ion-color-night-rgb);
+  --ion-color-contrast: var(--ion-color-night-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-night-contrast-rgb);
+  --ion-color-shade: var(--ion-color-night-shade);
+  --ion-color-tint: var(--ion-color-night-tint);
+}
+
 p {
   font-size: 13px;
   line-height: 22px;
@@ -186,8 +195,6 @@ ion-searchbar {
   /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#e3641d+0,e96127+100 */
   background: #e3641d;
   /* Old browsers */
-  /* FF3.6-15 */
-  /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(135deg, #e3641d 0%, #e96127 100%);
   /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e3641d', endColorstr='#e96127',GradientType=1 );
