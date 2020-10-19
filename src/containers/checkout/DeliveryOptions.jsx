@@ -23,6 +23,7 @@ const DeliveryOptions = (props) => {
                         stateId={address.stateId}
                         zipCode={address.zipcode}
                         phone={address.phoneNumber} 
+                        selectedId={props.selectedAddressId}
                         selectClickHandler={selectOption.bind(this, address.id)}
                 />
             })}

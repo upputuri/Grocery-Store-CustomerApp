@@ -7,6 +7,8 @@ import { chevronForwardOutline as nextIcon, chevronBackOutline as previousIcon }
 import DeliveryOptions from '../../containers/checkout/DeliveryOptions';
 import Client from 'ketting';
 import { serviceBaseURL } from '../../components/Utilities/ServiceCaller';
+import OrderReview from '../../containers/checkout/OrderReview';
+import PaymentOptions from '../../containers/checkout/PaymentOptions';
 
 const Checkout = (props) => {
     const [deliveryOptionsPhase, orderReviewPhase, PaymentOptionsPhase] = [
@@ -109,7 +111,7 @@ const Checkout = (props) => {
             setServiceRequestAlertState({show: true, msg: e.toString()});
             return;
         }
-        alert(JSON.stringify(receivedState));
+        // alert(JSON.stringify(receivedState));
         const preOrderSummary = receivedState.data;
         // alert(JSON.stringify(addresses));
         setPhaseData(preOrderSummary);
@@ -118,10 +120,46 @@ const Checkout = (props) => {
     }
 
     const loadPaymentOptions = async () => {
-
+        let path = serviceBaseURL + '/application/paymentoptions?type=ondelivery';
+        const client = new Client(path);
+        const resource = client.go();
+        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
+        const loginHeaders = new Headers();
+        loginHeaders.append("Content-Type", "application/json");
+        loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
+        setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
+        let receivedState;
+        try{
+            receivedState = await resource.get({
+                headers: loginHeaders
+            });
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e);
+            if (e.status && e.status === 401)//Unauthorized
+            {
+                history.push("/login");
+                return;
+            } 
+            setLoadingState(false);
+            setServiceRequestAlertState({show: true, msg: e.toString()});
+            return;
+        }
+        // alert(JSON.stringify(receivedState));
+        const paymentOptions = receivedState.getEmbedded().map((option) => option.data);
+        // alert(JSON.stringify(paymentOptions));
+        setPhaseData(paymentOptions);
+        console.log("Loaded payment options from server");
+        setLoadingState(false);
     }
 
     const goForward = () => {
+        if (!checkPhaseDone()) {
+            console.log('Current phase confirmation action not received');
+            return;
+        }
         if (currentPhaseIndex<0 || currentPhaseIndex>=phases.length) {
             console.log('Invalid Checkout Navigation request, not processing');
             return;
@@ -137,25 +175,44 @@ const Checkout = (props) => {
             return;
         }        
         currentPhaseIndex>0 ? setCurrentPhaseIndex(currentPhaseIndex-1):backwardExit();
+        setPhaseData(null);
+        setRetryState(!retryState);
     }
 
     const forwardExit = () => {
         //Create order and show success page
-        history.push('/orderplaced');
-        setCurrentPhaseIndex = -1;
+        cartContext.placeOrder().then(()=>history.push("/orders"));
+        //history.push('/orderplaced');
+        setCurrentPhaseIndex(-1)
     }
 
     const backwardExit = () => {
         history.push('/products/cart/'+loginContext.customer.id);
-        setCurrentPhaseIndex = -1;
+        setCurrentPhaseIndex(-1)
+    }
+
+    const checkPhaseDone = () => {
+        return (currentPhaseIndex === 0 && cartContext.order.deliveryAddressId > 0) ||
+        (currentPhaseIndex === 1 && true) ||
+        (currentPhaseIndex === 2 && cartContext.order.paymentType !== null)
     }
 
     const deliveryAddressSelected = (addressId) => {
-        cartContext.order.deliveryAddressId = addressId;
-        goForward();
+        console.log("Address seleted for delivery - Id: "+addressId);
+        cartContext.setDeliveryAddress(addressId);
+    }
+
+    const preOrderConfirmed = () => {
+
+    }
+
+    const paymentOptionConfirmed = (paymentOptionId) => {
+        console.log("Payment option selected: "+paymentOptionId);
+        cartContext.setPaymentOption(paymentOptionId);
     }
 
     if (phaseData !== null) {
+        console.log("Rendering checkout page");
         return (
             <IonPage>
                 <IonHeader className="osahan-nav">
@@ -168,19 +225,23 @@ const Checkout = (props) => {
                             message={infoAlertState.msg}
                             buttons={['OK']}/>
 
-                {currentPhaseIndex === 0 && <DeliveryOptions addresses={phaseData} addressSelectHandler={deliveryAddressSelected}/>}
-                {/* {currentPhaseIndex === 1 && <OrderReview/>}
-                {currentPhaseIndex === 2 && <PaymentOptions/>}                   */}
+                {currentPhaseIndex === 0 && <DeliveryOptions addresses={phaseData} 
+                                                                selectedAddressId={cartContext.order.deliveryAddressId} 
+                                                                addressSelectHandler={deliveryAddressSelected}/>}
+                {currentPhaseIndex === 1 && <OrderReview preOrder={phaseData} preOrderConfirmHandler={preOrderConfirmed}/>}
+                {currentPhaseIndex === 2 && <PaymentOptions onDeliveryOptions={phaseData} 
+                                                            selectedOption={cartContext.order.paymentOptionId}
+                                                            paymentOptionSelectHandler={paymentOptionConfirmed}/>}                  
 
                 <IonFooter>
                     <IonToolbar color="secondary">
                             <IonButtons slot="start">
-                                <IonButton onClick={props.backClickHandler} className="ion-no-margin">
+                                <IonButton onClick={goBack} className="ion-no-margin">
                                     <IonIcon size="large" icon={previousIcon}></IonIcon>Back
                                 </IonButton>
                             </IonButtons>
                             <IonButtons slot="end">
-                                <IonButton onClick={props.backClickHandler} className="ion-no-margin">Next
+                                <IonButton onClick={goForward} className="ion-no-margin">Next
                                     <IonIcon size="large" icon={nextIcon}></IonIcon>
                                 </IonButton>
                             </IonButtons>

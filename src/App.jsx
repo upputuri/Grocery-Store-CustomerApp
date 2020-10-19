@@ -28,6 +28,7 @@ import ProductsBrowser from './pages/ProductsBrowser';
 import Registration from './pages/Registration';
 import Account from './pages/userdata/Account';
 import AddressList from './pages/userdata/address/AddressList';
+import Orders from './pages/userdata/orders/Orders';
 import Profile from './pages/userdata/Profile';
 
 /* Theme variables */
@@ -52,12 +53,17 @@ const CartContext = React.createContext(
     itemCount: 0,
     addItem: (p,v,q)=>{},
     removeItem: (p,v,q)=>{},
+    placeOrder: () =>{},
+    setDeliveryAddress: ()=>{},
+    setPromoCodes: ()=>{},
+    setPaymentOption: ()=>{},
     order: {
+      id: '',
       deliveryAddressId: 0,
-      couponsApplied: [],
-      paymentType: '',
+      promoCodes: [],
+      paymentOptionId: '',
       transactionId: '',
-      placeOrder: () =>{}
+      instructions: '',
     }
   }
 )
@@ -68,27 +74,75 @@ class App extends React.Component {
 
   state =
     {
-      isAuthenticated: true,
+      isAuthenticated: false,
       customer: {
-        id: 618,
-        fname: 'Srikanth',
-        lname: 'Upputuri',
-        email: 'usrikanth@gmail.com',
-        password: 'Password123',
+        id: '',
+        fname: '',
+        lname: '',
+        email: '',
+        password: '',
         image: '',
+        // id: 618,
+        // fname: 'Srikanth',
+        // lname: 'Upputuri',
+        // email: 'usrikanth@gmail.com',
+        // password: 'Password123',
+        // image: '',
       },
       cart: {
         itemCount: 0,
-        order: {
-          deliveryAddressId: 0,
-          couponsApplied: [],
-          paymentType: '',
-          transactionId: ''
-        }
+      },
+      order: {
+        id: '',
+        deliveryAddressId: 0,
+        promoCodes: [],
+        paymentOptionId: 0,
+        transactionId: '',
+        instructions: ''
       },
       showToast: false,
       toastMsg: 'Happy shopping!',
       showLoading: false
+  }
+
+  async registerNewUserWithEmail(emailId, fName, lName, password)
+  {
+    console.log("Sending registration request for: "+emailId+","+fName+","+lName+",");
+    let path = serviceBaseURL + '/customers';
+
+    const client = new Client(path);
+    const resource = client.go();
+    let receivedState;
+    try{
+        receivedState = await resource.post(
+          {
+            data: {
+              email: emailId,
+              password: password,
+              fname: fName,
+              lname: lName
+            }
+          }
+        );
+    }
+    catch(e)
+    {
+        console.log("Service call failed with - "+e);
+        // alert(JSON.stringify(e));
+        return Promise.resolve(e.status);
+    }
+    const receivedData = receivedState.data;
+    this.setState({
+      isAuthenticated: true,
+      customer: {
+        id: receivedData.id,
+        fname: receivedData.fname,
+        lname: receivedData.lname,
+        email: receivedData.email,
+        password: password
+      }
+    });
+    return Promise.resolve(200);
   }
 
   loginHandler = async (user, password) =>
@@ -192,47 +246,61 @@ class App extends React.Component {
     });
   }
 
-  async registerNewUserWithEmail(emailId, fName, lName, password)
-  {
-    console.log("Sending registration request for: "+emailId+","+fName+","+lName+",");
-    let path = serviceBaseURL + '/customers';
+  setDeliveryAddress(addressId){
+    this.setState({order: {
+      ...this.state.order, deliveryAddressId: addressId
+    }})
+  }
 
+  setPromoCodes(promoCodes){
+    this.setState({order: {
+      ...this.state.order, promoCodes: promoCodes
+    }})
+  }
+
+  setPaymentOption(paymentOptionId){
+    this.setState({order: {
+      ...this.state.order, paymentOptionId: paymentOptionId
+    }})
+  }
+
+  setOrderId(orderId){
+    this.setState({order: {
+      ...this.state.order, id: orderId
+    }})
+  }
+
+  async placeOrder(){
+    let path = serviceBaseURL + '/orders';
     const client = new Client(path);
     const resource = client.go();
     let receivedState;
     try{
+        console.log("Making service call: "+resource.uri);  
+        const authHeaderBase64Value = btoa(this.state.customer.email+':'+this.state.customer.password);
+        const loginHeaders = new Headers();
+        loginHeaders.append("Content-Type", "application/json");
+        loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);
         receivedState = await resource.post(
           {
-            data: {
-              email: emailId,
-              password: password,
-              fname: fName,
-              lname: lName
-            }
+            data: {...this.state.order, customerId: this.state.customer.id},
+            headers: loginHeaders
           }
         );
     }
     catch(e)
     {
         console.log("Service call failed with - "+e);
-        // alert(JSON.stringify(e));
-        return Promise.resolve(e.status);
+        return;
     }
-    const receivedData = receivedState.data;
-    this.setState({
-      isAuthenticated: true,
-      customer: {
-        id: receivedData.id,
-        fname: receivedData.fname,
-        lname: receivedData.lname,
-        email: receivedData.email,
-        password: password
-      }
-    });
-    return Promise.resolve(200);
+    console.log("Received response from service call: "+resource.uri);
+    console.log("Order successfully created on server - Order Id: "+receivedState.data.id);
+    // alert(JSON.stringify(receivedState));
+    this.setOrderId(receivedState.data.id); 
   }
 
   render(){
+    console.log("Rendering App");
     return (
     <IonReactRouter>
       <LoginContext.Provider value={{isAuthenticated: this.state.isAuthenticated, 
@@ -242,7 +310,11 @@ class App extends React.Component {
                                     register: this.registerNewUserWithEmail.bind(this)
                                     }}>
         <CartContext.Provider value={{itemCount: this.state.cart.itemCount, 
-                                      order: this.state.cart.order,
+                                      order: this.state.order,
+                                      setDeliveryAddress: this.setDeliveryAddress.bind(this),
+                                      setPromoCodes: this.setPromoCodes.bind(this),
+                                      setPaymentOption: this.setPaymentOption.bind(this),
+                                      placeOrder: this.placeOrder.bind(this),
                                       addItem: (pId, vId, qty)=>this.addItemToCart(pId, vId, qty)
                                       }}>
           <IonApp>
@@ -261,6 +333,7 @@ class App extends React.Component {
                     <Route path="/account/profile" component={Profile} exact={true} />
                     <Route path="/account/addresslist" component={AddressList} exact={true} />
                     <Route path="/checkout" component={Checkout} exact={true} />
+                    <Route path="/orders" component={Orders} exact={true} />
                   </Switch>
                   :
                   <Redirect to="/login"/>
