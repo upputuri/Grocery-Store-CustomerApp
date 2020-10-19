@@ -1,4 +1,4 @@
-import { IonAlert, IonButton, IonContent, IonDatetime, IonHeader, IonInput, IonItem, IonLabel, IonList, IonLoading, IonPage, IonPicker, IonSearchbar, IonText } from '@ionic/react';
+import { IonAlert, IonButton, IonCol, IonContent, IonDatetime, IonHeader, IonInput, IonItem, IonLabel, IonList, IonLoading, IonPage, IonPicker, IonRow, IonSearchbar, IonSelect, IonSelectOption, IonText } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 
 const AddressForm = (props) => {
@@ -13,38 +13,50 @@ const AddressForm = (props) => {
     const [zipCodeState, setZipCodeState] = useState(props.zipCode);
     const [errorState, setErrorState] = useState('');
 
-    const setFirstName = (event) =>
-    {
-        setFirstNameState(event.target.value);
+    const setFirstName = (event) =>{
+        setFirstNameState(event.detail.value);
     }
 
     const setLastName = (event) => {
-        setLastNameState(event.target.value);
+        setLastNameState(event.detail.value);
     }
 
     const setLine1 = (event) => {
-        setLine1State(event.target.value);
+        setLine1State(event.detail.value);
     }
 
-    const setMobile = (event) =>
-    {
-        setMobileState(event.target.value);
+    const setMobile = (event) => {
+        setMobileState(event.detail.value);
     }
 
     const setCity = (event) => {
-        setCityState(event.target.value);
+        setCityState(event.detail.value);
     }
 
     const setLine2 = (event) => {
-        setLine2State(event.target.value);
+        setLine2State(event.detail.value);
     }
 
     const setStateId = (event) => {
-        setStateIdState(event.target.value);
+        setStateIdState(event.detail.value);
     }
 
     const setZipCode = (event) => {
-        setZipCodeState(event.target.value);
+        setZipCodeState(event.detail.value);
+    }
+
+    const submitAddress = () => {
+        props.submitClickHandler({
+            id: props.addressId,
+            firstName: fNameState,
+            lastName: lNameState,
+            line1: line1State,
+            line2: line2State,
+            city: cityState,
+            stateId: stateIdState,
+            zipCode: zipCodeState,
+            phone: mobileState
+    });
     }
 
     return (
@@ -55,7 +67,7 @@ const AddressForm = (props) => {
                         <IonLabel position="stacked">First Name
                             <IonText color="danger">*</IonText>
                         </IonLabel>
-                        <IonInput placeholder="First Name" required type="text" 
+                        <IonInput placeholder="First Name" required type="text" maxlength="30" 
                         onIonChange={setFirstName}
                         value={fNameState}></IonInput>
                     </IonItem>
@@ -65,7 +77,7 @@ const AddressForm = (props) => {
                         <IonLabel position="stacked">Last Name
                             <IonText color="danger">*</IonText>
                         </IonLabel>
-                        <IonInput placeholder="Last Name" required type="text" 
+                        <IonInput placeholder="Last Name" required type="text" maxlength="30" 
                         onIonChange={setLastName}
                         value={lNameState}></IonInput>
                     </IonItem>
@@ -75,7 +87,7 @@ const AddressForm = (props) => {
                         <IonLabel position="stacked">Phone Number
                             <IonText color="danger">*</IonText>
                         </IonLabel>
-                        <IonInput placeholder="Mobile Num" required type="text" 
+                        <IonInput placeholder="Mobile Num" required type="text" maxlength="10"
                         onIonChange={setMobile}
                         value={mobileState}></IonInput>
                     </IonItem>
@@ -85,7 +97,7 @@ const AddressForm = (props) => {
                         <IonLabel position="stacked">Line1
                             <IonText color="danger">*</IonText>
                         </IonLabel>
-                        <IonInput placeholder="Address Line 1" required type="text" 
+                        <IonInput placeholder="Address Line 1" required type="text" maxlength="50" 
                         onIonChange={setLine1}
                         value={line1State}></IonInput>
                     </IonItem>
@@ -94,7 +106,7 @@ const AddressForm = (props) => {
                     <IonItem>
                         <IonLabel position="stacked">Line2
                         </IonLabel>
-                        <IonInput placeholder="Address Line 2" type="text" 
+                        <IonInput placeholder="Address Line 2" type="text" maxlength="50" 
                         onIonChange={setLine2}
                         value={line2State}></IonInput>
                     </IonItem>
@@ -104,7 +116,7 @@ const AddressForm = (props) => {
                         <IonLabel position="stacked">City
                             <IonText color="danger">*</IonText>
                         </IonLabel>
-                        <IonInput placeholder="City" type="text" 
+                        <IonInput placeholder="City" type="text" maxlength="30" 
                         onIonChange={setCity}
                         value={cityState}></IonInput>
                     </IonItem>
@@ -114,9 +126,15 @@ const AddressForm = (props) => {
                         <IonLabel position="stacked">State
                         <IonText color="danger">*</IonText>
                         </IonLabel>
-                        <IonPicker placeholder="State" type="text" 
+                        {/* <IonPicker placeholder="State" type="text" 
                         onIonChange={setStateId}
-                        value={stateIdState}></IonPicker>
+                        value={stateIdState}></IonPicker> */}
+                        <IonSelect value={`${stateIdState}`} placeholder="Select One" onIonChange={setStateId}>
+                            {props.states && props.states.map((state)=>{
+                                return <IonSelectOption key={state.stateId} value={state.stateId}>{state.name}</IonSelectOption>
+                            })}
+
+                        </IonSelect>
                     </IonItem>
                 </IonList>
                 <IonList lines="full" className="ion-no-margin ion-no-padding">
@@ -124,9 +142,9 @@ const AddressForm = (props) => {
                         <IonLabel position="stacked">Pin Code
                         <IonText color="danger">*</IonText>
                         </IonLabel>
-                        <IonPicker placeholder="Pin Code" type="text" 
+                        <IonInput placeholder="Pin Code" type="text" 
                         onIonChange={setZipCode}
-                        value={setZipCodeState}></IonPicker>
+                        value={zipCodeState}></IonInput>
                     </IonItem>
                 </IonList>                                                        
                 {errorState !== '' &&
@@ -138,7 +156,14 @@ const AddressForm = (props) => {
                     </IonItem>
                 </IonList>}
                 <div className="mt-2">
-                    <IonButton color="secondary" routerDirection="forward" expand="block" onClick={props.submitClickHandler} className="ion-no-margin">Update</IonButton>
+                    <IonRow>
+                        <IonCol>
+                            <IonButton color="secondary" onClick={props.backClickHandler} className="ion-no-margin">Cancel</IonButton>
+                        </IonCol>
+                        <IonCol>
+                            <IonButton color="secondary" expand="block" onClick={submitAddress} className="ion-no-margin">Update</IonButton>
+                        </IonCol>
+                    </IonRow>
                 </div>
             </form>
         </IonContent>

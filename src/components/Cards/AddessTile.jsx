@@ -3,25 +3,30 @@ import React from 'react';
 import { callOutline as phoneIcon } from 'ionicons/icons';
 const AddressTile = (props) =>
 {
-
     return (
-        <IonCard className="m-3" onClick={props.selectClickHandler} color="night">
+        <IonCard className="address-card m-3" onClick={props.selectClickHandler} color="night">
             <IonRow className="ion-text-left">
                 <IonCol size="1"></IonCol>
-                <IonCol size="auto">
+                <IonCol className="ion-text-wrap" size="11">
                     <IonText color="primary"><h6>{props.fName+" "+props.lName}</h6></IonText>
-                    <small>{props.line1}</small><br/>
-                    <small>{props.line2}</small><br/>
-                    <small>City: {props.city}, State: {props.state}</small><br/>
-                    <small>{props.zipcode}</small><br/>
+                    <IonLabel className="ion-text-wrap">{props.line1}<br/>
+                                {props.line2}<br/>
+                                City: {props.city}, State: {props.state}<br/>
+                                Pin: {props.zipCode}
+                    </IonLabel><br/>
                     <h6><IonIcon className="mr-2" icon={phoneIcon} size="small" color="primary"/>{props.phone}</h6>
                 </IonCol>
             </IonRow>
-            <IonRow>
+            {props.editClickHandler && <IonRow>
                 <IonCol>
-                        <IonButton color="secondary" routerDirection="forward" onClick={props.editClickHandler} className="ion-no-margin">Edit</IonButton>
+                        <IonButton color="secondary" onClick={props.editClickHandler} className="ion-no-margin">Edit</IonButton>
                 </IonCol>
-            </IonRow>
+            </IonRow>}
+            {props.selectClickHandler && <IonRow>
+                <IonCol>
+                        <IonButton color="secondary" onClick={props.selectClickHandler} className="ion-no-margin">Select</IonButton>
+                </IonCol>
+            </IonRow>}
         </IonCard>
     )
 }

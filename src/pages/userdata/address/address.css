@@ -1,4 +1,4 @@
-ion-card {
+ion-card.address-card {
   padding: 10px;
   -webkit-box-shadow: 1px 1px 5px 1px var(--ion-color-secondary);
           box-shadow: 1px 1px 5px 1px var(--ion-color-secondary);

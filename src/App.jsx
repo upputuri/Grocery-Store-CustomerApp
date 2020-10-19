@@ -21,6 +21,7 @@ import { GrocMenu } from "./components/Menu/Menu";
 import AppPages from './components/Utilities/AppPages';
 import ServiceRequest, { serviceBaseURL } from './components/Utilities/ServiceCaller.ts';
 import './global.css';
+import Checkout from './pages/checkout/Checkout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import ProductsBrowser from './pages/ProductsBrowser';
@@ -50,7 +51,14 @@ const CartContext = React.createContext(
   {
     itemCount: 0,
     addItem: (p,v,q)=>{},
-    removeItem: (p,v,q)=>{}
+    removeItem: (p,v,q)=>{},
+    order: {
+      deliveryAddressId: 0,
+      couponsApplied: [],
+      paymentType: '',
+      transactionId: '',
+      placeOrder: () =>{}
+    }
   }
 )
 
@@ -71,6 +79,12 @@ class App extends React.Component {
       },
       cart: {
         itemCount: 0,
+        order: {
+          deliveryAddressId: 0,
+          couponsApplied: [],
+          paymentType: '',
+          transactionId: ''
+        }
       },
       showToast: false,
       toastMsg: 'Happy shopping!',
@@ -227,7 +241,10 @@ class App extends React.Component {
                                     logout: this.logoutHandler, 
                                     register: this.registerNewUserWithEmail.bind(this)
                                     }}>
-        <CartContext.Provider value={{itemCount: this.state.cart.itemCount, addItem: (pId, vId, qty)=>this.addItemToCart(pId, vId, qty)}}>
+        <CartContext.Provider value={{itemCount: this.state.cart.itemCount, 
+                                      order: this.state.cart.order,
+                                      addItem: (pId, vId, qty)=>this.addItemToCart(pId, vId, qty)
+                                      }}>
           <IonApp>
             <IonSplitPane contentId="main-content">
               <GrocMenu entries={appPages}/>
@@ -237,23 +254,24 @@ class App extends React.Component {
                   <Route path="/products" component={ProductsBrowser} />
                   <Route path="/register" component={Registration} />
                   <Route path="/login" component={Login} exact={true} />
+                  <Route exact path="/" render={() => <Redirect to="/home" />} />
                   {this.state.isAuthenticated?
                   <Switch>
                     <Route path="/account" component={Account} exact={true} />
                     <Route path="/account/profile" component={Profile} exact={true} />
                     <Route path="/account/addresslist" component={AddressList} exact={true} />
+                    <Route path="/checkout" component={Checkout} exact={true} />
                   </Switch>
                   :
                   <Redirect to="/login"/>
                   }
-                  <Route exact path="/" render={() => <Redirect to="/home" />} />
                 </Switch>
               </IonRouterOutlet>
               <IonToast
                   isOpen={this.state.showToast}
                   onDidDismiss={() => this.setState({showToast: false})}
                   message={this.state.toastMsg}
-                  duration={500}
+                  duration={3000}
                 />
               <IonLoading isOpen={this.state.showLoading}/>
             </IonSplitPane>

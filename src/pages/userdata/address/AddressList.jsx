@@ -11,6 +11,7 @@ import './address.css'
 
 const AddressList = () => {
     const [addressListState, setAddressListState] = useState(null);
+    const [statesList, setStatesList] = useState(null);
     const [editableAddressId, setEditableAddressId] = useState(0);
     const [loadingState, setLoadingState] = useState(false);
     const [serviceRequestAlertState, setServiceRequestAlertState] = useState({show: false, msg: ''});
@@ -24,8 +25,28 @@ const AddressList = () => {
         loadStatesList();
     }, [retryState]);
 
-    const loadStatesList = () => {
-        
+    const loadStatesList = async () => {
+        let path = serviceBaseURL + '/application/states';
+        const client = new Client(path);
+        const resource = client.go();
+        setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
+        let receivedState;
+        try{
+            receivedState = await resource.get();
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e);
+            setLoadingState(false);
+            setServiceRequestAlertState({show: true, msg: e.toString()});
+            return;
+        }
+        // alert(JSON.stringify(receivedState));
+        const states = receivedState.getEmbedded().map((state) => state.data);
+        console.log("Loaded states from server");
+        // alert(JSON.stringify(states));
+        setStatesList(states);
     }
 
     const loadAddressList = async () => {
@@ -64,13 +85,54 @@ const AddressList = () => {
         setLoadingState(false);  
     }
 
+    const updateAddressRequest = async (address) => {
+        console.log("Updating address: "+JSON.stringify(address));
+        let path = serviceBaseURL + '/customers/'+loginContext.customer.id+'/addresses/'+address.id;
+        const client = new Client(path);
+        const resource = client.go();
+        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
+        const loginHeaders = new Headers();
+        loginHeaders.append("Content-Type", "application/json");
+        loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
+        setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
+        let receivedState;
+        try{
+            receivedState = await resource.put({
+                data: address,
+                headers: loginHeaders
+            });
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e);
+            if (e.status && e.status === 401)//Unauthorized
+            {
+                history.push("/login");
+                return;
+            } 
+            setLoadingState(false);
+            setServiceRequestAlertState({show: true, msg: e.toString()});
+            return;
+        }
+        console.log("Updated address on server - address Id "+address.id);
+        setLoadingState(false);          
+    }
+
     const editAddress = (addressId) => {
         console.log("Making address editable "+addressId);
         setEditableAddressId(addressId);
     }
 
+    const cancelEdit = (addressId) => {
+        console.log("Cancelling edit operation for address +"+addressId);
+        setEditableAddressId(0);
+    }
+
     const saveEditedAddress = (address) => {
         //Send service request
+        console.log("Saving edited address with Id "+ address.id);
+        updateAddressRequest(address).then(()=>{loadAddressList(); setEditableAddressId(0)});
     }
 
     if (addressListState !== null) {
@@ -88,7 +150,7 @@ const AddressList = () => {
                 <IonContent color="dark">
                     {addressListState && addressListState.map(
                         (address) =>{
-                            console.log(editableAddressId+","+address.id)
+                            // console.log(editableAddressId+","+address.id)
                             return editableAddressId !== address.id ? <AddressTile 
                                     addressId={address.id}
                                     key={address.id}
@@ -115,8 +177,10 @@ const AddressList = () => {
                                     state={address.state}
                                     stateId={address.stateId}
                                     zipCode={address.zipcode}
-                                    phone={address.phoneNumber}   
-                                    submitClickHandler={saveEditedAddress.bind(this, address.id)}
+                                    phone={address.phoneNumber}
+                                    states={statesList}   
+                                    submitClickHandler={saveEditedAddress}
+                                    backClickHandler={cancelEdit.bind(this, address.id)}
                                     />
         
                         }

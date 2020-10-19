@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonLoading, IonPage, IonRow, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonLoading, IonPage, IonRouterLink, IonRow, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
 import { chevronForwardOutline as nextIcon } from 'ionicons/icons';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
@@ -133,11 +133,11 @@ const Cart = (props) =>{
                     </IonRow>
                 </IonToolbar>
                 <IonToolbar color="secondary">
-                    <IonButtons slot="end">
-                            <IonButton size="small" shape="round">
+                        <IonButtons slot="end">
+                            <IonButton onClick={()=>history.push('/checkout')} size="small" shape="round">
                                 Checkout<IonIcon size="large" icon={nextIcon}></IonIcon>
                             </IonButton>                                
-                    </IonButtons>
+                        </IonButtons>
                 </IonToolbar>
             </IonFooter>                
         </IonPage>
