@@ -5,7 +5,7 @@ const AddressTile = (props) =>
 {
     console.log("Rendering address tile");
     return (
-        <IonCard className="address-card m-3" color="night">
+        <IonCard className="address-card" color="night">
             <IonRow className="ion-text-left">
                 <IonCol size="1"></IonCol>
                 <IonCol className="ion-text-wrap" size="11">

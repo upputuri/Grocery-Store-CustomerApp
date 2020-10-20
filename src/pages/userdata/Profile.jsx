@@ -108,13 +108,14 @@ const Profile = () => {
         setLoadingState(true);
         console.log("Making service call: "+resource.uri);
         let receivedState;
+        // alert(dobState);
         try{
             receivedState = await resource.put({
                 data: {
                     "mobile": mobileState,
                     "fname": fNameState,
                     "lname": lNameState,
-                    "dob": new Date(dobState+"T00:00:00"),
+                    "dob": new Date(dobState.substr(0,10)+"T00:00:00"),
                 },
                 headers: loginHeaders
             });
@@ -163,6 +164,16 @@ const Profile = () => {
                             header={''}
                             message={infoAlertState.msg}
                             buttons={['OK']}/>
+                <IonAlert
+                    isOpen={serviceRequestAlertState.show}
+                    header={'Error'}
+                    subHeader={serviceRequestAlertState.msg}
+                    message={'Failed to load'}
+                    buttons={[{text: 'Cancel', 
+                                handler: ()=>{history.push('/home')}
+                            }, {text: 'Retry', 
+                                handler: ()=>{setServiceRequestAlertState({show: false, msg: ''}); setRetryState(!retryState)}}]}
+                />
                 <IonContent className="ion-padding" color="dark">
                     <div className="card mb-2">
                     <div className="border-bottom text-center p-3">We will not share your personal details with anyone</div>

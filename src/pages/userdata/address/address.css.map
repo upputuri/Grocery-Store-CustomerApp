@@ -1,6 +1,6 @@
 {
     "version": 3,
-    "mappings": "AAAA,AAAA,QAAQ,AAAA,aAAa,CAAC;EAClB,OAAO,EAAE,IAAI;EACb,UAAU,EAAE,GAAG,CAAC,GAAG,CAAC,GAAG,CAAC,GAAG,CAAC,0BAA0B;CACzD",
+    "mappings": "AAAA,AAAA,QAAQ,AAAA,aAAa,CAAC;EAClB,UAAU,EAAE,GAAG,CAAC,GAAG,CAAC,GAAG,CAAC,GAAG,CAAC,0BAA0B;CACzD",
     "sources": [
         "address.scss"
     ],

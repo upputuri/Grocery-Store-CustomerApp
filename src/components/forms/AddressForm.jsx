@@ -45,7 +45,23 @@ const AddressForm = (props) => {
         setZipCodeState(event.detail.value);
     }
 
+    const isInputValid = () => {
+        var zipCodeRegEx = /^\d{6}?$/;
+        var phoneRegEx = /^\d{10}?$/;
+        return (fNameState && fNameState.trim().length > 1) &&
+        (lNameState && lNameState.trim().length > 0) &&
+        (line1State && line1State.trim().length > 0) &&
+        (cityState && cityState.trim().length > 0) &&
+        (stateIdState && stateIdState > 0) &&
+        (zipCodeState && zipCodeRegEx.test(zipCodeState.trim())) &&
+        (mobileState && phoneRegEx.test(mobileState.trim()));
+    }
+
     const submitAddress = () => {
+        if (!isInputValid()){
+            setErrorState("Invalid Input! Please check.");
+            return;
+        }
         props.submitClickHandler({
             id: props.addressId,
             firstName: fNameState,
@@ -54,9 +70,11 @@ const AddressForm = (props) => {
             line2: line2State,
             city: cityState,
             stateId: stateIdState,
-            zipCode: zipCodeState,
+            zipcode: zipCodeState,
             phone: mobileState
     });
+
+
     }
 
     return (
@@ -67,7 +85,7 @@ const AddressForm = (props) => {
                         <IonLabel position="stacked">First Name
                             <IonText color="danger">*</IonText>
                         </IonLabel>
-                        <IonInput placeholder="First Name" required type="text" maxlength="30" 
+                        <IonInput placeholder="First Name" required type="text" minlength="2" maxlength="30" 
                         onIonChange={setFirstName}
                         value={fNameState}></IonInput>
                     </IonItem>
@@ -77,7 +95,7 @@ const AddressForm = (props) => {
                         <IonLabel position="stacked">Last Name
                             <IonText color="danger">*</IonText>
                         </IonLabel>
-                        <IonInput placeholder="Last Name" required type="text" maxlength="30" 
+                        <IonInput placeholder="Last Name" required type="text" minlength="1" maxlength="30" 
                         onIonChange={setLastName}
                         value={lNameState}></IonInput>
                     </IonItem>
@@ -87,7 +105,7 @@ const AddressForm = (props) => {
                         <IonLabel position="stacked">Phone Number
                             <IonText color="danger">*</IonText>
                         </IonLabel>
-                        <IonInput placeholder="Mobile Num" required type="text" maxlength="10"
+                        <IonInput placeholder="Mobile Num" required type="text" minlength="10" maxlength="10"
                         onIonChange={setMobile}
                         value={mobileState}></IonInput>
                     </IonItem>
@@ -97,7 +115,7 @@ const AddressForm = (props) => {
                         <IonLabel position="stacked">Line1
                             <IonText color="danger">*</IonText>
                         </IonLabel>
-                        <IonInput placeholder="Address Line 1" required type="text" maxlength="50" 
+                        <IonInput placeholder="Address Line 1" required type="text" minlength="1" maxlength="50" 
                         onIonChange={setLine1}
                         value={line1State}></IonInput>
                     </IonItem>
@@ -116,7 +134,7 @@ const AddressForm = (props) => {
                         <IonLabel position="stacked">City
                             <IonText color="danger">*</IonText>
                         </IonLabel>
-                        <IonInput placeholder="City" type="text" maxlength="30" 
+                        <IonInput placeholder="City" type="text" minlength="1" maxlength="30" 
                         onIonChange={setCity}
                         value={cityState}></IonInput>
                     </IonItem>

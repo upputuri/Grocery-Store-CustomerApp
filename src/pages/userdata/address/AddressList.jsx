@@ -1,4 +1,4 @@
-import { IonAlert, IonContent, IonHeader, IonLoading, IonPage } from '@ionic/react';
+import { IonAlert, IonButton, IonContent, IonHeader, IonLoading, IonPage } from '@ionic/react';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
@@ -85,6 +85,40 @@ const AddressList = () => {
         setLoadingState(false);  
     }
 
+    const createAddressRequest = async (address) => {
+        console.log("Creating address: "+JSON.stringify(address));
+        let path = serviceBaseURL + '/customers/'+loginContext.customer.id+'/addresses';
+        const client = new Client(path);
+        const resource = client.go();
+        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
+        const loginHeaders = new Headers();
+        loginHeaders.append("Content-Type", "application/json");
+        loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
+        setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
+        let receivedState;
+        try{
+            receivedState = await resource.post({
+                data: address,
+                headers: loginHeaders
+            });
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e);
+            if (e.status && e.status === 401)//Unauthorized
+            {
+                history.push("/login");
+                return;
+            } 
+            setLoadingState(false);
+            setServiceRequestAlertState({show: true, msg: e.toString()});
+            return;
+        }
+        console.log("Updated address on server - address Id "+address.id);
+        setLoadingState(false);          
+    }
+
     const updateAddressRequest = async (address) => {
         console.log("Updating address: "+JSON.stringify(address));
         let path = serviceBaseURL + '/customers/'+loginContext.customer.id+'/addresses/'+address.id;
@@ -119,6 +153,11 @@ const AddressList = () => {
         setLoadingState(false);          
     }
 
+    const addAddress = () => {
+        console.log("Opening address form for new address, addressId is -1");
+        setEditableAddressId(-1);
+    }
+
     const editAddress = (addressId) => {
         console.log("Making address editable "+addressId);
         setEditableAddressId(addressId);
@@ -132,6 +171,9 @@ const AddressList = () => {
     const saveEditedAddress = (address) => {
         //Send service request
         console.log("Saving edited address with Id "+ address.id);
+        address.id === -1 ?
+        createAddressRequest(address).then(()=>{loadAddressList(); setEditableAddressId(0)})
+        :
         updateAddressRequest(address).then(()=>{loadAddressList(); setEditableAddressId(0)});
     }
 
@@ -147,44 +189,64 @@ const AddressList = () => {
                             header={''}
                             message={infoAlertState.msg}
                             buttons={['OK']}/>
-                <IonContent color="dark">
-                    {addressListState && addressListState.map(
-                        (address) =>{
-                            // console.log(editableAddressId+","+address.id)
-                            return editableAddressId !== address.id ? <AddressTile 
-                                    addressId={address.id}
-                                    key={address.id}
-                                    fName={address.firstName}
-                                    lName={address.lastName}
-                                    line1={address.line1}
-                                    line2={address.line2}
-                                    city={address.city}
-                                    state={address.state}
-                                    stateId={address.stateId}
-                                    zipCode={address.zipcode}
-                                    phone={address.phoneNumber} 
-                                    editClickHandler={editAddress.bind(this, address.id)}
-                                    />
-                                :
-                                    <AddressForm 
-                                    addressId={address.id}
-                                    key={address.id}
-                                    fName={address.firstName}
-                                    lName={address.lastName}
-                                    line1={address.line1}
-                                    line2={address.line2}
-                                    city={address.city}
-                                    state={address.state}
-                                    stateId={address.stateId}
-                                    zipCode={address.zipcode}
-                                    phone={address.phoneNumber}
+                <IonContent className="ion-padding" color="dark">
+                {editableAddressId !== -1 ?
+                <IonButton color="secondary" expand="block" onClick={addAddress} className="ion-no-margin">Add New Address</IonButton>
+                :
+                <AddressForm 
+                                    addressId={-1}
+                                    // key={address.id}
+                                    // fName={address.firstName}
+                                    // lName={address.lastName}
+                                    // line1={address.line1}
+                                    // line2={address.line2}
+                                    // city={address.city}
+                                    // state={address.state}
+                                    // stateId={address.stateId}
+                                    // zipCode={address.zipcode}
+                                    // phone={address.phoneNumber}
                                     states={statesList}   
                                     submitClickHandler={saveEditedAddress}
-                                    backClickHandler={cancelEdit.bind(this, address.id)}
+                                    backClickHandler={cancelEdit.bind(this, -1)}
                                     />
-        
-                        }
-                    )}
+                }
+                {addressListState && addressListState.map(
+                    (address) =>{
+                        // console.log(editableAddressId+","+address.id)
+                        return editableAddressId !== address.id ? <AddressTile 
+                                addressId={address.id}
+                                key={address.id}
+                                fName={address.firstName}
+                                lName={address.lastName}
+                                line1={address.line1}
+                                line2={address.line2}
+                                city={address.city}
+                                state={address.state}
+                                stateId={address.stateId}
+                                zipCode={address.zipcode}
+                                phone={address.phoneNumber} 
+                                editClickHandler={editAddress.bind(this, address.id)}
+                                />
+                            :
+                                <AddressForm 
+                                addressId={address.id}
+                                key={address.id}
+                                fName={address.firstName}
+                                lName={address.lastName}
+                                line1={address.line1}
+                                line2={address.line2}
+                                city={address.city}
+                                state={address.state}
+                                stateId={address.stateId}
+                                zipCode={address.zipcode}
+                                phone={address.phoneNumber}
+                                states={statesList}   
+                                submitClickHandler={saveEditedAddress}
+                                backClickHandler={cancelEdit.bind(this, address.id)}
+                                />
+    
+                    }
+                )}
                 </IonContent>
             </IonPage>            
         )

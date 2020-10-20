@@ -20,49 +20,49 @@ import SingleProduct from './SingleProduct';
 
 class ProductsBrowser extends React.Component {
 
-    state = {        
-        categories: {
-            data: [],
-            resource: {},
-        }
-    }
+    // state = {        
+    //     categories: {
+    //         data: [],
+    //         resource: {},
+    //     }
+    // }
 
-    componentDidMount(){
-        console.log("ProductBrowser component mounted")
-        this.loadCategories();
-    }
+    // componentDidMount(){
+    //     console.log("ProductBrowser component mounted")
+    //     this.loadCategories();
+    // }
     
-    async loadCategories(){
-        // let serviceRequest = new ServiceRequest();
-        // let categories = await serviceRequest.listCategories();
-        // categories && this.setState({categories});\
-        const client = new Client(serviceBaseURL+'/products/categories');
-        const resource = client.go();
-        let categoriesState;
-        try{
-            console.log("Making service call: "+resource.uri);
-            categoriesState = await resource.get();
-        }
-        catch(e)
-        {
-            console.log("Service call failed with - "+e);
-            return;
-        }
-        // alert(JSON.stringify(categoriesState));
-        console.log("Received response from service call: "+resource.uri);
-        const categoriesListState = categoriesState.getEmbedded();
-        const categories = categoriesListState.map((categoryState) => categoryState.data)
-        categories && (
-            this.setState({
-                categories:{
-                    data: categories,
-                    resource: resource
-                }
-            })
-            );
+    // async loadCategories(){
+    //     // let serviceRequest = new ServiceRequest();
+    //     // let categories = await serviceRequest.listCategories();
+    //     // categories && this.setState({categories});\
+    //     const client = new Client(serviceBaseURL+'/products/categories');
+    //     const resource = client.go();
+    //     let categoriesState;
+    //     try{
+    //         console.log("Making service call: "+resource.uri);
+    //         categoriesState = await resource.get();
+    //     }
+    //     catch(e)
+    //     {
+    //         console.log("Service call failed with - "+e);
+    //         return;
+    //     }
+    //     // alert(JSON.stringify(categoriesState));
+    //     console.log("Received response from service call: "+resource.uri);
+    //     const categoriesListState = categoriesState.getEmbedded();
+    //     const categories = categoriesListState.map((categoryState) => categoryState.data)
+    //     categories && (
+    //         this.setState({
+    //             categories:{
+    //                 data: categories,
+    //                 resource: resource
+    //             }
+    //         })
+    //         );
             
             
-    }
+    // }
     
     listProductsOfCategory= (id) =>
     {
@@ -74,8 +74,7 @@ class ProductsBrowser extends React.Component {
         return (
         <Switch>
                     <Route path="/products/categories" render={
-                                                        (props)=><Categories 
-                                                                items={this.state.categories.data} 
+                                                        (props)=><Categories
                                                                 categoryClickHandler={this.listProductsOfCategory}/>} exact={true} /> 
 
                     <Route path="/products/list" component={ProductList} exact={true} />  
