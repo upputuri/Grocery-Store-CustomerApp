@@ -12,7 +12,7 @@ const ItemListing1 = () => {
                 </div>
                 <div className="shop-cart-right">
                     <IonText color="primary">
-                    <div className="mb-2">Surf Excel Matic Top Load Detergent Powder (Carton)
+                    <div className="mb-2">Apples
                     </div>
                     </IonText>
                     <p className="font-weight-normal text-white mb-2">
@@ -23,7 +23,8 @@ const ItemListing1 = () => {
                     <small className="text-muted">2 Kg</small>
                     <div className="input-group shop-cart-value">
                         <span className="input-group-btn"><button disabled="disabled" className="btn btn-sm" type="button">-</button></span>
-                        <input type="text" max="10" min="1" defaultValue="1" className="form-control border-form-control form-control-sm input-number text-white bg-black" name="quant[1]"/>
+                        <IonText className="ml-2 mr-2"> {' 1 '} </IonText>
+                        {/* <input type="text" max="10" min="1" defaultValue="1" className="form-control border-form-control form-control-sm input-number text-white bg-black" name="quant[1]"/> */}
                         <span className="input-group-btn"><button className="btn btn-sm" type="button">+</button>
                         </span>
                     </div>
@@ -39,7 +40,7 @@ const ItemListing1 = () => {
 
                 <div className="shop-cart-right">
                 <IonText color="primary">
-                    <div className="mb-2">Surf Excel Matic Top Load Detergent Powder (Carton)
+                    <div className="mb-2">Guavas
                 </div>
                 </IonText>
                 <p className="font-weight-normal text-white mb-2">
@@ -50,7 +51,8 @@ const ItemListing1 = () => {
                     <small className="text-muted">2 Kg</small>
                     <div className="input-group shop-cart-value">
                         <span className="input-group-btn"><button disabled="disabled" className="btn btn-sm" type="button">-</button></span>
-                        <input type="text" max="10" min="1" defaultValue="1" className="form-control border-form-control form-control-sm input-number text-white bg-black" name="quant[1]"/>
+                        <IonText className="ml-2 mr-2"> {' 1 '} </IonText>
+                        {/* <input type="text" max="10" min="1" defaultValue="1" className="form-control border-form-control form-control-sm input-number text-white bg-black" name="quant[1]"/> */}
                         <span className="input-group-btn"><button className="btn btn-sm" type="button">+</button>
                         </span>
                     </div>
@@ -68,7 +70,7 @@ const ItemListing1 = () => {
 
                 <div className="shop-cart-right">
                 <IonText color="primary">
-                    <div className="mb-2">Hygienix Anti-Bacterial Hand Sanitizer (Bottle)
+                    <div className="mb-2">Pineapple
                 </div>
                 </IonText>
                 <p className="font-weight-normal text-white mb-2 price">
@@ -79,7 +81,8 @@ const ItemListing1 = () => {
                     <small className="text-muted">300 ml</small>
                     <div className="input-group shop-cart-value">
                         <span className="input-group-btn"><button disabled="disabled" className="btn btn-sm" type="button">-</button></span>
-                        <input type="text" max="10" min="1" defaultValue="1" className="form-control border-form-control form-control-sm input-number text-white bg-black" name="quant[1]"/>
+                        <IonText className="ml-2 mr-2"> {' 1 '} </IonText>
+                        {/* <input type="text" max="10" min="1" defaultValue="1" className="form-control border-form-control form-control-sm input-number text-white bg-black" name="quant[1]"/> */}
                         <span className="input-group-btn"><button className="btn btn-sm" type="button">+</button>
                         </span>
                     </div>
@@ -95,7 +98,7 @@ const ItemListing1 = () => {
 
                 <div className="shop-cart-right">
                 <IonText color="primary">
-                    <div className="mb-2">Hygienix Anti-Bacterial Hand Sanitizer (Bottle)
+                    <div className="mb-2">Grapes
                 </div>
                 </IonText>
                 <p className="font-weight-normal text-white mb-2 price">
@@ -106,7 +109,8 @@ const ItemListing1 = () => {
                     <small className="text-muted">300 ml</small>
                     <div className="input-group shop-cart-value">
                         <span className="input-group-btn"><button disabled="disabled" className="btn btn-sm" type="button">-</button></span>
-                        <input type="text" max="10" min="1" defaultValue="1" className="form-control border-form-control form-control-sm input-number text-white bg-black" name="quant[1]"/>
+                        <IonText className="ml-2 mr-2"> {' 1 '} </IonText>
+                        {/* <input type="text" max="10" min="1" defaultValue="1" className="form-control border-form-control form-control-sm input-number text-white bg-black" name="quant[1]"/> */}
                         <span className="input-group-btn"><button className="btn btn-sm" type="button">+</button>
                         </span>
                     </div>

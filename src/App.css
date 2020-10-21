@@ -23,13 +23,17 @@ ion-menu.md ion-note {
 }
 
 ion-menu.md ion-list#inbox-list {
-  border-bottom: 1px solid var(--ion-color-step-150, #d7d8da);
+  border-bottom: 1px solid var(--ion-color-primary, #d7d8da);
 }
 
 ion-menu.md ion-list#inbox-list ion-list-header {
   font-size: 22px;
   font-weight: 600;
   min-height: 20px;
+}
+
+.menu-top-section {
+  border-bottom: 1px solid var(--ion-color-primary, #d7d8da);
 }
 
 ion-menu.md ion-list#labels-list ion-list-header {

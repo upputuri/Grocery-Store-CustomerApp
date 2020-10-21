@@ -106,7 +106,7 @@ const SingleProduct = (props) => {
                     <BaseToolbar title="Product Detail"/>
                     <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>      
                 </IonHeader>
-                <IonLoading isOpen={loadingState}/>                
+                <IonLoading isOpen={loadingState}/>              
                 <IonContent color="dark">
                     {productState && 
                     <div>

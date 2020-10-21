@@ -1,15 +1,15 @@
 import { IonButton } from '@ionic/react';
 import React from 'react';
+import { useHistory } from 'react-router';
 import { CartContext, LoginContext } from '../../App';
 
 const AddToCartButton = (props) => {
-
+    const history = useHistory();
     const addToCart = (loginContext, cartContext, productId, variantId, qty) => 
     {
         if (!loginContext.isAuthenticated)
         {
             console.log("Customer is not authenticated, hence redirecting to login page");
-            let { history } = this.props;
             history.push("/login");
             return;
         }

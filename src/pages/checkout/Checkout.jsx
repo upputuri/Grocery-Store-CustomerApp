@@ -181,7 +181,9 @@ const Checkout = (props) => {
 
     const forwardExit = () => {
         //Create order and show success page
-        cartContext.placeOrder().then(()=>history.push("/orders"));
+        cartContext.placeOrder().then(()=>{
+            history.push("/orders")
+        });
         //history.push('/orderplaced');
         setCurrentPhaseIndex(-1)
     }

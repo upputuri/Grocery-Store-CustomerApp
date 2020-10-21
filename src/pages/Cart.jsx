@@ -134,7 +134,7 @@ const Cart = (props) =>{
                 </IonToolbar>
                 <IonToolbar color="secondary">
                         <IonButtons slot="end">
-                            <IonButton onClick={()=>history.push('/checkout')} size="small" shape="round">
+                            <IonButton onClick={()=>cartItemsState.data && cartItemsState.data.length>0 && history.push('/checkout')} size="small" shape="round">
                                 Checkout<IonIcon size="large" icon={nextIcon}></IonIcon>
                             </IonButton>                                
                         </IonButtons>

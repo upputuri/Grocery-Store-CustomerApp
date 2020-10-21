@@ -140,7 +140,9 @@ class App extends React.Component {
         lname: receivedData.lname,
         email: receivedData.email,
         password: password
-      }
+      },
+      showToast: true,
+      toastMsg: 'Registration successful!'
     });
     return Promise.resolve(200);
   }
@@ -194,11 +196,18 @@ class App extends React.Component {
         lname: '',
         email: '',
         password: '',
-        password: '',
         image: '',
       },
       cart: {
         itemCount: 0,
+      },
+      order: {
+        id: '',
+        deliveryAddressId: 0,
+        promoCodes: [],
+        paymentOptionId: 0,
+        transactionId: '',
+        instructions: ''
       },
       showToast: true,
       toastMsg: 'You are logged out!'
@@ -244,6 +253,10 @@ class App extends React.Component {
         itemCount: this.state.cart.itemCount + qty
       }
     });
+    this.setState({
+      showToast: true,
+      toastMsg: qty>0?'One item added to cart':'One item removed from cart'
+    })
   }
 
   setDeliveryAddress(addressId){
@@ -268,6 +281,14 @@ class App extends React.Component {
     this.setState({order: {
       ...this.state.order, id: orderId
     }})
+  }
+
+  resetCartCount(){
+    this.setState({
+      cart: {
+        itemCount: 0
+      }
+    })
   }
 
   async placeOrder(){
@@ -296,7 +317,8 @@ class App extends React.Component {
     console.log("Received response from service call: "+resource.uri);
     console.log("Order successfully created on server - Order Id: "+receivedState.data.id);
     // alert(JSON.stringify(receivedState));
-    this.setOrderId(receivedState.data.id); 
+    this.setOrderId(receivedState.data.id);
+    this.resetCartCount();
   }
 
   render(){
@@ -340,11 +362,12 @@ class App extends React.Component {
                   }
                 </Switch>
               </IonRouterOutlet>
-              <IonToast
+              <IonToast color="tertiary"
                   isOpen={this.state.showToast}
+                  position="middle"
                   onDidDismiss={() => this.setState({showToast: false})}
                   message={this.state.toastMsg}
-                  duration={3000}
+                  duration={500}
                 />
               <IonLoading isOpen={this.state.showLoading}/>
             </IonSplitPane>

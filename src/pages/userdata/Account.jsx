@@ -1,17 +1,20 @@
-import { IonAlert, IonButton, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonItemGroup, IonLabel, IonLoading, IonPage, IonRouterLink, IonRow, IonSearchbar, IonText } from '@ionic/react';
-import Client from 'ketting';
-import React, { useContext, useEffect, useState } from 'react';
+import { IonButton, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonItemGroup, IonLabel, IonPage, IonRouterLink, IonRow, IonText } from '@ionic/react';
+import { listOutline as listIcon, lockClosedOutline as lockClosedIcon, navigateCircleOutline as navigateIcon, personCircleOutline as personIcon } from 'ionicons/icons';
+import React, { useContext } from 'react';
 import { useHistory } from 'react-router';
 import { LoginContext } from '../../App';
 import BaseToolbar from '../../components/Menu/BaseToolbar';
-import { serviceBaseURL } from '../../components/Utilities/ServiceCaller';
-import { navigateCircleOutline as navigateIcon, personCircleOutline as personIcon, listOutline as listIcon, lockClosedOutline as lockClosedIcon } from 'ionicons/icons';
 import './account.css';
 
 const Account = (props) => {
     const loginContext = useContext(LoginContext);
     const history = useHistory();
 
+    const handleLogout = () => {
+        loginContext.logout();
+        history.push('/home');
+    }
+    
     return (
         <IonPage>
             <IonHeader className="osahan-nav">
@@ -68,7 +71,7 @@ const Account = (props) => {
             </IonContent>
 
             <IonFooter className="border-0">
-                <IonButton size="large" className="button-block p-0 m-0" expand="full" color="secondary">
+                <IonButton onClick={handleLogout} size="large" className="button-block p-0 m-0" expand="full" color="secondary">
                     <IonIcon icon={lockClosedIcon}></IonIcon>
                     Logout
                 </IonButton>

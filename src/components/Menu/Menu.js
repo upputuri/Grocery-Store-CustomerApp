@@ -1,5 +1,5 @@
-import React from 'react'
-import { IonAvatar, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterLink } from "@ionic/react"
+import React, { useState } from 'react'
+import { IonAvatar, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterLink, IonText } from "@ionic/react"
 import { paperPlane as paperPlanceIcon, cafe as cafeIcon} from 'ionicons/icons'
 import { home, list, grid, pricetag, basket, card, person, location, create, heart, mail, help, sad} from 'ionicons/icons';
 import { LoginContext } from '../../App';
@@ -38,46 +38,44 @@ const SampleMenu = () => {
 }
 
 const GrocMenu = (props) => {
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   return (
       <IonMenu contentId="main-content" type="overlay">
-      <IonContent>
-        <IonList id="inbox-list">
+      <IonContent color="dark">
+        <IonList className="bg-black" id="inbox-list">
           <LoginContext.Consumer>
             {(context)=>{
               return (
                 context.isAuthenticated ? 
                 (
-                  <div>           
+                  <div className="bg-black">           
                     <IonAvatar class="ion-margin-start ios hydrated mb-2"><img alt="img" src="assets/user.jpg"></img></IonAvatar>
-                    <IonListHeader>{context.customer.fname}</IonListHeader>
-                    <IonNote>{context.customer.email}</IonNote>
-
-                    <IonMenuToggle auto-hide="false" >
-                      <IonItem onClick={context.logout} detail="false">
-                        <IonLabel>Logout</IonLabel>
-                      </IonItem>
-                    </IonMenuToggle>
-
+                    <IonListHeader color="night">{context.customer.fname}</IonListHeader>
+                    <IonNote color="night">{context.customer.email}</IonNote>
                   </div>   
-                ) : ( <IonRouterLink routerLink="/login">
+                ) : (
+                    <div className="menu-top-section">
+                      <IonRouterLink routerLink="/login">
                         <IonMenuToggle auto-hide="false" >
-                          <IonItem detail="false">
-                            <IonLabel>Login</IonLabel>
+                          <IonItem color="night" detail="false">
+                            <IonText color="primary">Login</IonText>
                           </IonItem>
                         </IonMenuToggle>
-                      </IonRouterLink>)
+                      </IonRouterLink>
+                    </div>  
+                    )
               );
             }}
           </LoginContext.Consumer>
-          {props.entries.map((entry) =>
+          {props.entries.map((entry, index) =>
           {
             return (
                     <IonRouterLink key={entry.title} routerLink={entry.url}>
                       <IonMenuToggle auto-hide="false" >
-                        <IonItem lines="none" detail="false">
+                        <IonItem className={index==selectedIndex ? "selected": "none"} onClick={()=>setSelectedIndex(index)} color="night" detail="false">
                           {menuIcons[`${entry.icon}`]}
-                          <IonLabel>{entry.title}</IonLabel>
+                          <IonText>{entry.title}</IonText>
                         </IonItem>
                       </IonMenuToggle>
                     </IonRouterLink>
@@ -86,14 +84,14 @@ const GrocMenu = (props) => {
 
         </IonList>
 
-        <IonList id="labels-list">
+        {/* <IonList id="labels-list">
           <IonListHeader>Trending</IonListHeader>
 
           <IonItem lines="none">
             <IonIcon slot="start" ios="trending-up-outline" md="trending-up-outline"></IonIcon>
               <IonLabel>{}</IonLabel>
           </IonItem>
-        </IonList>
+        </IonList> */}
       </IonContent>
     </IonMenu>
   )
