@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { IonAvatar, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterLink, IonText } from "@ionic/react"
 import { paperPlane as paperPlanceIcon, cafe as cafeIcon} from 'ionicons/icons'
-import { home, list, grid, pricetag, basket, card, person, location, create, heart, mail, help, sad} from 'ionicons/icons';
+import { home, list, grid, pricetag, basket, card, person, location, create, heart, mail, help, sad, logInOutline as logInIcon} from 'ionicons/icons';
 import { LoginContext } from '../../App';
+import '../../App.scss';
 
 const menuIcons = {
   home: <IonIcon slot="start" icon={home}></IonIcon>,
@@ -55,15 +56,16 @@ const GrocMenu = (props) => {
                     <IonNote color="night">{context.customer.email}</IonNote>
                   </div>   
                 ) : (
-                    <div className="menu-top-section">
+                    <IonList className="bg-black menu-top-section">
                       <IonRouterLink routerLink="/login">
                         <IonMenuToggle auto-hide="false" >
                           <IonItem color="night" detail="false">
-                            <IonText color="primary">Login</IonText>
+                            <IonIcon color="secondary" icon={logInIcon} slot="start"/>
+                            <IonText color="secondary">Login</IonText>
                           </IonItem>
                         </IonMenuToggle>
                       </IonRouterLink>
-                    </div>  
+                    </IonList>  
                     )
               );
             }}

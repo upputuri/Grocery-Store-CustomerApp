@@ -4,11 +4,11 @@ import { Switch, useHistory } from 'react-router';
 import { CartContext, LoginContext } from '../../App';
 import BaseToolbar from '../../components/Menu/BaseToolbar';
 import { chevronForwardOutline as nextIcon, chevronBackOutline as previousIcon } from 'ionicons/icons';
-import DeliveryOptions from '../../containers/checkout/DeliveryOptions';
+import DeliveryOptions from '../../components/checkout/DeliveryOptions';
 import Client from 'ketting';
 import { serviceBaseURL } from '../../components/Utilities/ServiceCaller';
-import OrderReview from '../../containers/checkout/OrderReview';
-import PaymentOptions from '../../containers/checkout/PaymentOptions';
+import PaymentOptions from '../../components/checkout/PaymentOptions';
+import OrderReview from '../../components/checkout/OrderReview'
 
 const Checkout = (props) => {
     const [deliveryOptionsPhase, orderReviewPhase, PaymentOptionsPhase] = [
@@ -182,7 +182,8 @@ const Checkout = (props) => {
     const forwardExit = () => {
         //Create order and show success page
         cartContext.placeOrder().then(()=>{
-            history.push("/orders")
+            cartContext.order.id != 0 ? history.push("/orders?id="+cartContext.order.id): 
+                setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before repeating the order!'});
         });
         //history.push('/orderplaced');
         setCurrentPhaseIndex(-1)
@@ -257,7 +258,7 @@ const Checkout = (props) => {
             return (
             <IonPage>
                 <IonHeader className="osahan-nav">
-                    <BaseToolbar title="Shipping Addresses"/>     
+                    <BaseToolbar title="Checking out"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>                
                 <IonContent color="dark">

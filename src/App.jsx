@@ -16,23 +16,23 @@ import '@ionic/react/css/typography.css';
 import Client from 'ketting';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import './App.css';
+import './App.scss';
 import { GrocMenu } from "./components/Menu/Menu";
 import AppPages from './components/Utilities/AppPages';
 import ServiceRequest, { serviceBaseURL } from './components/Utilities/ServiceCaller.ts';
 import './global.css';
+import Login from './pages/auth/Login';
+import Registration from './pages/auth/Registration';
 import Checkout from './pages/checkout/Checkout';
 import Home from './pages/Home';
-import Login from './pages/Login';
 import ProductsBrowser from './pages/ProductsBrowser';
-import Registration from './pages/Registration';
-import Account from './pages/userdata/Account';
+import Account from './pages/userdata/account/Account';
+import Profile from './pages/userdata/account/Profile';
 import AddressList from './pages/userdata/address/AddressList';
 import Orders from './pages/userdata/orders/Orders';
-import Profile from './pages/userdata/Profile';
-
 /* Theme variables */
 import './theme/variables.css';
+
 
 const LoginContext = React.createContext(
   {
@@ -291,10 +291,20 @@ class App extends React.Component {
     })
   }
 
+  clearOrderId(){
+    this.setState({
+      order: {
+        id: 0
+      }
+    })
+  }
+
   async placeOrder(){
     let path = serviceBaseURL + '/orders';
     const client = new Client(path);
     const resource = client.go();
+    //Clear previous order Id;
+    this.setOrderId(0);
     let receivedState;
     try{
         console.log("Making service call: "+resource.uri);  
@@ -337,6 +347,7 @@ class App extends React.Component {
                                       setPromoCodes: this.setPromoCodes.bind(this),
                                       setPaymentOption: this.setPaymentOption.bind(this),
                                       placeOrder: this.placeOrder.bind(this),
+                                      resetOrderState: this.clearOrderId.bind(this),
                                       addItem: (pId, vId, qty)=>this.addItemToCart(pId, vId, qty)
                                       }}>
           <IonApp>

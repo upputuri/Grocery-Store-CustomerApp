@@ -2,9 +2,9 @@ import { IonContent, IonHeader, IonPage, IonSearchbar } from '@ionic/react';
 import Client from 'ketting';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
-import ProductCard from '../components/Cards/ProductCard';
-import BaseToolbar from '../components/Menu/BaseToolbar';
-import { serviceBaseURL } from '../components/Utilities/ServiceCaller';
+import ProductCard from '../Cards/ProductCard';
+import BaseToolbar from '../Menu/BaseToolbar';
+import { serviceBaseURL } from '../Utilities/ServiceCaller';
 
 const ProductList = () => {
 

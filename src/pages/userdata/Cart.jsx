@@ -3,10 +3,10 @@ import { chevronForwardOutline as nextIcon } from 'ionicons/icons';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, withRouter } from "react-router-dom";
-import { LoginContext } from '../App';
-import CartItemTile from '../components/Cards/CartItemTile';
-import BaseToolbar from '../components/Menu/BaseToolbar';
-import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts';
+import { LoginContext } from '../../App';
+import CartItemTile from '../../components/Cards/CartItemTile';
+import BaseToolbar from '../../components/Menu/BaseToolbar';
+import { serviceBaseURL } from '../../components/Utilities/ServiceCaller.ts';
 
 
 const Cart = (props) =>{

@@ -2,9 +2,9 @@ import Client from 'ketting';
 import React from 'react';
 import { Route, Switch } from 'react-router';
 import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts';
-import Cart from './Cart';
+import Cart from './userdata/Cart';
 import Categories from './Categories';
-import ProductList from './ProductList';
+import ProductList from '../components/Listing/ProductList';
 import SingleProduct from './SingleProduct';
 
 // interface MyProps extends RouteComponentProps {

@@ -4,6 +4,8 @@ import Client from 'ketting';
 import React, { useEffect, useState } from 'react';
 import { useHistory, withRouter } from "react-router-dom";
 import { CartContext, LoginContext } from '../App';
+import ListingSection from '../components/Listing/ListingSection';
+import PosterSlider from '../components/Listing/PosterSlider';
 import AddToCartButton from '../components/Menu/AddToCartButton';
 import BaseToolbar from '../components/Menu/BaseToolbar';
 import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts'
@@ -182,6 +184,10 @@ const SingleProduct = (props) => {
                                 </div>
                             </div>
                         </div>
+                        <ListingSection title="Other similar products">
+                            <PosterSlider/>
+                        </ListingSection>
+                        
                     </div>
                     }
                     </IonContent>

@@ -1,7 +1,7 @@
 import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider } from '@ionic/react';
 import React, { useContext, useState } from 'react';
 import { Redirect, useHistory } from 'react-router';
-import { LoginContext } from '../App';
+import { LoginContext } from '../../App';
 
 const Registration = () =>
 {
