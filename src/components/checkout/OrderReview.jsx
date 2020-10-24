@@ -31,7 +31,7 @@ const OrderReview = (props) => {
                                     <small>{orderItem.qty}</small>
                                 </IonCol>
                                 <IonCol size="4" className="ion-text-right">
-                                    <small>{orderItem.priceAfterDiscount}</small>
+                                    <small>{orderItem.totalPriceAfterDiscount}</small>
                                 </IonCol>
                             </IonRow>
                 })}

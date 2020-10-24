@@ -50,11 +50,11 @@ const GrocMenu = (props) => {
               return (
                 context.isAuthenticated ? 
                 (
-                  <div className="bg-black">           
+                  <IonList className="bg-black menu-top-section">           
                     <IonAvatar class="ion-margin-start ios hydrated mb-2"><img alt="img" src="assets/user.jpg"></img></IonAvatar>
                     <IonListHeader color="night">{context.customer.fname}</IonListHeader>
                     <IonNote color="night">{context.customer.email}</IonNote>
-                  </div>   
+                  </IonList>   
                 ) : (
                     <IonList className="bg-black menu-top-section">
                       <IonRouterLink routerLink="/login">

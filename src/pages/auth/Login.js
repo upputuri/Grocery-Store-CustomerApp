@@ -1,6 +1,6 @@
 import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider } from '@ionic/react';
 import React, { useContext, useState } from 'react';
-import { Redirect, useHistory } from 'react-router';
+import { Redirect, useHistory, useLocation } from 'react-router';
 import { LoginContext } from '../../App';
 
 const Login = (props) =>
@@ -10,7 +10,8 @@ const Login = (props) =>
     const [userIdState, setUserIdState] = useState('');
     const [passwordState, setPasswordState] = useState('');
     const [errorState, setErrorState] = useState('');
-
+    const redirectTo = new URLSearchParams(useLocation().search).get('redirect');
+     
     const setUserId = (event) => {
         setUserIdState(event.target.value);
         setErrorState('');
@@ -38,7 +39,7 @@ const Login = (props) =>
             else if (result.hasResponse && !result.isResponseOk)
               setError(result.responseObject.message);
             else{ 
-              history.goBack();
+              redirectTo ? history.push(redirectTo): history.push("/home");
               return;
             }
           })
@@ -71,7 +72,7 @@ const Login = (props) =>
         <IonPage>
           <LoginContext.Consumer>
             {
-              (context) => context.isAuthenticated ? <Redirect to='/home'/>: ''
+              (context) => context.isAuthenticated ? <Redirect to={redirectTo ? redirectTo: '/home'}/>: ''
             }
           </LoginContext.Consumer>
             <IonHeader className="osahan-nav">

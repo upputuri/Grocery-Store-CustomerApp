@@ -6,7 +6,7 @@ import { useHistory, withRouter } from "react-router-dom";
 import { LoginContext } from '../../App';
 import CartItemTile from '../../components/Cards/CartItemTile';
 import BaseToolbar from '../../components/Menu/BaseToolbar';
-import { serviceBaseURL } from '../../components/Utilities/ServiceCaller.ts';
+import { serviceBaseURL } from '../../components/Utilities/ServiceCaller.jsx';
 
 
 const Cart = (props) =>{

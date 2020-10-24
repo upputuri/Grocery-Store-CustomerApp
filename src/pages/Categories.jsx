@@ -44,7 +44,7 @@ const Categories = (props) => {
                 <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>      
             </IonHeader>
 
-            <IonContent className="ion-padding my-address-page" color="dark">
+            <IonContent className="ion-padding" color="dark">
                 {categoriesState && categoriesState.map(
                     (category) => {
                         return ( 

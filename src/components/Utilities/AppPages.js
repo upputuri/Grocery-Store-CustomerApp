@@ -17,7 +17,7 @@ const AppPages =
     },
     {
       title: 'My Orders',
-      url: '/orderlist',
+      url: '/orders',
       icon: 'create'
     },
     // {

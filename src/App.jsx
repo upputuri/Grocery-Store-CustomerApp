@@ -14,12 +14,13 @@ import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/typography.css';
 import Client from 'ketting';
+import { getMaxListeners } from 'process';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.scss';
 import { GrocMenu } from "./components/Menu/Menu";
 import AppPages from './components/Utilities/AppPages';
-import ServiceRequest, { serviceBaseURL } from './components/Utilities/ServiceCaller.ts';
+import ServiceRequest, { serviceBaseURL } from './components/Utilities/ServiceCaller';
 import './global.css';
 import Login from './pages/auth/Login';
 import Registration from './pages/auth/Registration';
@@ -29,6 +30,7 @@ import ProductsBrowser from './pages/ProductsBrowser';
 import Account from './pages/userdata/account/Account';
 import Profile from './pages/userdata/account/Profile';
 import AddressList from './pages/userdata/address/AddressList';
+import OrderDetail from './pages/userdata/orders/OrderDetail';
 import Orders from './pages/userdata/orders/Orders';
 /* Theme variables */
 import './theme/variables.css';
@@ -36,7 +38,7 @@ import './theme/variables.css';
 
 const LoginContext = React.createContext(
   {
-    isAuthenticated: false,
+    isAuthenticated: true,
     customer: {
       id: '',
       fname: '',
@@ -72,15 +74,19 @@ const appPages = AppPages;
 
 class App extends React.Component {
 
+  constructor(props){
+    super(props)
+  }
+
   state =
     {
-      isAuthenticated: false,
+      isAuthenticated: true,
       customer: {
-        id: '',
-        fname: '',
+        id: 618,
+        fname: 'Srikanth',
         lname: '',
-        email: '',
-        password: '',
+        email: 'usrikanth@gmail.com',
+        password: 'Password123',
         image: '',
         // id: 618,
         // fname: 'Srikanth',
@@ -322,13 +328,14 @@ class App extends React.Component {
     catch(e)
     {
         console.log("Service call failed with - "+e);
-        return;
+        return 0;
     }
     console.log("Received response from service call: "+resource.uri);
     console.log("Order successfully created on server - Order Id: "+receivedState.data.id);
     // alert(JSON.stringify(receivedState));
-    this.setOrderId(receivedState.data.id);
+    // this.setOrderId(receivedState.data.id);
     this.resetCartCount();
+    return receivedState.data.id;
   }
 
   render(){
@@ -367,9 +374,10 @@ class App extends React.Component {
                     <Route path="/account/addresslist" component={AddressList} exact={true} />
                     <Route path="/checkout" component={Checkout} exact={true} />
                     <Route path="/orders" component={Orders} exact={true} />
+                    <Route path="/orders/:id" component={OrderDetail} exact={true} />
                   </Switch>
                   :
-                  <Redirect to="/login"/>
+                  <Redirect to={"/login"}/>
                   }
                 </Switch>
               </IonRouterOutlet>

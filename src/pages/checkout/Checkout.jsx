@@ -181,9 +181,10 @@ const Checkout = (props) => {
 
     const forwardExit = () => {
         //Create order and show success page
-        cartContext.placeOrder().then(()=>{
-            cartContext.order.id != 0 ? history.push("/orders?id="+cartContext.order.id): 
-                setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before repeating the order!'});
+        cartContext.placeOrder().then((newOrderId)=>{
+            console.log("Promise resolved new orderId "+newOrderId);
+            history.push("/orders?id="+newOrderId);
+                // setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before placing the order again!'});
         });
         //history.push('/orderplaced');
         setCurrentPhaseIndex(-1)

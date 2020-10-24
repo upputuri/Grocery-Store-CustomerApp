@@ -8,7 +8,7 @@ import ListingSection from '../components/Listing/ListingSection';
 import PosterSlider from '../components/Listing/PosterSlider';
 import AddToCartButton from '../components/Menu/AddToCartButton';
 import BaseToolbar from '../components/Menu/BaseToolbar';
-import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts'
+import { serviceBaseURL } from '../components/Utilities/ServiceCaller'
 
 const SingleProduct = (props) => {
     const [productState, setProductState] = useState(null);
