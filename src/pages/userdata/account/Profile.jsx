@@ -255,7 +255,6 @@ const Profile = () => {
             <IonPage>
                 <IonHeader className="osahan-nav">
                     <BaseToolbar title="Profile"/>
-                    <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>      
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>                
                 <IonContent color="dark">

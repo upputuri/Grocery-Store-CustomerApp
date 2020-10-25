@@ -25,16 +25,16 @@ const AppPages =
     //   url: '/about',
     //   icon: 'heart'
     // },
-    // {
-    //   title: 'Contact Us',
-    //   url: '/contactus',
-    //   icon: 'mail'
-    // },
-    // {
-    //   title: 'FAQ',
-    //   url: '/faq',
-    //   icon: 'help'
-    // }
+    {
+      title: 'Contact Us',
+      url: '/contactus',
+      icon: 'mail'
+    },
+    {
+      title: 'FAQ',
+      url: '/faq',
+      icon: 'help'
+    }
 ];
 
 export default AppPages;

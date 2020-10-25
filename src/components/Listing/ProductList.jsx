@@ -4,18 +4,20 @@ import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import ProductCard from '../Cards/ProductCard';
 import BaseToolbar from '../Menu/BaseToolbar';
+import GrocSearch from '../Menu/GrocSearch';
 import { serviceBaseURL } from '../Utilities/ServiceCaller';
 
 const ProductList = () => {
 
     const [data, setData] = useState(null);
     const [resource, setResource] = useState(null);
+    const [query, setQuery] = useState('');
     const history = useHistory();
 
     const search = useLocation().search;
 
-    let loadProducts = async (category) => {
-        let path = serviceBaseURL+'/products?category='+category;
+    let loadProducts = async (query) => {
+        let path = serviceBaseURL+'/products?'+query;     
 
         console.log("Loading products from server");
         const client = new Client(path);
@@ -38,11 +40,11 @@ const ProductList = () => {
 
     useEffect(()=>{
         const cat = new URLSearchParams(search).get('category');
-        let path = serviceBaseURL+'/products?category='+cat;
-        if (resource !== null && path.localeCompare(resource.uri) === 0)
-            return;        
-        loadProducts(cat);
-    });
+        const keywords = new URLSearchParams(search).get('keywords');
+        let query = cat && cat.length>0 ? 'category='+cat : 'category=';
+        query = keywords && keywords.length>0 ? query+'&keywords='+keywords : query+'&keywords=';
+        loadProducts(query);
+    },[query]);
 
 
     const viewProductDetail = (id) =>
@@ -55,7 +57,7 @@ const ProductList = () => {
             <IonPage>
                 <IonHeader className="osahan-nav">
                     <BaseToolbar title="Products"/>
-                    <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>      
+                    <GrocSearch/>      
                 </IonHeader>            
         
                 <IonContent color="dark">
@@ -66,10 +68,10 @@ const ProductList = () => {
                                     key={product.id}
                                     name={product.name}
                                     variationId={product.variations[0].id}
-                                    originalPrice={product.variations[0].mrp}
-                                    discountPrice={product.variations[0].price}
+                                    originalPrice={product.variations[0].price}
+                                    discountPrice={product.variations[0].priceAfterDiscount}
                                     discount={product.discount}
-                                    unitLabel={product.unitLabel}   
+                                    unitLabel={product.variations[0].name}   
                                     productClickHandler={viewProductDetail} />
         
                         }

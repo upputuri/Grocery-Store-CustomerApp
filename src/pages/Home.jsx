@@ -9,6 +9,7 @@ import BannerSlider from '../components/Slider/BannerSlider';
 import { serviceBaseURL } from '../components/Utilities/ServiceCaller';
 import {card as cardIcon, people as peopleIcon} from 'ionicons/icons';
 import '../App.scss';
+import GrocSearch from '../components/Menu/GrocSearch';
 
 
 const Home = () => {
@@ -72,7 +73,7 @@ const Home = () => {
           </IonTitle>
           <CartButton/>
         </IonToolbar>
-        <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>        
+        <GrocSearch/>      
       </IonHeader>
       <IonContent color="dark">
         <BannerSlider/>

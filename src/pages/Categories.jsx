@@ -3,6 +3,7 @@ import Client from 'ketting';
 import React, { useEffect, useState } from 'react';
 import CategoryCard from '../components/Cards/CategoryCard';
 import BaseToolbar from '../components/Menu/BaseToolbar';
+import GrocSearch from '../components/Menu/GrocSearch';
 import { serviceBaseURL } from '../components/Utilities/ServiceCaller';
 
 
@@ -41,7 +42,7 @@ const Categories = (props) => {
         <IonPage>
             <IonHeader className="osahan-nav">
                 <BaseToolbar title="Categories"/>
-                <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>      
+                <GrocSearch/>     
             </IonHeader>
 
             <IonContent className="ion-padding" color="dark">

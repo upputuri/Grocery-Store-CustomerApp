@@ -6,6 +6,7 @@ import { useHistory, withRouter } from "react-router-dom";
 import { LoginContext } from '../../App';
 import CartItemTile from '../../components/Cards/CartItemTile';
 import BaseToolbar from '../../components/Menu/BaseToolbar';
+import GrocSearch from '../../components/Menu/GrocSearch';
 import { serviceBaseURL } from '../../components/Utilities/ServiceCaller.jsx';
 
 
@@ -97,7 +98,7 @@ const Cart = (props) =>{
         <IonPage>
             <IonHeader className="osahan-nav">
                 <BaseToolbar title="Your Cart"/>
-                <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>      
+                <GrocSearch/>      
             </IonHeader>              
             <IonContent color="dark" >
                 {

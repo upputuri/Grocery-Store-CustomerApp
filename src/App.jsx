@@ -21,10 +21,12 @@ import './App.scss';
 import { GrocMenu } from "./components/Menu/Menu";
 import AppPages from './components/Utilities/AppPages';
 import ServiceRequest, { serviceBaseURL } from './components/Utilities/ServiceCaller';
-import './global.css';
+import './global.scss';
 import Login from './pages/auth/Login';
 import Registration from './pages/auth/Registration';
 import Checkout from './pages/checkout/Checkout';
+import ContactForm from './pages/general/ContactForm';
+import FAQ from './pages/general/FAQ';
 import Home from './pages/Home';
 import ProductsBrowser from './pages/ProductsBrowser';
 import Account from './pages/userdata/account/Account';
@@ -366,6 +368,8 @@ class App extends React.Component {
                   <Route path="/products" component={ProductsBrowser} />
                   <Route path="/register" component={Registration} />
                   <Route path="/login" component={Login} exact={true} />
+                  <Route path="/contactus" component={ContactForm} exact={true} />
+                  <Route path="/faq" component={FAQ} exact={true} />
                   <Route exact path="/" render={() => <Redirect to="/home" />} />
                   {this.state.isAuthenticated?
                   <Switch>

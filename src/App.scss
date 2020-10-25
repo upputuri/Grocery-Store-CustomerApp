@@ -174,3 +174,18 @@ ion-grid.ordertile {
 .order-review-table ion-row {
   background-color: var(--ion-color-night);
 }
+
+.faq .maintext {
+  font-size: 13px;
+}
+
+.price-after-discount {
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.price-before-discount {
+  font-weight: 600;
+  text-decoration: line-through;
+  text-decoration-color: var(--ion-color-danger);
+}
