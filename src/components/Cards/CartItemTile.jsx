@@ -24,7 +24,7 @@ const CartItemTile = (props) =>
                             <IonText color="primary"><strong>{props.name}</strong></IonText>
                         </IonCol>
                         <IonCol>
-                            <div className="ion-text-end text-white">{'₹'+props.totalPrice}</div>
+                            <div className="ion-text-end text-white">{'₹'+props.totalPriceAfterDiscount}</div>
                         </IonCol>
                     </IonRow>
                     <IonRow>

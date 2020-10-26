@@ -215,6 +215,14 @@ const Checkout = (props) => {
         cartContext.setPaymentOption(paymentOptionId);
     }
 
+    const updatePromoCodeInCart = (code) => {
+        cartContext.setPromoCodes([code]);
+    }
+
+    const clearPromoCodeInCart = () => {
+        cartContext.setPromoCodes([]);
+    }
+
     if (phaseData !== null) {
         console.log("Rendering checkout page");
         return (
@@ -232,7 +240,11 @@ const Checkout = (props) => {
                 {currentPhaseIndex === 0 && <DeliveryOptions addresses={phaseData} 
                                                                 selectedAddressId={cartContext.order.deliveryAddressId} 
                                                                 addressSelectHandler={deliveryAddressSelected}/>}
-                {currentPhaseIndex === 1 && <OrderReview preOrder={phaseData} preOrderConfirmHandler={preOrderConfirmed}/>}
+                {currentPhaseIndex === 1 && <OrderReview 
+                                                    preOrder={phaseData} 
+                                                    preOrderConfirmHandler={preOrderConfirmed}
+                                                    promoCodeApplied={updatePromoCodeInCart}
+                                                    promoCodeCleared={clearPromoCodeInCart}/>}
                 {currentPhaseIndex === 2 && <PaymentOptions onDeliveryOptions={phaseData} 
                                                             selectedOption={cartContext.order.paymentOptionId}
                                                             paymentOptionSelectHandler={paymentOptionConfirmed}/>}                  

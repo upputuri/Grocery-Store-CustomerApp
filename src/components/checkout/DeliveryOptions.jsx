@@ -9,7 +9,7 @@ const DeliveryOptions = (props) => {
     }
 
     return (
-        <IonContent color="dark">
+        <IonContent className="ion-padding" color="dark">
             {props.addresses && props.addresses.map((address)=>{
                 return <AddressTile 
                         addressId={address.id}

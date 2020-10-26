@@ -12,8 +12,12 @@ const GrocSearch = () => {
     }
 
     const doSearch = () => {
-        if (searchTextState && searchTextState.length>0)
-            history.push("/products/list?keywords="+searchTextState);
+        if (searchTextState && searchTextState.trim().length>0){
+            let keywords = searchTextState.trim().split(' ');
+            const searchText = keywords.map((word) => word+'*').join(' ');
+            // alert(searchText);
+            history.push("/products/list?keywords="+searchText);
+        }
     }
 
     const checkGo = (event) => {
@@ -24,7 +28,8 @@ const GrocSearch = () => {
     return (
         <IonSearchbar 
             className="pt-1" 
-            placeholder="Search for products" 
+            placeholder="Search for products"
+            autocomplete="on"
             value={searchTextState} 
             onIonChange={setSearchText}
             enterkeyhint="go"

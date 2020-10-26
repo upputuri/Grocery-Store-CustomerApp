@@ -8,17 +8,18 @@ import GrocSearch from '../Menu/GrocSearch';
 import { serviceBaseURL } from '../Utilities/ServiceCaller';
 
 const ProductList = () => {
-
+    
     const [data, setData] = useState(null);
     const [resource, setResource] = useState(null);
     const [query, setQuery] = useState('');
     const history = useHistory();
-
     const search = useLocation().search;
-
+    
+    
+    
     let loadProducts = async (query) => {
         let path = serviceBaseURL+'/products?'+query;     
-
+        
         console.log("Loading products from server");
         const client = new Client(path);
         const resource = client.go();
@@ -37,14 +38,17 @@ const ProductList = () => {
         setData(products);
         setResource(resource);
     }
-
+    
     useEffect(()=>{
         const cat = new URLSearchParams(search).get('category');
         const keywords = new URLSearchParams(search).get('keywords');
-        let query = cat && cat.length>0 ? 'category='+cat : 'category=';
-        query = keywords && keywords.length>0 ? query+'&keywords='+keywords : query+'&keywords=';
-        loadProducts(query);
-    },[query]);
+        let queryString = cat && cat.length>0 ? 'category='+cat : 'category=';
+        queryString = keywords && keywords.length>0 ? queryString+'&keywords='+keywords : queryString+'&keywords=';
+        if (query.localeCompare(queryString) !== 0){
+            setQuery(queryString);
+            loadProducts(queryString);
+        }
+    });
 
 
     const viewProductDetail = (id) =>
@@ -52,7 +56,7 @@ const ProductList = () => {
         history.push('/products/single/'+id);
     }
 
- 
+    console.log("Rendering product list");
     return (
             <IonPage>
                 <IonHeader className="osahan-nav">

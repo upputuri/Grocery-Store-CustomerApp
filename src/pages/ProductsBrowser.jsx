@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router';
+import { Redirect, Route, Switch } from 'react-router';
 import ProductList from '../components/Listing/ProductList';
 import Categories from './Categories';
 import SingleProduct from './SingleProduct';
@@ -20,7 +20,10 @@ class ProductsBrowser extends React.Component {
                                                         (props)=><Categories
                                                                 categoryClickHandler={this.listProductsOfCategory}/>} exact={true} /> 
 
-                    <Route path="/products/list" component={ProductList} exact={true} />  
+                    <Route path="/products/list" component={ProductList} exact={true} />
+
+                    {/* <Redirect path="/products/list/reload" to={ProductList} exact={true} /> */}
+                    {/* <Route exact path="/products/list/reload" render={() => <Redirect to="/products/list" />} />    */}
 
                     <Route path="/products/single/:productId" component={SingleProduct} exact={true} />
                     

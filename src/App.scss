@@ -149,8 +149,7 @@ ion-searchbar{
   background-color: var(--ion-color-primary);
 }
 
-ion-grid.ordertile {
-  border-radius: 10%;  
+ion-grid.ordertile { 
   overflow: hidden;
 }
 
@@ -162,10 +161,10 @@ ion-grid.ordertile {
   font-size: 11px;
 }
 
-.order-review-table ion-grid {
-  border-radius: 10%;
-  overflow: hidden;
-}
+// .order-review-table ion-grid {
+//   border-radius: 5%;
+//   overflow: hidden;
+// }
 
 .order-review-table ion-col {
   background-color: var(--ion-color-night);
@@ -188,4 +187,16 @@ ion-grid.ordertile {
   font-weight: 600;
   text-decoration: line-through;
   text-decoration-color: var(--ion-color-danger);
+}
+
+ion-card.address-card {
+  box-shadow: 1px 1px 25px 1px var(--ion-color-night);
+}
+
+ion-grid {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  border-radius: 2%; 
+  box-shadow: 1px 1px 25px 1px var(--ion-color-night);
+  background-color: var(--ion-color-night);
 }

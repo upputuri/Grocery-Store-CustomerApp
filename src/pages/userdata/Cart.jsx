@@ -48,7 +48,7 @@ const Cart = (props) =>{
             history.push("/login");
             return;
         }
-        let path = serviceBaseURL + '/customers/'+customerId+'/cart/items';
+        let path = serviceBaseURL + '/customers/'+customerId+'/cart';
 
         const client = new Client(path);
         const resource = client.go();
@@ -72,9 +72,12 @@ const Cart = (props) =>{
             } 
             return;
         }
-        const items = receivedState.getEmbedded().map((itemState) => itemState.data);
+        console.log("Service call response received");
+        // const items = receivedState.getEmbedded().map((itemState) => itemState.data);
+        const items = receivedState.data.cartItems;
         // alert(items.length);
-        const cartTotal = items.reduce((a, item) => a+item.totalPrice, 0.0);
+        // const cartTotal = items.reduce((a, item) => a+item.totalPrice, 0.0);
+        const cartTotal = receivedState.data.cartTotal;
         console.log('cart total'+cartTotal);
         setCartItemsState({
             data: items,
@@ -114,7 +117,7 @@ const Cart = (props) =>{
                                     discount={item.discount} 
                                     unitLabel={item.unitLabel}
                                     qty={item.qty}
-                                    totalPrice={item.totalPrice}
+                                    totalPriceAfterDiscount={item.totalPriceAfterDiscount}
                                     qtyChangeHandler={qtyChangeHandler.bind(this)}/>
                         )
                     }

@@ -7,7 +7,6 @@ import AddressTile from '../../../components/Cards/AddessTile';
 import AddressForm from '../../../components/forms/AddressForm';
 import BaseToolbar from '../../../components/Menu/BaseToolbar';
 import { serviceBaseURL } from '../../../components/Utilities/ServiceCaller';
-import './address.css'
 
 const AddressList = () => {
     const [addressListState, setAddressListState] = useState(null);

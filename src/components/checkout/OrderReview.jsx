@@ -1,10 +1,12 @@
 import { IonCol, IonContent, IonGrid, IonItem, IonLabel, IonRow, IonText } from '@ionic/react';
 import React from 'react';
+import PromoCodeForm from '../forms/PromoCodeForm';
 
 
 const OrderReview = (props) => {
     return (
         <IonContent className="ion-padding order-review-table" color="dark">
+            <PromoCodeForm codeApplied={props.promoCodeApplied} codeCleared={props.promoCodeCleared}/>
             <IonGrid className="p-2">
                 <IonRow className="p-3 ion-text-center border-bottom">
                     <IonCol>
@@ -13,7 +15,7 @@ const OrderReview = (props) => {
                 </IonRow>
                 <IonRow className="p-2 border-bottom">
                     <IonCol size="6" className="ion-text-left">
-                        <IonText color="primary">Item</IonText>
+                        <IonText color="primary">Item</IonText>         
                     </IonCol>
                     <IonCol size="2" className="ion-text-right">   
                         <IonText color="primary">count</IonText>

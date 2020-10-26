@@ -1,11 +1,11 @@
-import { IonButton, IonButtons, IonCard, IonCol, IonIcon, IonItem, IonLabel, IonRow, IonText } from '@ionic/react';
+import { IonButton, IonButtons, IonCard, IonCol, IonGrid, IonIcon, IonItem, IonLabel, IonRow, IonText } from '@ionic/react';
 import React from 'react';
 import { callOutline as phoneIcon, checkmarkCircleOutline as checkMarkIcon } from 'ionicons/icons';
 const AddressTile = (props) =>
 {
     console.log("Rendering address tile");
     return (
-        <IonCard className="address-card" color="night">
+        <IonGrid className="address-card" color="night">
             {props.title && 
             <IonRow className="ion-text-left">
                 <IonCol>{props.title}</IonCol>
@@ -41,7 +41,7 @@ const AddressTile = (props) =>
                     <IonButton color="secondary" onClick={props.selectClickHandler} className="ion-no-margin">Select</IonButton>
                 </IonCol>
             </IonRow>}
-        </IonCard>
+        </IonGrid>
     )
 }
 
