@@ -112,7 +112,8 @@ const Cart = (props) =>{
                                     id={item.cartItemId}
                                     key={item.cartItemId}
                                     productId={item.productId}
-                                    variationId={item.variationId} 
+                                    variationId={item.variationId}
+                                    image={item.image} 
                                     name={item.productName} 
                                     discount={item.discount} 
                                     unitLabel={item.unitLabel}

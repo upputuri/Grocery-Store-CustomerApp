@@ -6,6 +6,9 @@ import { Client } from 'ketting'
 // const serviceBaseURL = "http://grocservicecustomer-env.eba-bpju9vw3.ap-south-1.elasticbeanstalk.com/groc";
 const serviceBaseURL = "http://localhost:8080/groc";
 
+const smallImageStoreURL = "http://lhhs.in/vegitfiles/item/small";
+const mediumImageStoreURL = "http://lhhs.in/vegitfiles/item/medium";
+const largeImageStoreURL = "http://lhhs.in/vegitfiles/item/large";
 // interface RequestObj{
 //     method: string,
 //     body: string,
@@ -169,4 +172,4 @@ class ServiceRequest {
 }
 
 export default ServiceRequest;
-export { serviceBaseURL };
+export { serviceBaseURL, smallImageStoreURL, mediumImageStoreURL, largeImageStoreURL };

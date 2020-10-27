@@ -1,6 +1,6 @@
 import { IonContent, IonLabel } from '@ionic/react';
 import React from 'react';
-import AddressTile from '../Cards/AddessTile';
+import AddressTile from '../Cards/AddressTile';
 
 const DeliveryOptions = (props) => {
 

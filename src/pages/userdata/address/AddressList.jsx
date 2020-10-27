@@ -3,7 +3,7 @@ import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { LoginContext } from '../../../App';
-import AddressTile from '../../../components/Cards/AddessTile';
+import AddressTile from '../../../components/Cards/AddressTile';
 import AddressForm from '../../../components/forms/AddressForm';
 import BaseToolbar from '../../../components/Menu/BaseToolbar';
 import { serviceBaseURL } from '../../../components/Utilities/ServiceCaller';

@@ -291,21 +291,25 @@ class App extends React.Component {
     }})
   }
 
-  resetCartCount(){
+  resetCart(){
     this.setState({
       cart: {
         itemCount: 0
+      },
+      order: {
+        id : 0,
+        promoCodes : []
       }
     })
   }
 
-  clearOrderId(){
-    this.setState({
-      order: {
-        id: 0
-      }
-    })
-  }
+  // clearOrderId(){
+  //   this.setState({
+  //     order: {
+  //       id: 0
+  //     }
+  //   })
+  // }
 
   async placeOrder(){
     let path = serviceBaseURL + '/orders';
@@ -336,7 +340,7 @@ class App extends React.Component {
     console.log("Order successfully created on server - Order Id: "+receivedState.data.id);
     // alert(JSON.stringify(receivedState));
     // this.setOrderId(receivedState.data.id);
-    this.resetCartCount();
+    this.resetCart();
     return receivedState.data.id;
   }
 
@@ -356,7 +360,7 @@ class App extends React.Component {
                                       setPromoCodes: this.setPromoCodes.bind(this),
                                       setPaymentOption: this.setPaymentOption.bind(this),
                                       placeOrder: this.placeOrder.bind(this),
-                                      resetOrderState: this.clearOrderId.bind(this),
+                                      // resetOrderState: this.clearOrderId.bind(this),
                                       addItem: (pId, vId, qty)=>this.addItemToCart(pId, vId, qty)
                                       }}>
           <IonApp>

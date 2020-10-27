@@ -9,7 +9,8 @@ import PosterSlider from '../components/Listing/PosterSlider';
 import AddToCartButton from '../components/Menu/AddToCartButton';
 import BaseToolbar from '../components/Menu/BaseToolbar';
 import GrocSearch from '../components/Menu/GrocSearch';
-import { serviceBaseURL } from '../components/Utilities/ServiceCaller'
+import { serviceBaseURL } from '../components/Utilities/ServiceCaller';
+import { mediumImageStoreURL } from '../components/Utilities/ServiceCaller';
 
 const SingleProduct = (props) => {
     const [productState, setProductState] = useState(null);
@@ -114,15 +115,11 @@ const SingleProduct = (props) => {
                     {productState && 
                     <div>
                         <IonSlides pager="true">
-                            <IonSlide>
-                                <img alt="img" className="single-img" src="assets/item/7.jpg"/>
-                            </IonSlide>
-                            <IonSlide>
-                                <img alt="img" className="single-img" src="assets/item/10.jpg"/>
-                            </IonSlide>
-                            <IonSlide>
-                                <img alt="img" className="single-img" src="assets/item/9.jpg"/>
-                            </IonSlide>
+                            {productState.images && productState.images.map((image) => {
+                            return <IonSlide>
+                                        <img alt="img" className="single-img" src={mediumImageStoreURL+"/"+image}/>
+                                    </IonSlide>
+                            })}
                         </IonSlides>
                         <div className="p-3">
                             <div className="mb-2 card p-3 single-page-info">

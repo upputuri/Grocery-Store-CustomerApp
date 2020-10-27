@@ -10,12 +10,12 @@ import { serviceBaseURL } from '../Utilities/ServiceCaller';
 const ProductList = () => {
     
     const [data, setData] = useState(null);
-    const [resource, setResource] = useState(null);
+    const [pageOffset, setPageOffset] = useState(0);
+    const [pageSize, setPageSize] = useState(15);
+    const [totalCount, setTotalCount] = useState(0);
     const [query, setQuery] = useState('');
     const history = useHistory();
     const search = useLocation().search;
-    
-    
     
     let loadProducts = async (query) => {
         let path = serviceBaseURL+'/products?'+query;     
@@ -32,11 +32,10 @@ const ProductList = () => {
             console.log("Service call failed with - "+e);
             return;
         }
-        const products = productListState.getEmbedded().map((productState) => productState.data);
+        const products = productListState.data.products;
         console.log("Loaded products from server");
         // alert(JSON.stringify(products));
         setData(products);
-        setResource(resource);
     }
     
     useEffect(()=>{
@@ -71,6 +70,7 @@ const ProductList = () => {
                                     productId={product.id}
                                     key={product.id}
                                     name={product.name}
+                                    image={product.images[0]}
                                     variationId={product.variations[0].id}
                                     originalPrice={product.variations[0].price}
                                     discountPrice={product.variations[0].priceAfterDiscount}

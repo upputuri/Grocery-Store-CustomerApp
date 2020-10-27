@@ -19,7 +19,6 @@ const Checkout = (props) => {
     const phases = [deliveryOptionsPhase, orderReviewPhase, PaymentOptionsPhase];
     const [phaseData, setPhaseData] = useState(null);
     const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
-                                                                        
     const [shippingAddressIdState, setShippingAddressIdState] = useState(0);
     
     const [finalBillAmountState, setFinalBillAmountState] = useState(0);
@@ -29,6 +28,7 @@ const Checkout = (props) => {
     const [retryState, setRetryState] = useState(false);
     const loginContext = useContext(LoginContext);
     const cartContext = useContext(CartContext);
+    const [promoCodeState, setPromoCodeState] = useState(cartContext.order.promoCodes[0]);                                                                    
     const history = useHistory();
 
     useEffect(()=>{
@@ -45,7 +45,7 @@ const Checkout = (props) => {
             default:
                 break;
         }
-    }, [retryState]);
+    }, [retryState, promoCodeState]);
 
     const loadAddressList = async () => {
         let path = serviceBaseURL + '/customers/'+loginContext.customer.id+'/addresses';
@@ -84,7 +84,7 @@ const Checkout = (props) => {
     }
 
     const loadPreOrderSummary = async () => {
-        let path = serviceBaseURL + '/orders/preorder?customerId='+loginContext.customer.id+'&deliveryAddressId='+cartContext.order.deliveryAddressId;
+        let path = serviceBaseURL + '/orders/preorders';
         const client = new Client(path);
         const resource = client.go();
         const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
@@ -95,8 +95,9 @@ const Checkout = (props) => {
         console.log("Making service call: "+resource.uri);
         let receivedState;
         try{
-            receivedState = await resource.get({
-                headers: loginHeaders
+            receivedState = await resource.post({
+                headers: loginHeaders,
+                data: {...cartContext.order, customerId: loginContext.customer.id}
             });
         }
         catch(e)
@@ -217,10 +218,13 @@ const Checkout = (props) => {
 
     const updatePromoCodeInCart = (code) => {
         cartContext.setPromoCodes([code]);
+        setPromoCodeState(code);
+        //loadPreOrderSummary();
     }
 
     const clearPromoCodeInCart = () => {
         cartContext.setPromoCodes([]);
+        setPromoCodeState('');
     }
 
     if (phaseData !== null) {
@@ -244,7 +248,8 @@ const Checkout = (props) => {
                                                     preOrder={phaseData} 
                                                     preOrderConfirmHandler={preOrderConfirmed}
                                                     promoCodeApplied={updatePromoCodeInCart}
-                                                    promoCodeCleared={clearPromoCodeInCart}/>}
+                                                    promoCodeCleared={clearPromoCodeInCart}
+                                                    appliedPromoCode={cartContext.order.promoCodes[0]}/>}
                 {currentPhaseIndex === 2 && <PaymentOptions onDeliveryOptions={phaseData} 
                                                             selectedOption={cartContext.order.paymentOptionId}
                                                             paymentOptionSelectHandler={paymentOptionConfirmed}/>}                  

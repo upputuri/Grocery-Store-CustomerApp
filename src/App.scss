@@ -141,6 +141,28 @@ ion-searchbar{
   --box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 }
 
+
+// Srikanth
+.headtext {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.subheadtext {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.maintext {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.subtext {
+  font-size: 11px;
+  font-weight: 300;
+}
+
 .content-banner-canvas {
   background-color: var(--ion-color-night);
 }
@@ -157,9 +179,6 @@ ion-grid.ordertile {
   background-color: var(--ion-color-night);
 }
 
-.ordertile .subtext {
-  font-size: 11px;
-}
 
 // .order-review-table ion-grid {
 //   border-radius: 5%;
@@ -174,9 +193,6 @@ ion-grid.ordertile {
   background-color: var(--ion-color-night);
 }
 
-.faq .maintext {
-  font-size: 13px;
-}
 
 .price-after-discount {
   font-size: 15px;

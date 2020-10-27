@@ -3,7 +3,7 @@ import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router';
 import { LoginContext } from '../../../App';
-import AddressTile from '../../../components/Cards/AddessTile';
+import AddressTile from '../../../components/Cards/AddressTile';
 import BaseToolbar from '../../../components/Menu/BaseToolbar';
 import ServiceRequest, { serviceBaseURL } from '../../../components/Utilities/ServiceCaller';
 import StatusText from './StatusText';
@@ -176,6 +176,14 @@ const OrderDetail = (props) => {
                             </IonCol>
                             <IonCol size="6">
                                 <IonLabel><div>{'₹'+orderDetailState.orderTotal}</div></IonLabel>
+                            </IonCol>
+                        </IonRow>
+                        <IonRow className="ion-text-right">
+                            <IonCol size="6">
+                                <IonLabel color="primary"><span>Discounted Total:</span></IonLabel>
+                            </IonCol>
+                            <IonCol size="6">
+                                <IonLabel><div>{'₹'+orderDetailState.discountedTotal}</div></IonLabel>
                             </IonCol>
                         </IonRow>
                         <IonRow className="ion-text-right">

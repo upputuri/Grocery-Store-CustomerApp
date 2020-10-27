@@ -3,6 +3,7 @@ import React from 'react'
 import { CartContext } from '../../App'
 import { addCircle as addIcon, removeCircle as removeIcon, trash as trashIcon } from 'ionicons/icons';
 import { useHistory } from 'react-router';
+import { smallImageStoreURL } from '../Utilities/ServiceCaller';
 
 const CartItemTile = (props) =>
 {
@@ -16,7 +17,7 @@ const CartItemTile = (props) =>
         <IonCard onClick={viewProduct.bind(this, props.productId)} className="bg-black">
             <IonRow>
                 <IonCol size="auto">
-                    <img alt="img" className="not-found-img m-2" width="70px" height="70px" src="assets/item/9.jpg"/>
+                    <img alt="img" className="not-found-img m-2" width="70px" height="70px" src={smallImageStoreURL+'/'+props.image}/>
                 </IonCol>
                 <IonCol>
                     <IonRow>
