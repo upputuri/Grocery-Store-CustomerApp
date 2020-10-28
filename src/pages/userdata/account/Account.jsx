@@ -2,8 +2,8 @@ import { IonButton, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, 
 import { listOutline as listIcon, lockClosedOutline as lockClosedIcon, navigateCircleOutline as navigateIcon, personCircleOutline as personIcon } from 'ionicons/icons';
 import React, { useContext } from 'react';
 import { useHistory } from 'react-router';
-import { LoginContext } from '../../App';
-import BaseToolbar from '../../components/Menu/BaseToolbar';
+import { LoginContext } from '../../../App';
+import BaseToolbar from '../../../components/Menu/BaseToolbar';
 import './account.css';
 
 const Account = (props) => {
@@ -20,7 +20,7 @@ const Account = (props) => {
             <IonHeader className="osahan-nav">
                 <BaseToolbar title="Account"/>     
             </IonHeader>
-            <IonContent className="ion-padding my-profile-page" color="dark">
+            <IonContent className="account-info-table ion-padding my-profile-page" color="dark">
                 <div>
                     <IonGrid>
                         <IonRow>

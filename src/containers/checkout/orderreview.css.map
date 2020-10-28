@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "AAAA,AAAA,mBAAmB,CAAC,OAAO,CAAC;EACxB,YAAY,EAAE,0BAA0B;CAC3C",
-    "sources": [
-        "orderreview.scss"
-    ],
-    "names": [],
-    "file": "orderreview.css"
-}

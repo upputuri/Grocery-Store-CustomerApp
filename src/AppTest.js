@@ -7,7 +7,7 @@ import { LoginContext } from './App';
 import { GrocMenu } from './components/Menu/Menu';
 import AppPages from './components/Utilities/AppPages';
 import Home from './pages/Home';
-import Login from './pages/Login';
+import Login from './pages/auth/Login';
 
 const appPages = AppPages;
 

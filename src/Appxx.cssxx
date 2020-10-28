@@ -32,7 +32,7 @@ ion-menu.md ion-list#inbox-list ion-list-header {
   min-height: 20px;
 }
 
-.menu-top-section {
+ion-menu.md ion-list.menu-top-section {
   border-bottom: 1px solid var(--ion-color-primary, #d7d8da);
 }
 
@@ -132,5 +132,18 @@ span.regular-price {
 
 span.error-text {
   font-size: 10px;
+}
+
+ion-searchbar {
+  --border-radius: 2px !important;
+  --box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.content-banner-canvas {
+  background-color: var(--ion-color-night);
+}
+
+.listing-section-canvas {
+  background-color: var(--ion-color-primary);
 }
 /*# sourceMappingURL=App.css.map */

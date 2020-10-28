@@ -1,0 +1,23 @@
+.poster {
+    width:100px;
+    height:100px;
+    background-color: red;
+}
+
+.poster-container {
+    display:flex;
+    overflow-x:auto;
+}
+
+.poster-subtext {
+    font-size: 12px;
+    line-height: 1.25em;
+}
+
+.poster-title-section {
+    height: 22px;
+}
+
+.poster-text-section {
+    height: 66px;
+}

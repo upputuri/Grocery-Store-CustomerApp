@@ -1,7 +1,8 @@
 import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider } from '@ionic/react';
 import React, { useContext, useState } from 'react';
 import { Redirect, useHistory } from 'react-router';
-import { LoginContext } from '../App';
+import { LoginContext } from '../../App';
+import { logoURL } from '../../components/Utilities/ServiceCaller';
 
 const Registration = () =>
 {
@@ -138,7 +139,9 @@ const Registration = () =>
             </IonHeader>
             <IonContent className="ion-padding shop-cart-page" color="dark">
             <div className="card mb-2">
-                <div className="border-bottom text-center p-3">VEGIT Registration</div>
+                <div className="border-bottom text-center p-3">
+                  <img alt="img" className="single-img" src={logoURL}/>
+                </div>
                 <div className="p-3">
                     <form className="card">
                     <IonList lines="full" className="ion-no-margin ion-no-padding">

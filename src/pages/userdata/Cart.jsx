@@ -3,10 +3,11 @@ import { chevronForwardOutline as nextIcon } from 'ionicons/icons';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, withRouter } from "react-router-dom";
-import { LoginContext } from '../App';
-import CartItemTile from '../components/Cards/CartItemTile';
-import BaseToolbar from '../components/Menu/BaseToolbar';
-import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts';
+import { LoginContext } from '../../App';
+import CartItemTile from '../../components/Cards/CartItemTile';
+import BaseToolbar from '../../components/Menu/BaseToolbar';
+import GrocSearch from '../../components/Menu/GrocSearch';
+import { serviceBaseURL } from '../../components/Utilities/ServiceCaller.jsx';
 
 
 const Cart = (props) =>{
@@ -47,7 +48,7 @@ const Cart = (props) =>{
             history.push("/login");
             return;
         }
-        let path = serviceBaseURL + '/customers/'+customerId+'/cart/items';
+        let path = serviceBaseURL + '/customers/'+customerId+'/cart';
 
         const client = new Client(path);
         const resource = client.go();
@@ -71,9 +72,12 @@ const Cart = (props) =>{
             } 
             return;
         }
-        const items = receivedState.getEmbedded().map((itemState) => itemState.data);
+        console.log("Service call response received");
+        // const items = receivedState.getEmbedded().map((itemState) => itemState.data);
+        const items = receivedState.data.cartItems;
         // alert(items.length);
-        const cartTotal = items.reduce((a, item) => a+item.totalPrice, 0.0);
+        // const cartTotal = items.reduce((a, item) => a+item.totalPrice, 0.0);
+        const cartTotal = receivedState.data.cartTotal;
         console.log('cart total'+cartTotal);
         setCartItemsState({
             data: items,
@@ -97,7 +101,7 @@ const Cart = (props) =>{
         <IonPage>
             <IonHeader className="osahan-nav">
                 <BaseToolbar title="Your Cart"/>
-                <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>      
+                <GrocSearch/>      
             </IonHeader>              
             <IonContent color="dark" >
                 {
@@ -108,12 +112,13 @@ const Cart = (props) =>{
                                     id={item.cartItemId}
                                     key={item.cartItemId}
                                     productId={item.productId}
-                                    variationId={item.variationId} 
+                                    variationId={item.variationId}
+                                    image={item.image} 
                                     name={item.productName} 
                                     discount={item.discount} 
                                     unitLabel={item.unitLabel}
                                     qty={item.qty}
-                                    totalPrice={item.totalPrice}
+                                    totalPriceAfterDiscount={item.totalPriceAfterDiscount}
                                     qtyChangeHandler={qtyChangeHandler.bind(this)}/>
                         )
                     }

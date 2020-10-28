@@ -1,8 +1,7 @@
 import { IonRouterLink, IonSlide, IonSlides } from '@ionic/react'
 import React from 'react'
-import { Link } from 'react-router-dom'
 
-const Slider = () => {
+const BannerSlider = () => {
     return (
         <IonSlides className="homepage-slider" pager="true">
             <IonSlide>
@@ -15,4 +14,4 @@ const Slider = () => {
     )
 }
 
-export default Slider
+export default BannerSlider

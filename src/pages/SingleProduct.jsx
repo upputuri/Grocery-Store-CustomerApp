@@ -4,9 +4,13 @@ import Client from 'ketting';
 import React, { useEffect, useState } from 'react';
 import { useHistory, withRouter } from "react-router-dom";
 import { CartContext, LoginContext } from '../App';
+import ListingSection from '../components/Listing/ListingSection';
+import PosterSlider from '../components/Listing/PosterSlider';
 import AddToCartButton from '../components/Menu/AddToCartButton';
 import BaseToolbar from '../components/Menu/BaseToolbar';
-import { serviceBaseURL } from '../components/Utilities/ServiceCaller.ts'
+import GrocSearch from '../components/Menu/GrocSearch';
+import { serviceBaseURL } from '../components/Utilities/ServiceCaller';
+import { mediumImageStoreURL } from '../components/Utilities/ServiceCaller';
 
 const SingleProduct = (props) => {
     const [productState, setProductState] = useState(null);
@@ -104,29 +108,25 @@ const SingleProduct = (props) => {
             <IonPage>
                 <IonHeader className="osahan-nav">
                     <BaseToolbar title="Product Detail"/>
-                    <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>      
+                    <GrocSearch/>      
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>              
                 <IonContent color="dark">
                     {productState && 
                     <div>
                         <IonSlides pager="true">
-                            <IonSlide>
-                                <img alt="img" className="single-img" src="assets/item/7.jpg"/>
-                            </IonSlide>
-                            <IonSlide>
-                                <img alt="img" className="single-img" src="assets/item/10.jpg"/>
-                            </IonSlide>
-                            <IonSlide>
-                                <img alt="img" className="single-img" src="assets/item/9.jpg"/>
-                            </IonSlide>
+                            {productState.images && productState.images.map((image) => {
+                            return <IonSlide key={image}>
+                                        <img alt="img" className="single-img" src={mediumImageStoreURL+"/"+image}/>
+                                    </IonSlide>
+                            })}
                         </IonSlides>
                         <div className="p-3">
                             <div className="mb-2 card p-3 single-page-info">
                                 <div>
                                 <div className="single-page-shop">
                                     <IonText color="primary">
-                                        <h6 className="mb-1">{productState.name}</h6>
+                                        <h6 className="mb-1">{productState.name} - {productState.variations[variantIndexState].name}</h6>
                                     </IonText>
 
 
@@ -135,10 +135,19 @@ const SingleProduct = (props) => {
                                     <IonBadge color="success">25% OFF</IonBadge>
                                     </p> */}
                                     <div className="font-weight-normal mb-2 price">
-                                        <span><IonText><h5 className="mb-2 text-white">{'₹'+productState.variations[variantIndexState].price}
+                                        {/* <span><IonText><h5 className="mb-2 text-white">{'₹'+productState.variations[variantIndexState].price}
                                             <span>
                                             <IonText color="success">  {productState.discount > 0 ? productState.discount+'% OFF':''}</IonText></span></h5></IonText>
-                                        </span>  
+                                        </span> */}
+                                        {productState.discount > 0 &&
+                                        <IonText>
+                                            <span className="price-before-discount">{'₹'+productState.variations[variantIndexState].price}</span>
+                                            <span className="price-after-discount"> {'₹'+productState.variations[variantIndexState].priceAfterDiscount}</span>
+                                            <IonBadge color="secondary">{productState.discount+'% OFF'}</IonBadge>
+                                        </IonText> || 
+                                        <IonText>
+                                            <span className="price-after-discount">{'₹'+productState.variations[variantIndexState].price}</span>
+                                        </IonText>}                                          
                                     </div>
                                     <small className="text-secondary">
                                         <strong>
@@ -182,6 +191,10 @@ const SingleProduct = (props) => {
                                 </div>
                             </div>
                         </div>
+                        {/* <ListingSection title="Other similar products">
+                            <PosterSlider/>
+                        </ListingSection> */}
+                        
                     </div>
                     }
                     </IonContent>

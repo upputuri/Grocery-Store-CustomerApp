@@ -1,6 +1,6 @@
 import { IonContent, IonLabel } from '@ionic/react';
 import React from 'react';
-import AddressTile from '../../components/Cards/AddessTile';
+import AddressTile from '../Cards/AddressTile';
 
 const DeliveryOptions = (props) => {
 
@@ -9,7 +9,7 @@ const DeliveryOptions = (props) => {
     }
 
     return (
-        <IonContent color="dark">
+        <IonContent className="ion-padding" color="dark">
             {props.addresses && props.addresses.map((address)=>{
                 return <AddressTile 
                         addressId={address.id}

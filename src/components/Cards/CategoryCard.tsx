@@ -1,5 +1,6 @@
 import { IonCard, IonText } from '@ionic/react';
 import React, { MouseEventHandler } from 'react';
+import mediumImageStoreURL from '../Utilities/ServiceCaller';
 
 type CategoryProps = {
     id: string,

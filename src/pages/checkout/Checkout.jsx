@@ -4,11 +4,11 @@ import { Switch, useHistory } from 'react-router';
 import { CartContext, LoginContext } from '../../App';
 import BaseToolbar from '../../components/Menu/BaseToolbar';
 import { chevronForwardOutline as nextIcon, chevronBackOutline as previousIcon } from 'ionicons/icons';
-import DeliveryOptions from '../../containers/checkout/DeliveryOptions';
+import DeliveryOptions from '../../components/checkout/DeliveryOptions';
 import Client from 'ketting';
 import { serviceBaseURL } from '../../components/Utilities/ServiceCaller';
-import OrderReview from '../../containers/checkout/OrderReview';
-import PaymentOptions from '../../containers/checkout/PaymentOptions';
+import PaymentOptions from '../../components/checkout/PaymentOptions';
+import OrderReview from '../../components/checkout/OrderReview'
 
 const Checkout = (props) => {
     const [deliveryOptionsPhase, orderReviewPhase, PaymentOptionsPhase] = [
@@ -19,7 +19,6 @@ const Checkout = (props) => {
     const phases = [deliveryOptionsPhase, orderReviewPhase, PaymentOptionsPhase];
     const [phaseData, setPhaseData] = useState(null);
     const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
-                                                                        
     const [shippingAddressIdState, setShippingAddressIdState] = useState(0);
     
     const [finalBillAmountState, setFinalBillAmountState] = useState(0);
@@ -29,6 +28,7 @@ const Checkout = (props) => {
     const [retryState, setRetryState] = useState(false);
     const loginContext = useContext(LoginContext);
     const cartContext = useContext(CartContext);
+    const [promoCodeState, setPromoCodeState] = useState(cartContext.order.promoCodes[0]);                                                                    
     const history = useHistory();
 
     useEffect(()=>{
@@ -45,7 +45,7 @@ const Checkout = (props) => {
             default:
                 break;
         }
-    }, [retryState]);
+    }, [retryState, promoCodeState]);
 
     const loadAddressList = async () => {
         let path = serviceBaseURL + '/customers/'+loginContext.customer.id+'/addresses';
@@ -84,7 +84,7 @@ const Checkout = (props) => {
     }
 
     const loadPreOrderSummary = async () => {
-        let path = serviceBaseURL + '/orders/preorder?customerId='+loginContext.customer.id+'&deliveryAddressId='+cartContext.order.deliveryAddressId;
+        let path = serviceBaseURL + '/orders/preorders';
         const client = new Client(path);
         const resource = client.go();
         const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
@@ -95,8 +95,9 @@ const Checkout = (props) => {
         console.log("Making service call: "+resource.uri);
         let receivedState;
         try{
-            receivedState = await resource.get({
-                headers: loginHeaders
+            receivedState = await resource.post({
+                headers: loginHeaders,
+                data: {...cartContext.order, customerId: loginContext.customer.id}
             });
         }
         catch(e)
@@ -181,8 +182,10 @@ const Checkout = (props) => {
 
     const forwardExit = () => {
         //Create order and show success page
-        cartContext.placeOrder().then(()=>{
-            history.push("/orders")
+        cartContext.placeOrder().then((newOrderId)=>{
+            console.log("Promise resolved new orderId "+newOrderId);
+            history.push("/orders?id="+newOrderId);
+                // setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before placing the order again!'});
         });
         //history.push('/orderplaced');
         setCurrentPhaseIndex(-1)
@@ -213,6 +216,18 @@ const Checkout = (props) => {
         cartContext.setPaymentOption(paymentOptionId);
     }
 
+    // Promo code logic
+    const updatePromoCodeInCart = (code) => {
+        cartContext.setPromoCodes([code]);
+        setPromoCodeState(code);
+        //loadPreOrderSummary();
+    }
+
+    const clearPromoCodeInCart = () => {
+        cartContext.setPromoCodes([]);
+        setPromoCodeState('');
+    }
+
     if (phaseData !== null) {
         console.log("Rendering checkout page");
         return (
@@ -230,7 +245,12 @@ const Checkout = (props) => {
                 {currentPhaseIndex === 0 && <DeliveryOptions addresses={phaseData} 
                                                                 selectedAddressId={cartContext.order.deliveryAddressId} 
                                                                 addressSelectHandler={deliveryAddressSelected}/>}
-                {currentPhaseIndex === 1 && <OrderReview preOrder={phaseData} preOrderConfirmHandler={preOrderConfirmed}/>}
+                {currentPhaseIndex === 1 && <OrderReview 
+                                                    preOrder={phaseData} 
+                                                    preOrderConfirmHandler={preOrderConfirmed}
+                                                    promoCodeApplied={updatePromoCodeInCart}
+                                                    promoCodeCleared={clearPromoCodeInCart}
+                                                    appliedPromoCode={cartContext.order.promoCodes[0]}/>}
                 {currentPhaseIndex === 2 && <PaymentOptions onDeliveryOptions={phaseData} 
                                                             selectedOption={cartContext.order.paymentOptionId}
                                                             paymentOptionSelectHandler={paymentOptionConfirmed}/>}                  
@@ -257,7 +277,7 @@ const Checkout = (props) => {
             return (
             <IonPage>
                 <IonHeader className="osahan-nav">
-                    <BaseToolbar title="Shipping Addresses"/>     
+                    <BaseToolbar title="Checking out"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>                
                 <IonContent color="dark">

@@ -2,9 +2,9 @@ import { IonAlert, IonButton, IonContent, IonDatetime, IonHeader, IonInput, IonI
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { LoginContext } from '../../App';
-import BaseToolbar from '../../components/Menu/BaseToolbar';
-import { serviceBaseURL } from '../../components/Utilities/ServiceCaller';
+import { LoginContext } from '../../../App';
+import BaseToolbar from '../../../components/Menu/BaseToolbar';
+import { serviceBaseURL } from '../../../components/Utilities/ServiceCaller';
 import './account.css';
 
 const Profile = () => {
@@ -255,7 +255,6 @@ const Profile = () => {
             <IonPage>
                 <IonHeader className="osahan-nav">
                     <BaseToolbar title="Profile"/>
-                    <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>      
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>                
                 <IonContent color="dark">

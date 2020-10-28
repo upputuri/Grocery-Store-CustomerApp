@@ -14,29 +14,33 @@ import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/typography.css';
 import Client from 'ketting';
+import { getMaxListeners } from 'process';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import './App.css';
+import './App.scss';
 import { GrocMenu } from "./components/Menu/Menu";
 import AppPages from './components/Utilities/AppPages';
-import ServiceRequest, { serviceBaseURL } from './components/Utilities/ServiceCaller.ts';
-import './global.css';
+import ServiceRequest, { serviceBaseURL } from './components/Utilities/ServiceCaller';
+import './global.scss';
+import Login from './pages/auth/Login';
+import Registration from './pages/auth/Registration';
 import Checkout from './pages/checkout/Checkout';
+import ContactForm from './pages/general/ContactForm';
+import FAQ from './pages/general/FAQ';
 import Home from './pages/Home';
-import Login from './pages/Login';
 import ProductsBrowser from './pages/ProductsBrowser';
-import Registration from './pages/Registration';
-import Account from './pages/userdata/Account';
+import Account from './pages/userdata/account/Account';
+import Profile from './pages/userdata/account/Profile';
 import AddressList from './pages/userdata/address/AddressList';
+import OrderDetail from './pages/userdata/orders/OrderDetail';
 import Orders from './pages/userdata/orders/Orders';
-import Profile from './pages/userdata/Profile';
-
 /* Theme variables */
 import './theme/variables.css';
 
+
 const LoginContext = React.createContext(
   {
-    isAuthenticated: false,
+    isAuthenticated: true,
     customer: {
       id: '',
       fname: '',
@@ -71,6 +75,10 @@ const CartContext = React.createContext(
 const appPages = AppPages;
 
 class App extends React.Component {
+
+  constructor(props){
+    super(props)
+  }
 
   state =
     {
@@ -283,18 +291,32 @@ class App extends React.Component {
     }})
   }
 
-  resetCartCount(){
+  resetCart(){
     this.setState({
       cart: {
         itemCount: 0
+      },
+      order: {
+        id : 0,
+        promoCodes : []
       }
     })
   }
+
+  // clearOrderId(){
+  //   this.setState({
+  //     order: {
+  //       id: 0
+  //     }
+  //   })
+  // }
 
   async placeOrder(){
     let path = serviceBaseURL + '/orders';
     const client = new Client(path);
     const resource = client.go();
+    //Clear previous order Id;
+    this.setOrderId(0);
     let receivedState;
     try{
         console.log("Making service call: "+resource.uri);  
@@ -312,13 +334,14 @@ class App extends React.Component {
     catch(e)
     {
         console.log("Service call failed with - "+e);
-        return;
+        return 0;
     }
     console.log("Received response from service call: "+resource.uri);
     console.log("Order successfully created on server - Order Id: "+receivedState.data.id);
     // alert(JSON.stringify(receivedState));
-    this.setOrderId(receivedState.data.id);
-    this.resetCartCount();
+    // this.setOrderId(receivedState.data.id);
+    this.resetCart();
+    return receivedState.data.id;
   }
 
   render(){
@@ -337,6 +360,7 @@ class App extends React.Component {
                                       setPromoCodes: this.setPromoCodes.bind(this),
                                       setPaymentOption: this.setPaymentOption.bind(this),
                                       placeOrder: this.placeOrder.bind(this),
+                                      // resetOrderState: this.clearOrderId.bind(this),
                                       addItem: (pId, vId, qty)=>this.addItemToCart(pId, vId, qty)
                                       }}>
           <IonApp>
@@ -348,6 +372,8 @@ class App extends React.Component {
                   <Route path="/products" component={ProductsBrowser} />
                   <Route path="/register" component={Registration} />
                   <Route path="/login" component={Login} exact={true} />
+                  <Route path="/contactus" component={ContactForm} exact={true} />
+                  <Route path="/faq" component={FAQ} exact={true} />
                   <Route exact path="/" render={() => <Redirect to="/home" />} />
                   {this.state.isAuthenticated?
                   <Switch>
@@ -356,9 +382,10 @@ class App extends React.Component {
                     <Route path="/account/addresslist" component={AddressList} exact={true} />
                     <Route path="/checkout" component={Checkout} exact={true} />
                     <Route path="/orders" component={Orders} exact={true} />
+                    <Route path="/orders/:id" component={OrderDetail} exact={true} />
                   </Switch>
                   :
-                  <Redirect to="/login"/>
+                  <Redirect to={"/login"}/>
                   }
                 </Switch>
               </IonRouterOutlet>
