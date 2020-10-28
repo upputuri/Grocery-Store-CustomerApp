@@ -82,13 +82,13 @@ class App extends React.Component {
 
   state =
     {
-      isAuthenticated: true,
+      isAuthenticated: false,
       customer: {
-        id: 618,
-        fname: 'Srikanth',
+        id: '',
+        fname: '',
         lname: '',
-        email: 'usrikanth@gmail.com',
-        password: 'Password123',
+        email: '',
+        password: '',
         image: '',
         // id: 618,
         // fname: 'Srikanth',

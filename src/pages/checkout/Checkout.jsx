@@ -216,6 +216,7 @@ const Checkout = (props) => {
         cartContext.setPaymentOption(paymentOptionId);
     }
 
+    // Promo code logic
     const updatePromoCodeInCart = (code) => {
         cartContext.setPromoCodes([code]);
         setPromoCodeState(code);

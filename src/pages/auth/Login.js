@@ -2,6 +2,7 @@ import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLab
 import React, { useContext, useState } from 'react';
 import { Redirect, useHistory, useLocation } from 'react-router';
 import { LoginContext } from '../../App';
+import { logoURL } from '../../components/Utilities/ServiceCaller';
 
 const Login = (props) =>
 {
@@ -86,7 +87,9 @@ const Login = (props) =>
             </IonHeader>
             <IonContent className="ion-padding shop-cart-page" color="dark">
             <div className="card mb-2">
-                <div className="border-bottom text-center p-3">VEGIT Login</div>
+                <div className="border-bottom text-center p-3">
+                  <img alt="img" className="single-img" src={logoURL}/>
+                </div>
                 <div className="p-3">
                     <form className="card">
                     <IonList lines="full" className="ion-no-margin ion-no-padding">

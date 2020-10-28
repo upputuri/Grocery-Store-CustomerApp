@@ -3,9 +3,10 @@ import { Client } from 'ketting'
 
 // Login 
 
-// const serviceBaseURL = "http://grocservicecustomer-env.eba-bpju9vw3.ap-south-1.elasticbeanstalk.com/groc";
-const serviceBaseURL = "http://localhost:8080/groc";
-
+const serviceBaseURL = "http://grocservicecustomer-env.eba-bpju9vw3.ap-south-1.elasticbeanstalk.com/groc";
+// const serviceBaseURL = "http://localhost:8080/groc";
+const logoURL = "http://lhhs.in/vegit/themes/nyk/images/logo-1.jpeg";
+const logoIconURL = "";
 const smallImageStoreURL = "http://lhhs.in/vegitfiles/item/small";
 const mediumImageStoreURL = "http://lhhs.in/vegitfiles/item/medium";
 const largeImageStoreURL = "http://lhhs.in/vegitfiles/item/large";
@@ -172,4 +173,4 @@ class ServiceRequest {
 }
 
 export default ServiceRequest;
-export { serviceBaseURL, smallImageStoreURL, mediumImageStoreURL, largeImageStoreURL };
+export { serviceBaseURL, smallImageStoreURL, mediumImageStoreURL, largeImageStoreURL, logoURL, logoIconURL };

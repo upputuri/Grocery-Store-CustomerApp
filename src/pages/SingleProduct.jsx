@@ -116,7 +116,7 @@ const SingleProduct = (props) => {
                     <div>
                         <IonSlides pager="true">
                             {productState.images && productState.images.map((image) => {
-                            return <IonSlide>
+                            return <IonSlide key={image}>
                                         <img alt="img" className="single-img" src={mediumImageStoreURL+"/"+image}/>
                                     </IonSlide>
                             })}
@@ -191,9 +191,9 @@ const SingleProduct = (props) => {
                                 </div>
                             </div>
                         </div>
-                        <ListingSection title="Other similar products">
+                        {/* <ListingSection title="Other similar products">
                             <PosterSlider/>
-                        </ListingSection>
+                        </ListingSection> */}
                         
                     </div>
                     }

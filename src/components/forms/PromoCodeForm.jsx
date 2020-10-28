@@ -68,7 +68,8 @@ const PromoCodeForm = (props) => {
             return reason;
         }
         else {
-            return '';
+            // Promo code valid, but check against minimum order value
+            return parseFloat(props.orderValue) >= parseFloat(receivedState.data.orderAmount) ? '': 'Order value should be above'+receivedState.data.orderAmount;
         }
     }
 

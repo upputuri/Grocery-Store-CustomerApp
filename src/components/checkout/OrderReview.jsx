@@ -6,7 +6,10 @@ import PromoCodeForm from '../forms/PromoCodeForm';
 const OrderReview = (props) => {
     return (
         <IonContent className="ion-padding order-review-table" color="dark">
-            <PromoCodeForm appliedCode={props.appliedPromoCode} codeApplied={props.promoCodeApplied} codeCleared={props.promoCodeCleared}/>
+            <PromoCodeForm orderValue={props.preOrder.orderTotal} 
+                            appliedCode={props.appliedPromoCode} 
+                            codeApplied={props.promoCodeApplied} 
+                            codeCleared={props.promoCodeCleared}/>
             <IonGrid className="p-2">
                 <IonRow className="p-2 ion-text-center border-bottom">
                     <IonCol>
