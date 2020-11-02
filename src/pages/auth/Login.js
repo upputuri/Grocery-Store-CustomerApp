@@ -55,11 +55,11 @@ const Login = (props) =>
         setError("Username cannot be blank!");
         return false;
       }
-      let re = /([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])/;
-      if(!re.test(userIdState)) {
-        setError("Invalid credentials!");
-        return false;
-      }
+      // let re = /([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])/;
+      // if(!re.test(userIdState)) {
+      //   setError("Invalid credentials!");
+      //   return false;
+      // }
   
       if(passwordState === "") {
         setError("Please enter your password!");
@@ -95,10 +95,10 @@ const Login = (props) =>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
                             <IonLabel position="stacked">
-                                Email Id 
+                                Email Id/Mobile No.
                                 <IonText color="danger">*</IonText>
                             </IonLabel>
-                            <IonInput placeholder="Enter Email" required type="email" 
+                            <IonInput placeholder="Email Id/Mobile No." required type="email" 
                                     onIonChange={setUserId} 
                                     value={userIdState}></IonInput>
                         </IonItem>

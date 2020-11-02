@@ -1,5 +1,5 @@
 import { IonButton, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonItemGroup, IonLabel, IonPage, IonRouterLink, IonRow, IonText } from '@ionic/react';
-import { listOutline as listIcon, lockClosedOutline as lockClosedIcon, navigateCircleOutline as navigateIcon, personCircleOutline as personIcon } from 'ionicons/icons';
+import { keyOutline as keyIcon, lockClosedOutline as lockClosedIcon, navigateCircleOutline as navigateIcon, personCircleOutline as personIcon } from 'ionicons/icons';
 import React, { useContext } from 'react';
 import { useHistory } from 'react-router';
 import { LoginContext } from '../../../App';
@@ -48,6 +48,12 @@ const Account = (props) => {
                 </div>
                 <div className="menu-box">
                     <IonItemGroup>
+                        <IonRouterLink routerLink="/account/security">
+                            <IonItem color="night" lines="full" className="border-bottom">
+                                <IonIcon slot="start" icon={keyIcon} color="primary" size="small"/>
+                                <IonLabel>{'Login & Security'}</IonLabel>
+                            </IonItem>
+                        </IonRouterLink>
                         <IonRouterLink routerLink="/account/profile">
                             <IonItem color="night" lines="full" className="border-bottom">
                                 <IonIcon slot="start" icon={personIcon} color="primary" size="small"/>
@@ -55,15 +61,9 @@ const Account = (props) => {
                             </IonItem>
                         </IonRouterLink>
                         <IonRouterLink routerLink="/account/addresslist">
-                            <IonItem color="night" lines="full" className="border-bottom">
+                            <IonItem color="night" lines="full">
                                 <IonIcon slot="start" icon={navigateIcon} color="primary" size="small"/>
                                 <IonLabel>Addresses</IonLabel>
-                            </IonItem>
-                        </IonRouterLink>
-                        <IonRouterLink routerLink="/account/orders">
-                            <IonItem color="night" lines="full">
-                                <IonIcon slot="start" icon={listIcon} color="primary" size="small"/>
-                                <IonLabel>Orders</IonLabel>
                             </IonItem>
                         </IonRouterLink>
                     </IonItemGroup>

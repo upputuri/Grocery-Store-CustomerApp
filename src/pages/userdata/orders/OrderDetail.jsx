@@ -28,7 +28,7 @@ const OrderDetail = (props) => {
         let path = serviceBaseURL + '/orders/'+orderId;
         const client = new Client(path);
         const resource = client.go();
-        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
+        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
@@ -73,7 +73,7 @@ const OrderDetail = (props) => {
     const sendCancelRequest = async (orderId) => {
         setLoadingState(true);
         let serviceRequest = new ServiceRequest();
-        await serviceRequest.cancelOrder(orderId, {loginId: loginContext.customer.email,
+        await serviceRequest.cancelOrder(orderId, {loginId: loginContext.customer.mobile,
                                                                             password: loginContext.customer.password});
         if (serviceRequest.hasResponse && serviceRequest.isResponseOk)
         {

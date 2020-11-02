@@ -8,7 +8,8 @@ const Registration = () =>
 {
     const loginContext = useContext(LoginContext);
     const history = useHistory();
-    const [userIdState, setUserIdState] = useState('');
+    const [emailIdState, setEmailIdState] = useState('');
+    const [mobileState, setMobileState] = useState('');
     const [passwordState, setPasswordState] = useState('');
     const [rePasswordState, setRePasswordState] = useState('');
     const [fNameState, setFNameState] = useState('');
@@ -16,29 +17,33 @@ const Registration = () =>
     const [errorState, setErrorState] = useState('');
     const passwordFormatError = "Password must contain at least six characters, one lowercase, one uppercase and one numeric!";
 
-    const setUserId = (event) => {
-        setUserIdState(event.target.value);
-        setErrorState('');
+    const setEmail = (event) => {
+      setEmailIdState(event.detail.value);
+      setErrorState('');
     }
 
+    const setMobile = (event) => {
+      setMobileState(event.detail.value);
+      setErrorState('');
+    }
     const setPassword = (event) => {
-        setPasswordState(event.target.value);
-        setErrorState('');        
+      setPasswordState(event.detail.value);
+      setErrorState('');        
     }
 
     const setRePassword = (event) => {
-        setRePasswordState(event.target.value);
-        passwordState.localeCompare(event.target.value) !== 0 ? setErrorState('Passwords do not match!'): setErrorState('');       
+      setRePasswordState(event.detail.value);
+      passwordState.localeCompare(event.detail.value) !== 0 ? setErrorState('Passwords do not match!'): setErrorState('');       
     }
 
     const setFirstName = (event) => {
-        setFNameState(event.target.value);
-        setErrorState('');
+      setFNameState(event.detail.value);
+      setErrorState('');
     }
 
     const setLastName = (event) => {
-        setLNameState(event.target.value);
-        setErrorState('');
+      setLNameState(event.detail.value);
+      setErrorState('');
     }
 
     const checkPasswordMatch = (event) => {
@@ -49,7 +54,7 @@ const Registration = () =>
     {
         if (checkInput() && checkPasswordMatch()){
 
-          let result = loginContext.register(userIdState, fNameState, lNameState, passwordState).then(
+          let result = loginContext.register(mobileState, emailIdState, fNameState, lNameState, passwordState).then(
               (result) => {
                 if (result === 400)
                 {
@@ -71,30 +76,30 @@ const Registration = () =>
 
     const checkInput = () =>
     {
-      if(userIdState === "") {
-        setErrorState("Email Id cannot be blank!");
+      if(mobileState === "") {
+        setErrorState("Mobile number cannot be blank!");
         return false;
       }
       let re = /([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])/;
-      if(!re.test(userIdState)) {
+      if(emailIdState !== "" && !re.test(emailIdState)) {
         setErrorState("Email Id must be valid");
         return false;
       }
-      if(fNameState === "") {
-        setErrorState("First name cannot be blank!");
-        return false;
-      }
-      if(lNameState === "") {
-        setErrorState("Last Name cannot be blank!");
-        return false;
-      }
+      // if(fNameState === "") {
+      //   setErrorState("First name cannot be blank!");
+      //   return false;
+      // }
+      // if(lNameState === "") {
+      //   setErrorState("Last Name cannot be blank!");
+      //   return false;
+      // }
   
       if(passwordState !== "") {
         if(passwordState.length < 6) {
           setErrorState(passwordFormatError);
           return false;
         }
-        if(passwordState === userIdState) {
+        if(passwordState === emailIdState) {
           setErrorState(passwordFormatError);
           return false;
         }
@@ -147,20 +152,29 @@ const Registration = () =>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
                             <IonLabel position="stacked">
-                                Email Id 
+                                Mobile No. 
                                 <IonText color="danger">*</IonText>
                             </IonLabel>
-                            <IonInput placeholder="Enter Email" required type="email" 
-                                    onIonChange={setUserId} 
-                                    value={userIdState}></IonInput>
+                            <IonInput placeholder="Mobile No." type="tel" 
+                                    onIonChange={setMobile} 
+                                    value={mobileState}></IonInput>
+                        </IonItem>
+                    </IonList>
+                    <IonList lines="full" className="ion-no-margin ion-no-padding">
+                        <IonItem>
+                            <IonLabel position="stacked">
+                                Email Id
+                            </IonLabel>
+                            <IonInput placeholder="Enter Email" type="email" 
+                                    onIonChange={setEmail} 
+                                    value={emailIdState}></IonInput>
                         </IonItem>
                     </IonList>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
                             <IonLabel position="stacked">First Name
-                                <IonText color="danger">*</IonText>
                             </IonLabel>
-                            <IonInput placeholder="First Name" required type="text"
+                            <IonInput placeholder="First Name" type="text"
                              onIonChange={setFirstName}
                              value={fNameState}></IonInput>
                         </IonItem>
@@ -168,9 +182,8 @@ const Registration = () =>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
                             <IonLabel position="stacked">Last Name
-                                <IonText color="danger">*</IonText>
                             </IonLabel>
-                            <IonInput placeholder="Last Name" required type="text"
+                            <IonInput placeholder="Last Name" type="text"
                              onIonChange={setLastName}
                              value={lNameState}></IonInput>
                         </IonItem>

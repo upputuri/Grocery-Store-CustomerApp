@@ -24,6 +24,7 @@ import ServiceRequest, { serviceBaseURL } from './components/Utilities/ServiceCa
 import './global.scss';
 import Login from './pages/auth/Login';
 import Registration from './pages/auth/Registration';
+import Security from './pages/auth/Security';
 import Checkout from './pages/checkout/Checkout';
 import ContactForm from './pages/general/ContactForm';
 import FAQ from './pages/general/FAQ';
@@ -34,10 +35,11 @@ import Profile from './pages/userdata/account/Profile';
 import AddressList from './pages/userdata/address/AddressList';
 import OrderDetail from './pages/userdata/orders/OrderDetail';
 import Orders from './pages/userdata/orders/Orders';
+import { Plugins } from '@capacitor/core';
 /* Theme variables */
 import './theme/variables.css';
 
-
+const { Storage } = Plugins;
 const LoginContext = React.createContext(
   {
     isAuthenticated: true,
@@ -46,10 +48,12 @@ const LoginContext = React.createContext(
       fname: '',
       lname: '',
       email: '',
+      mobile: '',
       image: '',
     },
     login: () => {},
-    register: () => {}                                    
+    register: () => {},
+    updateProfile: () => {}                                   
 });
 
 const CartContext = React.createContext(
@@ -77,45 +81,42 @@ const appPages = AppPages;
 class App extends React.Component {
 
   constructor(props){
-    super(props)
+    super(props);
+    
+    const user = this.retrieveUser();
+
+    this.state =
+      {
+        isAuthenticated: false,
+        customer: {
+          id: '',
+          fname: '',
+          lname: '',
+          email: '',
+          password: '',
+          mobile: '',
+          image: '',
+        },
+        cart: {
+          itemCount: 0,
+        },
+        order: {
+          id: '',
+          deliveryAddressId: 0,
+          promoCodes: [],
+          paymentOptionId: 0,
+          transactionId: '',
+          instructions: ''
+        },
+        showToast: false,
+        toastMsg: 'Happy shopping!',
+        showLoading: false
+    }
   }
 
-  state =
-    {
-      isAuthenticated: false,
-      customer: {
-        id: '',
-        fname: '',
-        lname: '',
-        email: '',
-        password: '',
-        image: '',
-        // id: 618,
-        // fname: 'Srikanth',
-        // lname: 'Upputuri',
-        // email: 'usrikanth@gmail.com',
-        // password: 'Password123',
-        // image: '',
-      },
-      cart: {
-        itemCount: 0,
-      },
-      order: {
-        id: '',
-        deliveryAddressId: 0,
-        promoCodes: [],
-        paymentOptionId: 0,
-        transactionId: '',
-        instructions: ''
-      },
-      showToast: false,
-      toastMsg: 'Happy shopping!',
-      showLoading: false
-  }
-
-  async registerNewUserWithEmail(emailId, fName, lName, password)
+  async registerNewUser(mobile, emailId, fName, lName, password)
   {
-    console.log("Sending registration request for: "+emailId+","+fName+","+lName+",");
+    console.log("Sending registration request for: "+mobile+","+emailId+","+fName+","+lName+",");
     let path = serviceBaseURL + '/customers';
 
     const client = new Client(path);
@@ -125,6 +126,7 @@ class App extends React.Component {
         receivedState = await resource.post(
           {
             data: {
+              mobile: mobile,
               email: emailId,
               password: password,
               fname: fName,
@@ -147,12 +149,41 @@ class App extends React.Component {
         fname: receivedData.fname,
         lname: receivedData.lname,
         email: receivedData.email,
+        mobile: receivedData.mobile,
         password: password
       },
       showToast: true,
       toastMsg: 'Registration successful!'
     });
     return Promise.resolve(200);
+  }
+
+  async saveEditedProfile (newData) {
+    let path = serviceBaseURL + '/customers/'+this.state.customer.id;
+    const client = new Client(path);
+    const resource = client.go();
+    const authHeaderBase64Value = btoa(this.state.customer.mobile+':'+this.state.customer.password);
+    const loginHeaders = new Headers();
+    loginHeaders.append("Content-Type", "application/json");
+    loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
+    console.log("Making service call: "+resource.uri);
+    // alert(dobState);
+    let mergedProfile = {...this.state.customer, ...newData};
+    try{
+        await resource.put({
+            data: mergedProfile,
+            headers: loginHeaders
+        });
+    }
+    catch(e)
+    {
+        console.log("Service call failed with - "+e);
+        return false;
+    }
+    console.log("Service call completed successfully");
+    this.setState({customer: mergedProfile});
+    this.storeUser(mergedProfile);
+    return true;
   }
 
   loginHandler = async (user, password) =>
@@ -168,20 +199,22 @@ class App extends React.Component {
         fname: serviceRequest.responseObject.customer.fname,
         lname: serviceRequest.responseObject.customer.lname,
         email: serviceRequest.responseObject.customer.email,
+        mobile: serviceRequest.responseObject.customer.mobile,
         image: serviceRequest.responseObject.customer.image
       }
 
       // alert(JSON.stringify(fetchedCustomer));
+      const authenticatedCustomer = {...fetchedCustomer, password: password};
       this.setState({
         isAuthenticated: true,
-        customer: {...fetchedCustomer, password: password},
+        customer: authenticatedCustomer,
         cart: {
           itemCount: serviceRequest.responseObject.cartItemCount
         },
         toastMsg: 'Login Successful!',
         showToast: true
       });
-      
+      this.storeUser(authenticatedCustomer);
       return serviceRequest;
     }
     else if (serviceRequest.hasResponse){
@@ -204,6 +237,7 @@ class App extends React.Component {
         lname: '',
         email: '',
         password: '',
+        mobile: '',
         image: '',
       },
       cart: {
@@ -222,6 +256,44 @@ class App extends React.Component {
     });
   }
 
+  async storeUser(user) {
+    console.log("Storing in app: "+JSON.stringify(user));
+    await Storage.set({
+      key: "user",
+      value: JSON.stringify(user)
+    })
+  }
+
+  async retrieveUser() {
+    const ret = await Storage.get({key: "user"});
+    // console.log("Retrieved user from storage: "+ret.value);
+    const user = JSON.parse(ret.value);
+    // alert(JSON.parse(JSON.stringify(user)).fname);
+    let customer = (user === null) ? {
+      id: '',
+      fname: '',
+      lname: '',
+      email: '',
+      mobile: '',
+      password: '',
+      image: ''
+    }:{
+      id: user.id,
+      fname: user.fname,
+      lname: user.lname,
+      email: user.email,
+      mobile: user.mobile,
+      password: user.password,
+      image: user.image
+    }
+    this.setState({customer: customer});
+    this.setState({isAuthenticated: 
+                  (user && user.email && user.email.length>0) || 
+                  (user && user.mobile && user.mobile.length>0)});
+    // alert(JSON.stringify(ret));
+    // JSON.parse(ret);
+  }
+
   async addItemToCart(productId, variationId, qty)
   {
     //alert('adding to cart'+productId+variationId+qty);
@@ -235,7 +307,7 @@ class App extends React.Component {
     let receivedState;
     try{
         console.log("Making service call: "+resource.uri);  
-        const authHeaderBase64Value = btoa(this.state.customer.email+':'+this.state.customer.password);
+        const authHeaderBase64Value = btoa(this.state.customer.mobile+':'+this.state.customer.password);
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);
@@ -320,7 +392,7 @@ class App extends React.Component {
     let receivedState;
     try{
         console.log("Making service call: "+resource.uri);  
-        const authHeaderBase64Value = btoa(this.state.customer.email+':'+this.state.customer.password);
+        const authHeaderBase64Value = btoa(this.state.customer.mobile+':'+this.state.customer.password);
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);
@@ -352,7 +424,9 @@ class App extends React.Component {
                                     customer: this.state.customer, 
                                     login: (u, p)=>this.loginHandler(u, p),
                                     logout: this.logoutHandler, 
-                                    register: this.registerNewUserWithEmail.bind(this)
+                                    register: this.registerNewUser.bind(this),
+                                    updateProfile: this.saveEditedProfile.bind(this),
+                                    // updateMobile: updateMobile.bind(this,newMobile)
                                     }}>
         <CartContext.Provider value={{itemCount: this.state.cart.itemCount, 
                                       order: this.state.order,
@@ -380,6 +454,7 @@ class App extends React.Component {
                     <Route path="/account" component={Account} exact={true} />
                     <Route path="/account/profile" component={Profile} exact={true} />
                     <Route path="/account/addresslist" component={AddressList} exact={true} />
+                    <Route path="/account/security" component={Security} exact={true} />
                     <Route path="/checkout" component={Checkout} exact={true} />
                     <Route path="/orders" component={Orders} exact={true} />
                     <Route path="/orders/:id" component={OrderDetail} exact={true} />

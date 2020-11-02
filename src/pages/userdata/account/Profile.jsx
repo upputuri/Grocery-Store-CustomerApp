@@ -13,6 +13,7 @@ const Profile = () => {
     const [serviceRequestAlertState, setServiceRequestAlertState] = useState({show: false, msg: ''});
     const [infoAlertState, setInfoAlertState] = useState({show: false, msg: ''});
     const [retryState, setRetryState] = useState(false);
+    const [emailState, setEmailState] = useState('');
     const [fNameState, setFNameState] = useState('');
     const [lNameState, setLNameState] = useState('');
     const [dobState, setDobState] = useState('');
@@ -28,6 +29,11 @@ const Profile = () => {
 
     const setFirstName = (event) => {
         setFNameState(event.target.value);
+        setErrorState('');
+    }
+
+    const setEmail = (event) => {
+        setEmailState(event.target.value);
         setErrorState('');
     }
 
@@ -49,7 +55,7 @@ const Profile = () => {
         let path = serviceBaseURL + '/customers/'+loginContext.customer.id;
         const client = new Client(path);
         const resource = client.go();
-        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
+        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
@@ -76,6 +82,7 @@ const Profile = () => {
         const profile = receivedState.data;
         // alert(JSON.stringify(profile));
         setProfileState(profile);
+        setEmailState(profile.email);
         setFNameState(profile.fname);
         setLNameState(profile.lname);
         setMobileState(profile.mobile);
@@ -93,7 +100,22 @@ const Profile = () => {
         if (checkInput() === true)
         {
             // alert(fNameState+lNameState+mobileState+","+dobState)
-            sendEditProfileRequest();
+            setLoadingState(true);
+            loginContext.updateProfile({
+                "fname": fNameState,
+                "lname": lNameState,
+                "dob": dobState && dobState.length >= 10 ? new Date(dobState.substr(0,10)+"T00:00:00") : '',
+            }).then((result) => {
+                if (result) {
+                    setEditableState(false);
+                    setLoadingState(false);
+                    setInfoAlertState({show: true, msg: 'Profile updated!'});
+                }
+                else{
+                    setLoadingState(false);
+                    setErrorState("Failed to update profile. Please try again");
+                }
+            });
         }
     }
 
@@ -101,7 +123,7 @@ const Profile = () => {
         let path = serviceBaseURL + '/customers/'+loginContext.customer.id;
         const client = new Client(path);
         const resource = client.go();
-        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
+        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
@@ -112,10 +134,11 @@ const Profile = () => {
         try{
             receivedState = await resource.put({
                 data: {
+                    "email" : emailState,
                     "mobile": mobileState,
                     "fname": fNameState,
                     "lname": lNameState,
-                    "dob": new Date(dobState.substr(0,10)+"T00:00:00"),
+                    "dob": dobState && dobState.length >= 10 ? new Date(dobState.substr(0,10)+"T00:00:00") : '',
                 },
                 headers: loginHeaders
             });
@@ -132,6 +155,7 @@ const Profile = () => {
             setServiceRequestAlertState({show: true, msg: e.toString()});
             return;
         }
+        console.log("Service call completed successfully")
         setEditableState(false);
         setInfoAlertState({show: true, msg: 'Profile updated!'});
         setLoadingState(false);          
@@ -139,7 +163,8 @@ const Profile = () => {
 
     const checkInput = () => {
 
-        if ((fNameState && fNameState.trim().length<1)
+        if ((emailState && emailState.trim().length<1)
+                || (fNameState && fNameState.trim().length<1)
                 || (lNameState && lNameState.trim().length<1)
                 || (mobileState && mobileState.trim().length<1)
                 || (dobState && dobState.trim().length<1) )
@@ -179,20 +204,21 @@ const Profile = () => {
                     <div className="border-bottom text-center p-3">We will not share your personal details with anyone</div>
                         <div className="p-3">
                             <form className="card">
-                            <IonList lines="full" className="ion-no-margin ion-no-padding">
+                            {/* <IonList lines="full" className="ion-no-margin ion-no-padding">
                                 <IonItem>
                                     <IonLabel position="stacked">
                                         Email Id 
                                     </IonLabel>
-                                    <IonInput type="email" value={profileState.email} disabled></IonInput>
+                                    <IonInput placeholder="Email Id" type="email" disabled={!editableState}
+                                    onIonChange={setEmail}
+                                    value={emailState}></IonInput>
                                 </IonItem>
-                            </IonList>
+                            </IonList> */}
                             <IonList lines="full" className="ion-no-margin ion-no-padding">
                                 <IonItem>
                                     <IonLabel position="stacked">First Name
-                                        <IonText color="danger">*</IonText>
                                     </IonLabel>
-                                    <IonInput placeholder="First Name" required type="text" disabled={!editableState}
+                                    <IonInput placeholder="First Name" type="text" disabled={!editableState}
                                     onIonChange={setFirstName}
                                     value={fNameState}></IonInput>
                                 </IonItem>
@@ -200,14 +226,13 @@ const Profile = () => {
                             <IonList lines="full" className="ion-no-margin ion-no-padding">
                                 <IonItem>
                                     <IonLabel position="stacked">Last Name
-                                        <IonText color="danger">*</IonText>
                                     </IonLabel>
-                                    <IonInput placeholder="Last Name" required type="text" disabled={!editableState}
+                                    <IonInput placeholder="Last Name" type="text" disabled={!editableState}
                                     onIonChange={setLastName}
                                     value={lNameState}></IonInput>
                                 </IonItem>
                             </IonList>
-                            <IonList lines="full" className="ion-no-margin ion-no-padding">
+                            {/* <IonList lines="full" className="ion-no-margin ion-no-padding">
                                 <IonItem>
                                     <IonLabel position="stacked">Mobile Number
                                         <IonText color="danger">*</IonText>
@@ -216,12 +241,12 @@ const Profile = () => {
                                     onIonChange={setMobile}
                                     value={mobileState}></IonInput>
                                 </IonItem>
-                            </IonList>                            
+                            </IonList>                             */}
                             <IonList lines="full" className="ion-no-margin ion-no-padding">
                                 <IonItem>
                                     <IonLabel position="stacked">Date of Birth
                                     </IonLabel>
-                                    <IonDatetime placeholder="Date of Birth" required type="date" disabled={!editableState}
+                                    <IonDatetime placeholder="Date of Birth" type="date" disabled={!editableState}
                                     onIonChange={setDob}
                                     value={dobState}></IonDatetime>
                                 </IonItem>

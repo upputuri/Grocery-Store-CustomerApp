@@ -50,10 +50,14 @@ const GrocMenu = (props) => {
               return (
                 context.isAuthenticated ? 
                 (
-                  <IonList className="bg-black menu-top-section">           
-                    <IonAvatar class="ion-margin-start ios hydrated mb-2"><img alt="img" src="assets/user.jpg"></img></IonAvatar>
-                    <IonListHeader color="night">{context.customer.fname}</IonListHeader>
-                    <IonNote color="night">{context.customer.email}</IonNote>
+                  <IonList className="bg-black menu-top-section">
+                      <IonAvatar class="ion-margin-start ios hydrated mb-2"><img alt="img" src="assets/user.jpg"></img></IonAvatar>
+                      <IonItem color="night" detail="false">  
+                        {context.customer.fname && <IonListHeader color="night">{context.customer.fname+" "+context.customer.lname}</IonListHeader>}
+                      </IonItem>
+                      <IonItem color="night" detail="false">
+                        {context.customer.email && <IonNote>{context.customer.email}</IonNote>}
+                      </IonItem> 
                   </IonList>   
                 ) : (
                     <IonList className="bg-black menu-top-section">

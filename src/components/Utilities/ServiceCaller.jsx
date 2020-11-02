@@ -3,8 +3,8 @@ import { Client } from 'ketting'
 
 // Login 
 
-const serviceBaseURL = "http://grocservicecustomer-env.eba-bpju9vw3.ap-south-1.elasticbeanstalk.com/groc";
-// const serviceBaseURL = "http://localhost:8080/groc";
+// const serviceBaseURL = "http://grocservicecustomer-env.eba-bpju9vw3.ap-south-1.elasticbeanstalk.com/groc";
+const serviceBaseURL = "http://localhost:8080/groc";
 const logoURL = "http://lhhs.in/vegit/themes/nyk/images/logo-1.jpeg";
 const logoIconURL = "";
 const smallImageStoreURL = "http://lhhs.in/vegitfiles/item/small";

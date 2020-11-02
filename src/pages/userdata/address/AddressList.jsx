@@ -52,7 +52,7 @@ const AddressList = () => {
         let path = serviceBaseURL + '/customers/'+loginContext.customer.id+'/addresses';
         const client = new Client(path);
         const resource = client.go();
-        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
+        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
@@ -89,7 +89,7 @@ const AddressList = () => {
         let path = serviceBaseURL + '/customers/'+loginContext.customer.id+'/addresses';
         const client = new Client(path);
         const resource = client.go();
-        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
+        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
@@ -123,7 +123,7 @@ const AddressList = () => {
         let path = serviceBaseURL + '/customers/'+loginContext.customer.id+'/addresses/'+address.id;
         const client = new Client(path);
         const resource = client.go();
-        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
+        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        

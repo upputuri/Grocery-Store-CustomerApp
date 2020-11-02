@@ -53,7 +53,7 @@ const Cart = (props) =>{
         const client = new Client(path);
         const resource = client.go();
         let receivedState;
-        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
+        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);
