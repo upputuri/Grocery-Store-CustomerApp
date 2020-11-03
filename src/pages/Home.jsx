@@ -15,12 +15,34 @@ import GrocSearch from '../components/Menu/GrocSearch';
 const Home = () => {
 
   const [posterListsState, setPosterListsState] = useState([]);
+  const [bannersState, setBannersState] = useState([]);
 
   useEffect(() => {
+    loadBanners();
     loadPosters();
   }, []);
 
-  const loadPosters = async() =>{
+  const loadBanners = async () => {
+    const client = new Client(serviceBaseURL+'/application/coverimages');
+    const resource = client.go();
+    console.log("Making service call: "+resource.uri);
+    let receivedData;
+    try{
+        receivedData = await resource.get();
+    }
+    catch(e)
+    {
+        console.log("Service call failed with - "+e);
+        return;
+    }
+    // alert(JSON.stringify(receivedData));
+    console.log("Received response from service call: "+resource.uri);
+    const images = receivedData.getEmbedded().map((imageState) => imageState.data.image);
+    // console.log(images);
+    setBannersState(images);
+  }
+
+  const loadPosters = async () =>{
     //Categories posters
     loadSlot1Posters();
   }
@@ -76,7 +98,7 @@ const Home = () => {
         <GrocSearch/>      
       </IonHeader>
       <IonContent color="dark">
-        <BannerSlider/>
+        <BannerSlider images={bannersState}/>
         {/*Slot 1 posterslider*/}
         <ListingSection title={posterListsState[0] && posterListsState[0].title} viewAllRoute={"/products/categories"}>
           <PosterSlider slidesPerView={2.6} 

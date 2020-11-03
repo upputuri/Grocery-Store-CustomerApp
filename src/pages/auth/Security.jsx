@@ -6,6 +6,7 @@ import '../../App.scss';
 import Client from 'ketting';
 import { serviceBaseURL } from '../../components/Utilities/ServiceCaller';
 import CountDownTimer from './CountDownTimer';
+import PasswordResetForm from '../../components/forms/PasswordResetForm';
 
 const Security = () => {
     const [loadingState, setLoadingState] = useState(false);
@@ -102,11 +103,15 @@ const Security = () => {
     }
 
     const editEmailClicked = () => {
+        setMobileState('');
+        setOtpState('');
         setWaitingForOTPState(false);
         setEditingState('email');
     }
 
     const editMobileClicked = () => {
+        setEmailState('');
+        setOtpState('');
         setWaitingForOTPState(false);
         setEditingState('mobile');
     }
@@ -172,58 +177,76 @@ const Security = () => {
         // Compare input OTP with generated OTP
         if (generatedOtpState === otpState) {
             // alert(generatedOtpState+","+otpState);
+            setOtpState('');
             setWaitingForOTPState(false);
-            setLoadingState(true);
             sendEmailUpdateServiceRequest();
         }
     }
-
+    
     const verifyOTPForMobileUpdate = () => {
         // Compare input OTP with generated OTP
         if (generatedOtpState === otpState) {
             // alert(generatedOtpState+","+otpState);
+            setOtpState('');
             setWaitingForOTPState(false);
-            setLoadingState(true);
             sendMobileUpdateServiceRequest();
         }
     }
     
     const sendEmailUpdateServiceRequest = () => {
+        setLoadingState(true);
         loginContext.updateProfile({email: emailState}).then((result) => {
-            if (result) {
+            if (result === 200) {
                 setEditingState('');
                 setWaitingForOTPState(false);
                 setResendOTPEnabledState(false);
                 clearTimeout(otpClearingTimerState);
                 setOTPClearingTimerState(null);
                 setEmailState('');
+                setOtpState('');
                 setErrorState("");
                 setInfoAlertState({show: true, msg: "Email successfully updated!"});
             }
-            else {
-                setErrorState("Update request failed on server. Please try again");
+            else if (result === 400) {
+                setErrorState("New email Id not accepted. This email Id is already registered with another account");
             }
             setLoadingState(false);
         });
     }
 
     const sendMobileUpdateServiceRequest = () => {
+        setLoadingState(true);
         loginContext.updateProfile({mobile: mobileState}).then((result) => {
-            if (result) {
+            // alert(result.status);
+            if (result === 200) {
                 setEditingState('');
                 setWaitingForOTPState(false);
                 setResendOTPEnabledState(false);
                 clearTimeout(otpClearingTimerState);
                 setOTPClearingTimerState(null);
                 setMobileState('');
+                setOtpState('');
                 setErrorState("");
                 setInfoAlertState({show: true, msg: "Mobile No. successfully updated!"});
             }
-            else {
-                setErrorState("Update request failed on server. Please try again");
+            else if (result === 400) {
+                setErrorState("New mobile no. not accepted. This mobile no. is already registered with another account");
             }
             setLoadingState(false);
         });
+    }
+
+    const updatePassword = (newPassword) => {
+        setLoadingState(true);
+        loginContext.updateProfile({password: newPassword}).then((result)=>{
+            if (result) {
+                setInfoAlertState({show: true, msg: "Password successfully updated!"});
+            }
+            else {
+                setServiceRequestAlertState({show: true, msg: "Failed to update on server, please try again"});
+            }
+        });
+        setLoadingState(false);
     }
 
     return (
@@ -239,115 +262,112 @@ const Security = () => {
                         buttons={['OK']}/>                   
             <IonContent className="ion-padding" color="dark">
 
-                            <div className="card mb-2">
-                            <div className="p-3">    
-                            <form className="card">
-                                <IonList lines="full" className="ion-no-margin ion-no-padding">
-                                    <IonItem>
-                                        <IonLabel position="stacked">
-                                            Email Id
-                                        </IonLabel>
-                                        <IonInput type="email" disabled
-                                                value={loginContext.customer.email}></IonInput>
-                                    </IonItem>
-                                    {editingState !== 'email' ? 
-                                        <div className="p-2">
-                                            <IonButton onClick={editEmailClicked} size="small" color="secondary">Edit</IonButton>
-                                        </div>
-                                    :
-                                    <div>
-                                        <IonItem>
-                                            <IonLabel position="stacked">
-                                                New Email Id
-                                            </IonLabel>
-                                            <IonInput autofocus={waitingForOTPState ? false : true} type="email" disabled={waitingForOTPState ? true : false}
-                                                    onIonChange={setEmail} 
-                                                    value={emailState}></IonInput>
-                                        </IonItem>
-                                        {!waitingForOTPState && 
-                                                <div className="p-2">
-                                                   <IonButton onClick={sendOTPForEmailUpdateClicked} size="small" color="secondary">Send OTP</IonButton>
-                                                </div>}
-                                        {waitingForOTPState && 
-                                        <div>
-                                            <IonItem>
-                                                <IonLabel> OTP </IonLabel>
-                                                <IonInput autofocus={true} className="border m-2" type="text" value={otpState} onIonChange={setOtp}></IonInput>
-                                            </IonItem>
-                                            <div className="d-flex p-2 justify-content-center align-items-center">
-                                                <IonButton onClick={verifyOTPForEmailUpdate} size="small" color="secondary">Verify</IonButton>
-                                                {resendOTPEnabledState ?
-                                                    <IonButton onClick={sendOTPForEmailUpdateClicked} size="small" color="secondary">Resend OTP</IonButton>
-                                                :
-                                                    <CountDownTimer seconds={waitTimeForResendOTP} onTimeOut={() => setResendOTPEnabledState(true)}/>}
-                                            </div>
-                                        </div>}
-                                        {errorState !== '' &&
-                                            <IonItem>
-                                                <IonLabel className="ion-text-center ion-text-wrap" color="danger">
-                                                    <small>{errorState}</small>
-                                                </IonLabel>
-                                            </IonItem>}
-                                    </div>}
-                                </IonList>
-                            </form>
-                            </div>
-                            </div>
-                            <div className="card mb-2">
-                            <div className="p-3">    
-                            <form className="card">
-                                <IonList lines="full" className="ion-no-margin ion-no-padding">
-                                    <IonItem>
-                                        <IonLabel position="stacked">
-                                            Mobile #
-                                        </IonLabel>
-                                        <IonInput disabled type="tel" 
-                                                value={loginContext.customer.mobile}></IonInput>
-                                    </IonItem>
-                                    {editingState !== 'mobile' ? 
+                    <div className="card mb-2 p-3">
+                        <form className="card">
+                            <IonList lines="full" className="ion-no-margin ion-no-padding">
+                                <IonItem>
+                                    <IonLabel position="stacked">
+                                        Email Id
+                                    </IonLabel>
+                                    <IonInput type="email" disabled
+                                            value={loginContext.customer.email}></IonInput>
+                                </IonItem>
+                                {editingState !== 'email' ? 
                                     <div className="p-2">
-                                        <IonButton onClick={editMobileClicked} size="small" color="secondary">Edit</IonButton>
-                                        </div>
-                                    :
+                                        <IonButton onClick={editEmailClicked} size="small" color="secondary">Edit</IonButton>
+                                        {/* <IonButton onClick={()=>loginContext.updateProfile({mobile: '888888888'})} size="small" color="secondary">Edit</IonButton> */}
+                                    </div>
+                                :
+                                <div>
+                                    <IonItem>
+                                        <IonLabel position="stacked">
+                                            New Email Id
+                                        </IonLabel>
+                                        <IonInput autofocus={waitingForOTPState ? false : true} type="email" disabled={waitingForOTPState ? true : false}
+                                                onIonChange={setEmail} 
+                                                value={emailState}></IonInput>
+                                    </IonItem>
+                                    {!waitingForOTPState && 
+                                            <div className="p-2">
+                                                <IonButton onClick={sendOTPForEmailUpdateClicked} size="small" color="secondary">Send OTP</IonButton>
+                                            </div>}
+                                    {waitingForOTPState && 
                                     <div>
                                         <IonItem>
-                                            <IonLabel position="stacked">
-                                                New Mobile No.
-                                            </IonLabel>
-                                            <IonInput autofocus={waitingForOTPState ? false : true} type="tel" disabled={waitingForOTPState ? true : false}
-                                                    onIonChange={setMobile} 
-                                                    value={mobileState}></IonInput>
+                                            <IonLabel> OTP </IonLabel>
+                                            <IonInput autofocus={true} className="border m-2" type="text" value={otpState} onIonChange={setOtp}></IonInput>
                                         </IonItem>
-                                        {!waitingForOTPState && 
-                                                <div className="p-2">
-                                                   <IonButton onClick={sendOTPForMobileUpdateClicked} size="small" color="secondary">Send OTP</IonButton>
-                                                </div>}
-                                        {waitingForOTPState && 
-                                        <div>
-                                            <IonItem>
-                                                <IonLabel> OTP </IonLabel>
-                                                <IonInput autofocus={true} className="border m-2" type="text" value={otpState} onIonChange={setOtp}></IonInput>
-                                            </IonItem>
-                                            <div className="d-flex p-2 justify-content-center align-items-center">
-                                                <IonButton onClick={verifyOTPForMobileUpdate} size="small" color="secondary">Verify</IonButton>
-                                                {resendOTPEnabledState ?
-                                                    <IonButton onClick={sendOTPForMobileUpdateClicked} size="small" color="secondary">Resend OTP</IonButton>
-                                                :
-                                                    <CountDownTimer seconds={waitTimeForResendOTP} onTimeOut={() => setResendOTPEnabledState(true)}/>}
-                                            </div>
-                                        </div>}
-                                        {errorState !== '' &&
-                                            <IonItem>
-                                                <IonLabel className="ion-text-center ion-text-wrap" color="danger">
-                                                    <small>{errorState}</small>
-                                                </IonLabel>
-                                            </IonItem>}
-                                    </div>}                                        
-                                </IonList>
-                            </form>
-                            </div>
-                            </div>
-
+                                        <div className="d-flex p-2 justify-content-center align-items-center">
+                                            <IonButton onClick={verifyOTPForEmailUpdate} size="small" color="secondary">Verify</IonButton>
+                                            {resendOTPEnabledState ?
+                                                <IonButton onClick={sendOTPForEmailUpdateClicked} size="small" color="secondary">Resend OTP</IonButton>
+                                            :
+                                                <CountDownTimer seconds={waitTimeForResendOTP} onTimeOut={() => setResendOTPEnabledState(true)}/>}
+                                        </div>
+                                    </div>}
+                                    {errorState !== '' &&
+                                        <IonItem>
+                                            <IonLabel className="ion-text-center ion-text-wrap" color="danger">
+                                                <small>{errorState}</small>
+                                            </IonLabel>
+                                        </IonItem>}
+                                </div>}
+                            </IonList>
+                        </form>
+                    </div>
+                    <div className="card mb-2 p-3">
+                        <form className="card">
+                            <IonList lines="full" className="ion-no-margin ion-no-padding">
+                                <IonItem>
+                                    <IonLabel position="stacked">
+                                        Mobile #
+                                    </IonLabel>
+                                    <IonInput disabled type="tel" 
+                                            value={loginContext.customer.mobile}></IonInput>
+                                </IonItem>
+                                {editingState !== 'mobile' ? 
+                                <div className="p-2">
+                                    <IonButton onClick={editMobileClicked} size="small" color="secondary">Edit</IonButton>
+                                    </div>
+                                :
+                                <div>
+                                    <IonItem>
+                                        <IonLabel position="stacked">
+                                            New Mobile No.
+                                        </IonLabel>
+                                        <IonInput autofocus={waitingForOTPState ? false : true} type="tel" disabled={waitingForOTPState ? true : false}
+                                                onIonChange={setMobile} 
+                                                value={mobileState}></IonInput>
+                                    </IonItem>
+                                    {!waitingForOTPState && 
+                                            <div className="p-2">
+                                                <IonButton onClick={sendOTPForMobileUpdateClicked} size="small" color="secondary">Send OTP</IonButton>
+                                            </div>}
+                                    {waitingForOTPState && 
+                                    <div>
+                                        <IonItem>
+                                            <IonLabel> OTP </IonLabel>
+                                            <IonInput autofocus={true} className="border m-2" type="text" value={otpState} onIonChange={setOtp}></IonInput>
+                                        </IonItem>
+                                        <div className="d-flex p-2 justify-content-center align-items-center">
+                                            <IonButton onClick={verifyOTPForMobileUpdate} size="small" color="secondary">Verify</IonButton>
+                                            {resendOTPEnabledState ?
+                                                <IonButton onClick={sendOTPForMobileUpdateClicked} size="small" color="secondary">Resend OTP</IonButton>
+                                            :
+                                                <CountDownTimer seconds={waitTimeForResendOTP} onTimeOut={() => setResendOTPEnabledState(true)}/>}
+                                        </div>
+                                    </div>}
+                                    {errorState !== '' &&
+                                        <IonItem>
+                                            <IonLabel className="ion-text-center ion-text-wrap" color="danger">
+                                                <small>{errorState}</small>
+                                            </IonLabel>
+                                        </IonItem>}
+                                </div>}                                        
+                            </IonList>
+                        </form>
+                    </div>
+                    <PasswordResetForm onNewPasswordInput={updatePassword}/>
             </IonContent>
         </IonPage>
     )

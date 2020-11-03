@@ -9,7 +9,7 @@ import PosterSlider from '../components/Listing/PosterSlider';
 import AddToCartButton from '../components/Menu/AddToCartButton';
 import BaseToolbar from '../components/Menu/BaseToolbar';
 import GrocSearch from '../components/Menu/GrocSearch';
-import { serviceBaseURL } from '../components/Utilities/ServiceCaller';
+import { serviceBaseURL, smallImageStoreURL } from '../components/Utilities/ServiceCaller';
 import { mediumImageStoreURL } from '../components/Utilities/ServiceCaller';
 
 const SingleProduct = (props) => {
@@ -117,7 +117,7 @@ const SingleProduct = (props) => {
                         <IonSlides pager="true">
                             {productState.images && productState.images.map((image) => {
                             return <IonSlide key={image}>
-                                        <img alt="img" className="single-img" src={mediumImageStoreURL+"/"+image}/>
+                                        <img alt="img" className="single-img" src={smallImageStoreURL+"/"+image}/>
                                     </IonSlide>
                             })}
                         </IonSlides>

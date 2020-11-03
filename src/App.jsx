@@ -45,6 +45,7 @@ const LoginContext = React.createContext(
     isAuthenticated: true,
     customer: {
       id: '',
+      password: '',
       fname: '',
       lname: '',
       email: '',
@@ -53,7 +54,7 @@ const LoginContext = React.createContext(
     },
     login: () => {},
     register: () => {},
-    updateProfile: () => {}                                   
+    updateProfile: () => {},
 });
 
 const CartContext = React.createContext(
@@ -160,30 +161,33 @@ class App extends React.Component {
 
   async saveEditedProfile (newData) {
     let path = serviceBaseURL + '/customers/'+this.state.customer.id;
-    const client = new Client(path);
-    const resource = client.go();
     const authHeaderBase64Value = btoa(this.state.customer.mobile+':'+this.state.customer.password);
     const loginHeaders = new Headers();
     loginHeaders.append("Content-Type", "application/json");
     loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
-    console.log("Making service call: "+resource.uri);
-    // alert(dobState);
+    console.log("Making service call: "+path);
     let mergedProfile = {...this.state.customer, ...newData};
+    let response;
     try{
-        await resource.put({
-            data: mergedProfile,
+        response = await fetch(path, {
+            method: 'PUT',
+            body: JSON.stringify(mergedProfile),
             headers: loginHeaders
         });
     }
     catch(e)
     {
         console.log("Service call failed with - "+e);
-        return false;
+        throw e;
     }
-    console.log("Service call completed successfully");
-    this.setState({customer: mergedProfile});
-    this.storeUser(mergedProfile);
-    return true;
+    if (response.ok) {
+      console.log("Service call completed successfully");
+      this.setState({customer: mergedProfile});
+      this.storeUser(mergedProfile);
+    }
+    // console.dir(result);
+    console.log(response.status);
+    return Promise.resolve(response.status);
   }
 
   loginHandler = async (user, password) =>
@@ -426,7 +430,6 @@ class App extends React.Component {
                                     logout: this.logoutHandler, 
                                     register: this.registerNewUser.bind(this),
                                     updateProfile: this.saveEditedProfile.bind(this),
-                                    // updateMobile: updateMobile.bind(this,newMobile)
                                     }}>
         <CartContext.Provider value={{itemCount: this.state.cart.itemCount, 
                                       order: this.state.order,

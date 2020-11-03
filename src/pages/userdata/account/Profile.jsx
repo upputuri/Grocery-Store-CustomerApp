@@ -106,7 +106,7 @@ const Profile = () => {
                 "lname": lNameState,
                 "dob": dobState && dobState.length >= 10 ? new Date(dobState.substr(0,10)+"T00:00:00") : '',
             }).then((result) => {
-                if (result) {
+                if (result.success) {
                     setEditableState(false);
                     setLoadingState(false);
                     setInfoAlertState({show: true, msg: 'Profile updated!'});
@@ -117,48 +117,6 @@ const Profile = () => {
                 }
             });
         }
-    }
-
-    const sendEditProfileRequest = async () => {
-        let path = serviceBaseURL + '/customers/'+loginContext.customer.id;
-        const client = new Client(path);
-        const resource = client.go();
-        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
-        const loginHeaders = new Headers();
-        loginHeaders.append("Content-Type", "application/json");
-        loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
-        setLoadingState(true);
-        console.log("Making service call: "+resource.uri);
-        let receivedState;
-        // alert(dobState);
-        try{
-            receivedState = await resource.put({
-                data: {
-                    "email" : emailState,
-                    "mobile": mobileState,
-                    "fname": fNameState,
-                    "lname": lNameState,
-                    "dob": dobState && dobState.length >= 10 ? new Date(dobState.substr(0,10)+"T00:00:00") : '',
-                },
-                headers: loginHeaders
-            });
-        }
-        catch(e)
-        {
-            console.log("Service call failed with - "+e);
-            if (e.status && e.status === 401)//Unauthorized
-            {
-                history.push("/login");
-                return;
-            } 
-            setLoadingState(false);
-            setServiceRequestAlertState({show: true, msg: e.toString()});
-            return;
-        }
-        console.log("Service call completed successfully")
-        setEditableState(false);
-        setInfoAlertState({show: true, msg: 'Profile updated!'});
-        setLoadingState(false);          
     }
 
     const checkInput = () => {

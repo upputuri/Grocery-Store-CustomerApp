@@ -6,7 +6,7 @@ const CountDownTimer = (props) => {
 
     useEffect(() => {
         let ticker = setTimeout(()=> setTimerState(timerState-1), 1000);
-        if (timerState === 0){
+        if (timerState <= 0){
             clearInterval(ticker);
             props.onTimeOut();
         }

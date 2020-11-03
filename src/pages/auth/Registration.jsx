@@ -2,6 +2,7 @@ import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLab
 import React, { useContext, useState } from 'react';
 import { Redirect, useHistory } from 'react-router';
 import { LoginContext } from '../../App';
+import { isPasswordValid, passwordFormatError } from '../../components/Utilities/AppCommons';
 import { logoURL } from '../../components/Utilities/ServiceCaller';
 
 const Registration = () =>
@@ -15,7 +16,7 @@ const Registration = () =>
     const [fNameState, setFNameState] = useState('');
     const [lNameState, setLNameState] = useState('');
     const [errorState, setErrorState] = useState('');
-    const passwordFormatError = "Password must contain at least six characters, one lowercase, one uppercase and one numeric!";
+
 
     const setEmail = (event) => {
       setEmailIdState(event.detail.value);
@@ -94,36 +95,15 @@ const Registration = () =>
       //   return false;
       // }
   
-      if(passwordState !== "") {
-        if(passwordState.length < 6) {
-          setErrorState(passwordFormatError);
-          return false;
-        }
-        if(passwordState === emailIdState) {
-          setErrorState(passwordFormatError);
-          return false;
-        }
-        re = /[0-9]/;
-        if(!re.test(passwordState)) {
-          setErrorState(passwordFormatError);
-          return false;
-        }
-        re = /[a-z]/;
-        if(!re.test(passwordState)) {
-          setErrorState(passwordFormatError);
-          return false;
-        }
-        re = /[A-Z]/;
-        if(!re.test(passwordState)) {
-          setErrorState(passwordFormatError);
-          return false;
-        }
-      } else {
+      if(passwordState === "") {
         setErrorState("Please enter your password!");
         return false;
+      }else if (!isPasswordValid(emailIdState, passwordState)) {
+        setErrorState(passwordFormatError);
+        return false;
+      } else{
+        return true;
       }
-
-      return true;
     }
 
     return (
