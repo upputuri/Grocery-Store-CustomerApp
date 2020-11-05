@@ -94,7 +94,7 @@ const Account = (props) => {
                     <IonGrid>
                         <IonRow>
                             <IonCol>
-                                <div className="border-bottom">
+                                <div className="border-bottom border-secondary">
                                     <div className="profile-picture-box mt-3 mb-3">
                                         <img alt="profile_picture" src="assets/user/blank_profile.png"/>     
                                     </div>
@@ -119,13 +119,13 @@ const Account = (props) => {
                 <div className="menu-box">
                     <IonItemGroup>
                         <IonRouterLink routerLink="/account/security">
-                            <IonItem color="night" lines="full" className="border-bottom">
+                            <IonItem color="night" lines="full" className="border-bottom border-secondary">
                                 <IonIcon slot="start" icon={keyIcon} color="primary" size="small"/>
                                 <IonLabel>{'Login & Security'}</IonLabel>
                             </IonItem>
                         </IonRouterLink>
                         <IonRouterLink routerLink="/account/profile">
-                            <IonItem color="night" lines="full" className="border-bottom">
+                            <IonItem color="night" lines="full" className="border-bottom border-secondary">
                                 <IonIcon slot="start" icon={personIcon} color="primary" size="small"/>
                                 <IonLabel>Profile</IonLabel>
                             </IonItem>

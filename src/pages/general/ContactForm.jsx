@@ -97,44 +97,48 @@ const ContactForm = () => {
                         message={infoAlertState.msg}
                         buttons={['OK']}/>                                            
             <IonContent className="ion-padding" color="dark">
-            <form className="card p-3">
-                <IonList lines="full" className="ion-no-margin ion-no-padding">
-                    <IonItem>
-                        <IonLabel position="stacked">Subject
-                            <IonText color="danger">*</IonText>
-                        </IonLabel>
-                        <IonInput placeholder="Short summary" required type="text" minlength="2" maxlength="30" 
-                        onIonChange={setSubject}
-                        value={subjectState}></IonInput>
-                    </IonItem>
-                </IonList>
-                <IonList lines="full" className="ion-no-margin ion-no-padding">
-                    <IonItem>
-                        <IonLabel position="stacked">Detailed query
-                        </IonLabel>
-                        <IonTextarea rows={5} wrap="soft" maxlength="300"  placeholder="Details of your query" type="text"
-                        onIonChange={setDetail}
-                        value={detailState}></IonTextarea>
-                    </IonItem>
-                </IonList>
-                {errorState !== '' &&
-                <IonList lines="full" className="ion-no-margin ion-no-padding">
-                    <IonItem>
-                        <IonLabel className="ion-text-center ion-text-wrap" color="danger">
-                            <small>{errorState}</small>
-                        </IonLabel>
-                    </IonItem>
-                </IonList>}
-                <div className="mt-2">
+            <div>
+                <form>
                     <IonGrid>
                         <IonRow>
                             <IonCol>
-                                <IonButton color="secondary" expand="block" onClick={submitClicked} className="ion-no-margin">Send</IonButton>
+                                <IonList lines="full" className="ion-no-margin ion-no-padding">
+                                    <IonItem>
+                                        <IonLabel position="stacked">Subject
+                                            <IonText color="danger">*</IonText>
+                                        </IonLabel>
+                                        <IonInput placeholder="Short summary" required type="text" minlength="2" maxlength="30" 
+                                        onIonChange={setSubject}
+                                        value={subjectState}></IonInput>
+                                    </IonItem>
+                                </IonList>
+                                <IonList lines="full" className="ion-no-margin ion-no-padding">
+                                    <IonItem>
+                                        <IonLabel position="stacked">Detailed query
+                                        </IonLabel>
+                                        <IonTextarea rows={5} wrap="soft" maxlength="300"  placeholder="Details of your query" type="text"
+                                        onIonChange={setDetail}
+                                        value={detailState}></IonTextarea>
+                                    </IonItem>
+                                </IonList>
+                                {errorState !== '' &&
+                                <IonList lines="full" className="ion-no-margin ion-no-padding">
+                                    <IonItem>
+                                        <IonLabel className="ion-text-center ion-text-wrap" color="danger">
+                                            <small>{errorState}</small>
+                                        </IonLabel>
+                                    </IonItem>
+                                </IonList>}
                             </IonCol>
                         </IonRow>
+                            <IonRow>
+                                <IonCol>
+                                    <IonButton color="secondary" expand="block" onClick={submitClicked} className="ion-no-margin">Send</IonButton>
+                                </IonCol>
+                            </IonRow>
                     </IonGrid>
-                </div>
             </form>
+            </div>
             </IonContent>
         </IonPage>
     )

@@ -31,9 +31,24 @@ const AppPages =
       icon: 'mail'
     },
     {
-      title: 'FAQ',
+      title: 'Policies',
+      url: '/policies',
+      icon: 'document'
+    },
+    {
+      title: 'Support',
+      url: '/support',
+      icon: 'phone'
+    },
+    {
+      title: 'FAQs',
       url: '/faq',
       icon: 'help'
+    },
+    {
+      title: 'Blog',
+      url: '/',
+      icon: 'blog'
     }
 ];
 

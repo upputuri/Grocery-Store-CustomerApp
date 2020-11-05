@@ -11,12 +11,12 @@ const OrderReview = (props) => {
                             codeApplied={props.promoCodeApplied} 
                             codeCleared={props.promoCodeCleared}/>
             <IonGrid className="p-2">
-                <IonRow className="p-2 ion-text-center border-bottom">
+                <IonRow className="p-2 ion-text-center border-bottom border-secondary">
                     <IonCol>
                         <IonText className="headtext" color="primary">Please review your order</IonText>
                     </IonCol>
                 </IonRow>
-                <IonRow className="p-2 border-bottom">
+                <IonRow className="p-2 border-bottom border-secondary">
                     <IonCol size="6" className="ion-text-left">
                         <IonText color="primary">Item</IonText>         
                     </IonCol>
@@ -28,7 +28,7 @@ const OrderReview = (props) => {
                     </IonCol>
                 </IonRow>
                 {props.preOrder.orderItems && props.preOrder.orderItems.map((orderItem, index) => {
-                    return <IonRow className="p-0 pr-1 border-bottom" key={index}>
+                    return <IonRow className="p-0 pr-1 border-bottom border-secondary" key={index}>
                                 <IonCol size="6">
                                     <small>{orderItem.name+'-'+orderItem.qtyUnit}</small>
                                 </IonCol>
@@ -62,6 +62,14 @@ const OrderReview = (props) => {
                     </IonCol>
                     <IonCol size="6" className="p-0">
                         <IonLabel><div>{'₹'+props.preOrder.discountedTotal}</div></IonLabel>
+                    </IonCol>
+                </IonRow>
+                <IonRow className="ion-text-right p-0 pr-2">
+                    <IonCol size="6" className="p-0">
+                        <IonLabel className="subtext"><span>Shipping Charge:</span></IonLabel>
+                    </IonCol>
+                    <IonCol size="6" className="p-0">
+                        <IonLabel><div>{'₹'+props.preOrder.totalChargesValue}</div></IonLabel>
                     </IonCol>
                 </IonRow>
                 <IonRow className="ion-text-right p-0 pr-2">

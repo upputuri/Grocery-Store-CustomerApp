@@ -200,8 +200,8 @@ const Registration = () =>
                 </div>
                 <div className="p-3 border-top">
                     <IonButton color="secondary" routerDirection="forward" expand="block" onClick={sendRegisterRequest} className="ion-no-margin">Submit</IonButton>
-                    <div className='ion-text-center m-3'>Registered User?</div>
-                    <IonButton color="secondary" routerDirection="forward" expand="block" onClick={()=>history.goBack()} className="ion-no-margin">Login</IonButton>
+                    {/* <div className='ion-text-center m-3'>Registered User?</div>
+                    <IonButton color="secondary" routerDirection="forward" expand="block" onClick={()=>history.goBack()} className="ion-no-margin">Login</IonButton> */}
                 </div>
             </div>
             </IonContent>

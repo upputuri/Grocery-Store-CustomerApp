@@ -53,7 +53,8 @@ const Categories = (props) => {
                                 <CategoryCard
                                 id={category.id}
                                 key={category.id} 
-                                title={category.title} 
+                                title={category.title}
+                                image={category.image} 
                                 uspText={category.metaDescription} 
                                 description={category.description}
                                 categoryClickHandler={props.categoryClickHandler}/>

@@ -38,6 +38,10 @@ import Orders from './pages/userdata/orders/Orders';
 import { Plugins } from '@capacitor/core';
 /* Theme variables */
 import './theme/variables.css';
+import Policies from './pages/general/Policies';
+import Support from './pages/general/Support';
+import OTPLogin from './pages/auth/OTPLogin';
+import PasswordReset from './pages/auth/PasswordReset';
 
 const { Storage } = Plugins;
 const LoginContext = React.createContext(
@@ -190,6 +194,10 @@ class App extends React.Component {
     return Promise.resolve(response.status);
   }
 
+  loginWithOTP = async (mobile) => {
+    
+  }
+
   loginHandler = async (user, password) =>
   {
     let serviceRequest = new ServiceRequest();
@@ -257,6 +265,16 @@ class App extends React.Component {
       },
       showToast: true,
       toastMsg: 'You are logged out!'
+    });
+
+    this.storeUser({
+      id: '',
+      fname: '',
+      lname: '',
+      email: '',
+      password: '',
+      mobile: '',
+      image: '',
     });
   }
 
@@ -449,8 +467,11 @@ class App extends React.Component {
                   <Route path="/products" component={ProductsBrowser} />
                   <Route path="/register" component={Registration} />
                   <Route path="/login" component={Login} exact={true} />
+                  <Route path="/resetpass" component={PasswordReset} exact={true} />
                   <Route path="/contactus" component={ContactForm} exact={true} />
                   <Route path="/faq" component={FAQ} exact={true} />
+                  <Route path="/policies" component={Policies} exact={true} />
+                  <Route path="/support" component={Support} exact={true} />
                   <Route exact path="/" render={() => <Redirect to="/home" />} />
                   {this.state.isAuthenticated?
                   <Switch>

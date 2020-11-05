@@ -10,10 +10,10 @@ const ListingSection = (props) => {
     
     return (
         <React.Fragment>
-            <div onClick={viewAllClicked} className="listing-section-canvas p-3">
+            <div className="listing-section-canvas p-3">
                 <h5 className="mb-2 text-white text-center">{props.title}</h5>
                 <div className="text-center text-white-50 h6">
-                    <IonTitle color="secondary" size="small" class="ios button button-small ml-auto">View All</IonTitle>
+                    <IonTitle onClick={viewAllClicked} color="secondary" size="small" class="ios button button-small ml-auto">View All</IonTitle>
                 </div>            
                 {props.children}
             </div>

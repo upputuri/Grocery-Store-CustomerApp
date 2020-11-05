@@ -12,6 +12,7 @@ type ProductCardProps = {
     originalPrice: number,
     discountPrice: number,
     discount: number,
+    inStock: boolean,
     productClickHandler: Function
 }
 
@@ -44,7 +45,9 @@ const ProductCard = (props: ProductCardProps) =>
                 </div>              
                 <div className="small text-gray-500 d-flex ml-3 align-items-center justify-content-between">
                     <small className="text-secondary">{props.unitLabel}</small>
-                    <AddToCartButton productId={props.productId} variationId={props.variationId}/>
+                    {props.inStock ? <AddToCartButton productId={props.productId} variationId={props.variationId}/>
+                    :
+                    <IonText color="secondary">Out of Stock</IonText>}
                     {/* <span className="input-group-btn"><button disabled="disabled" className="btn btn-sm" type="button">-</button></span>
                     <input type="text" max="10" min="1" value="1" className="form-control border-form-control form-control-sm input-number text-white bg-black" name="quant[1]"/>
                     <span className="input-group-btn"><button className="btn btn-sm" type="button">+</button>

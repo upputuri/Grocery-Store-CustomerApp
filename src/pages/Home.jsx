@@ -10,7 +10,14 @@ import { serviceBaseURL } from '../components/Utilities/ServiceCaller';
 import {card as cardIcon, people as peopleIcon} from 'ionicons/icons';
 import '../App.scss';
 import GrocSearch from '../components/Menu/GrocSearch';
+import { Plugins } from '@capacitor/core';
+const { MobileApp } = Plugins;
 
+  document.addEventListener('ionBackButton', (ev) => {
+    ev.detail.register(-1, () => {
+          MobileApp.exitApp();
+    });
+  });
 
 const Home = () => {
 
@@ -44,10 +51,21 @@ const Home = () => {
 
   const loadPosters = async () =>{
     //Categories posters
-    loadSlot1Posters();
+    try{
+      let result = await loadCategoryPosters(posterListsState);
+      // alert(JSON.stringify(result));
+      result = await loadBestSellingItemPosters(result);
+      // alert(JSON.stringify(result));
+      result = await loadNewlyArrivedItemPosters(result);
+      // alert(JSON.stringify(result));
+      setPosterListsState(result);
+    }catch(e) {
+      console.log("Service call failed with - "+e);
+      return;
+    }
   }
 
-  const loadSlot1Posters = async () => {
+  const loadCategoryPosters = async (posterLists) => {
     // let serviceRequest = new ServiceRequest();
     // let categories = await serviceRequest.listCategories();
     // categories && this.setState({categories});\
@@ -61,7 +79,7 @@ const Home = () => {
     catch(e)
     {
         console.log("Service call failed with - "+e);
-        return;
+        Promise.reject(e);
     }
     // alert(JSON.stringify(categoriesState));
     console.log("Received response from service call: "+resource.uri);
@@ -73,14 +91,81 @@ const Home = () => {
         title: '',
         mainText: cat.metaDescription,
         subText: 'on all '+cat.name,
+        image: cat.image,
         leadType: 'productlist',
         leadQuery: 'category='+cat.id
       }
     });
     const posterList = {slot: 1, title: 'Everyday Essentials', posters: posters}
-    const posterLists = [...posterListsState, posterList];
-    setPosterListsState(posterLists);       
-}
+    const newPosterLists = [...posterLists, posterList];
+    return Promise.resolve(newPosterLists);      
+  }
+
+  const loadBestSellingItemPosters = async (posterLists) => {
+    const query = '?offset=0&size=12&sortkey=sales&sortorder=desc';
+    const client = new Client(serviceBaseURL+'/products'+query);
+    const resource = client.go();
+    let receivedData;
+    try{
+        console.log("Making service call: "+resource.uri);
+        receivedData = await resource.get();
+    }
+    catch(e)
+    {
+        console.log("Service call failed with - "+e);
+        Promise.reject(e);
+    }
+    // alert("TWO"+JSON.stringify(receivedData));
+    console.log("Received response from service call: "+resource.uri);
+    const products = receivedData.data.products;
+    const posters = products.map((product) =>{
+      return {
+        id: product.id,
+        title: product.discount ? product.discount+"% off": '',
+        mainText: product.name,
+        subText: product.variations[0].priceAfterDiscount,
+        image: product.image,
+        leadType: 'product',
+        leadQuery: product.id
+      }
+    });
+    const posterList = {slot: 2, title: 'Best Selling Products', viewAllRoute: "products/list"+query, posters: posters};
+    const newPosterLists = [...posterLists, posterList];
+    return Promise.resolve(newPosterLists);       
+  }
+
+  const loadNewlyArrivedItemPosters = async (posterLists) => {
+    const query = '?offset=0&size=12&sortkey=created_ts&sortorder=desc';
+    const client = new Client(serviceBaseURL+'/products'+query);
+    const resource = client.go();
+    let receivedData;
+    try{
+        console.log("Making service call: "+resource.uri);
+        receivedData = await resource.get();
+    }
+    catch(e)
+    {
+        console.log("Service call failed with - "+e);
+        Promise.reject(e);
+    }
+    // alert(JSON.stringify(receivedData));
+    console.log("Received response from service call: "+resource.uri);
+    const products = receivedData.data.products;
+    const posters = products.map((product) =>{
+      return {
+        id: product.id,
+        title: product.discount ? product.discount+"% off": '',
+        mainText: product.name,
+        subText: product.variations[0].priceAfterDiscount,
+        image: product.image,
+        leadType: 'product',
+        leadQuery: product.id
+      }
+    });
+    const posterList = {slot: 3, title: 'New Arrivals', viewAllRoute: "products/list"+query, posters: posters}
+    const newPosterLists = [...posterLists, posterList];
+    return Promise.resolve(newPosterLists);  
+  }
 
   return (
     <IonPage>
@@ -106,6 +191,22 @@ const Home = () => {
                         centeredSlides={false} 
                         spaceBetween={10} 
                         posters={posterListsState[0] && posterListsState[0].posters}/>
+        </ListingSection>
+        <ListingSection title={posterListsState[1] && posterListsState[1].title} 
+                        viewAllRoute={(posterListsState[1]  && posterListsState[1].viewAllRoute)}>
+          <PosterSlider slidesPerView={2.6} 
+                        loop={false} 
+                        centeredSlides={false} 
+                        spaceBetween={10} 
+                        posters={posterListsState[1] && posterListsState[1].posters}/>
+        </ListingSection>
+        <ListingSection title={posterListsState[2] && posterListsState[2].title} 
+                        viewAllRoute={(posterListsState[2] && posterListsState[2].viewAllRoute)}>
+          <PosterSlider slidesPerView={2.6} 
+                        loop={false} 
+                        centeredSlides={false} 
+                        spaceBetween={10} 
+                        posters={posterListsState[2] && posterListsState[2].posters}/>
         </ListingSection>
         <IonSlides options={{watchOverflow : true}}>
           <IonSlide>

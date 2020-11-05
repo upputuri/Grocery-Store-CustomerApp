@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { IonAvatar, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterLink, IonText } from "@ionic/react"
+import { IonAvatar, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterLink, IonText, IonTitle } from "@ionic/react"
 import { paperPlane as paperPlanceIcon, cafe as cafeIcon} from 'ionicons/icons'
-import { home, list, grid, pricetag, basket, card, person, location, create, heart, mail, help, sad, logInOutline as logInIcon} from 'ionicons/icons';
+import { home, informationCircle as blog, document, call as phone, list, grid, pricetag, basket, card, person, location, create, heart, mail, helpCircle as help, sad, logInOutline as logInIcon} from 'ionicons/icons';
 import { LoginContext } from '../../App';
 import '../../App.scss';
 
@@ -18,7 +18,10 @@ const menuIcons = {
   heart: <IonIcon slot="start" icon={heart}></IonIcon>,
   mail: <IonIcon slot="start" icon={mail}></IonIcon>,
   help: <IonIcon slot="start" icon={help}></IonIcon>,
-  sad: <IonIcon slot="start" icon={sad}></IonIcon>
+  sad: <IonIcon slot="start" icon={sad}></IonIcon>,
+  document: <IonIcon slot="start" icon={document}></IonIcon>,
+  phone: <IonIcon slot="start" icon={phone}></IonIcon>,
+  blog: <IonIcon slot="start" icon={blog}></IonIcon>
 };
 
 const SampleMenu = () => {
@@ -52,12 +55,12 @@ const GrocMenu = (props) => {
                 (
                   <IonList className="bg-black menu-top-section">
                       <IonAvatar class="ion-margin-start ios hydrated mb-2"><img alt="img" src="assets/user/blank_profile.png"></img></IonAvatar>
-                      <IonItem color="night" detail="false">  
-                        {context.customer.fname && <IonListHeader color="night">{context.customer.fname+" "+context.customer.lname}</IonListHeader>}
-                      </IonItem>
-                      <IonItem color="night" detail="false">
-                        {context.customer.email && <IonNote>{context.customer.email}</IonNote>}
-                      </IonItem> 
+                      {context.customer.fname && <IonItem color="night" detail="false">  
+                        <IonTitle color="primary">{context.customer.fname+" "+context.customer.lname}</IonTitle>
+                      </IonItem>}
+                      {/* {context.customer.email && <IonItem color="night" detail="false">
+                        <IonNote>{context.customer.email}</IonNote>
+                      </IonItem> } */}
                   </IonList>   
                 ) : (
                     <IonList className="bg-black menu-top-section">

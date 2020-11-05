@@ -1,10 +1,11 @@
 import { IonCard, IonText } from '@ionic/react';
 import React, { MouseEventHandler } from 'react';
-import mediumImageStoreURL from '../Utilities/ServiceCaller';
+import thumbNailImageStoreURL from '../Utilities/ServiceCaller';
 
 type CategoryProps = {
     id: string,
     title: string,
+    image: string,
     uspText: string,
     description: string,
     categoryClickHandler: Function
@@ -14,7 +15,7 @@ const CategoryCard = (props: CategoryProps) => {
         <div id={props.id} onClick={()=>props.categoryClickHandler(props.id)} className="categories-item mb-2 card">
             <div className="gold-members p-3">
                 <div className="media align-items-center">
-                    <div className="mr-3"><img alt="img" className="categories-img" src="assets/cate/1.png"/></div>
+                    <div className="mr-3"><img alt="img" className="categories-img" src={thumbNailImageStoreURL+"/"+props.image}/></div>
                     <div className="media-body">
                     <p className="text-success m-0">{props.uspText}</p>
                     <IonText color="primary">

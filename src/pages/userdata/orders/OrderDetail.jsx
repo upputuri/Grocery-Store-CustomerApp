@@ -119,7 +119,7 @@ const OrderDetail = (props) => {
                             buttons={[{text: 'Yes', handler: processOrderCancel}, 'No']}/>                                              
                 <IonContent className="ion-padding order-review-table" color="dark">
                     <IonGrid className="p-2">
-                        <IonRow className="ion-text-center border-bottom">
+                        <IonRow className="ion-text-center border-bottom border-secondary">
                         <IonCol className="p-3">
                             <IonText color="primary">{'Order# '+orderDetailState.id}</IonText>
                         </IonCol>
@@ -138,7 +138,7 @@ const OrderDetail = (props) => {
                             </IonCol>
                         </IonRow>
                         {(orderDetailState.status.trim() === 'Initial' || orderDetailState.status.trim() === 'Executing') &&
-                        <IonRow className="border-bottom">
+                        <IonRow className="border-bottom border-secondary">
                             <IonCol>
                                 <div className="d-flex justify-content-end">
                                     <IonButton onClick={checkAndProceedToCancel} className="ml-2" color="tertiary" size="small">Cancel Order</IonButton>
@@ -146,7 +146,7 @@ const OrderDetail = (props) => {
                             </IonCol>
                         </IonRow>
                         }
-                        <IonRow className="p-2 border-bottom">
+                        <IonRow className="p-2 border-bottom border-secondary">
                             <IonCol size="6" className="ion-text-left">
                                 <IonText color="primary">Item</IonText>
                             </IonCol>
@@ -158,7 +158,7 @@ const OrderDetail = (props) => {
                             </IonCol>
                         </IonRow>
                         {orderDetailState.orderItems && orderDetailState.orderItems.map((orderItem, index) => {
-                            return <IonRow className="p-2 border-bottom" key={index}>
+                            return <IonRow className="p-2 border-bottom border-secondary" key={index}>
                                         <IonCol size="6">
                                             <small>{orderItem.name+'-'+orderItem.qtyUnit}</small>
                                         </IonCol>
@@ -184,6 +184,14 @@ const OrderDetail = (props) => {
                             </IonCol>
                             <IonCol size="6">
                                 <IonLabel><div>{'₹'+orderDetailState.discountedTotal}</div></IonLabel>
+                            </IonCol>
+                        </IonRow>
+                        <IonRow className="ion-text-right">
+                            <IonCol size="6">
+                                <IonLabel color="primary"><span>Shipping Charge:</span></IonLabel>
+                            </IonCol>
+                            <IonCol size="6">
+                                <IonLabel><div>{'₹'+orderDetailState.totalChargesValue}</div></IonLabel>
                             </IonCol>
                         </IonRow>
                         <IonRow className="ion-text-right">

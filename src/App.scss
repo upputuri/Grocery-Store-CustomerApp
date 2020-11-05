@@ -216,3 +216,9 @@ ion-grid {
   box-shadow: 1px 1px 25px 1px var(--ion-color-night);
   background-color: var(--ion-color-night);
 }
+
+ion-input,ion-textarea{
+  ::placeholder {
+    font-size: 13px;
+  }
+}

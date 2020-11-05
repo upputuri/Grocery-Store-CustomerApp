@@ -27,7 +27,7 @@ const OrderTile = (props) =>
 
     return  <IonGrid className="ordertile">
 
-                <IonRow className="ion-text-center border-bottom">
+                <IonRow className="ion-text-center border-bottom border-secondary">
                     <IonCol className="p-3">
                         <IonText color="primary">{'Order# '+props.order.orderId}</IonText>
                     </IonCol>

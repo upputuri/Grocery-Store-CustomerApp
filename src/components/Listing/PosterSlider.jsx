@@ -22,6 +22,7 @@ const PosterSlider = (props) => {
                                     title={poster.title}
                                     mainText={poster.mainText}
                                     subText={poster.subText}
+                                    image={poster.image}
                                     leadQuery={poster.leadQuery}
                                     leadType={poster.leadType}/>
                             </IonSlide>

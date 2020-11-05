@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonLoading, IonPage, IonRouterLink, IonRow, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonLoading, IonPage, IonRouterLink, IonRow, IonSearchbar, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import { chevronForwardOutline as nextIcon } from 'ionicons/icons';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
@@ -129,7 +129,7 @@ const Cart = (props) =>{
                 <IonToolbar color="secondary">
                     <IonRow>
                         <IonCol>
-                            <IonTitle><small>Cart Total: </small>{'₹'+cartItemsState.cartTotal}</IonTitle>
+                            <IonText className="headtext"><small>Cart Total: </small>{'₹'+cartItemsState.cartTotal}</IonText>
                         </IonCol>
                         <IonCol>
                             <IonButtons >

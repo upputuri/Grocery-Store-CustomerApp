@@ -18,9 +18,9 @@ const ProductList = () => {
     const search = useLocation().search;
     
     let loadProducts = async (query) => {
-        let path = serviceBaseURL+'/products?'+query;     
+        let path = serviceBaseURL+'/products'+query;     
         
-        console.log("Loading products from server");
+        console.log("Making service call: "+path);
         const client = new Client(path);
         const resource = client.go();
         let productListState;
@@ -39,10 +39,12 @@ const ProductList = () => {
     }
     
     useEffect(()=>{
-        const cat = new URLSearchParams(search).get('category');
-        const keywords = new URLSearchParams(search).get('keywords');
-        let queryString = cat && cat.length>0 ? 'category='+cat : 'category=';
-        queryString = keywords && keywords.length>0 ? queryString+'&keywords='+keywords : queryString+'&keywords=';
+        // const cat = new URLSearchParams(search).get('category');
+        // const keywords = new URLSearchParams(search).get('keywords');
+        // const sortKey = new URLSearchParams()
+        // let queryString = cat && cat.length>0 ? 'category='+cat : 'category=';
+        // queryString = keywords && keywords.length>0 ? queryString+'&keywords='+keywords : queryString+'&keywords=';
+        let queryString = search;
         if (query.localeCompare(queryString) !== 0){
             setQuery(queryString);
             loadProducts(queryString);
@@ -75,6 +77,7 @@ const ProductList = () => {
                                     originalPrice={product.variations[0].price}
                                     discountPrice={product.variations[0].priceAfterDiscount}
                                     discount={product.discount}
+                                    inStock={product.variations[0].inStock}
                                     unitLabel={product.variations[0].name}   
                                     productClickHandler={viewProductDetail} />
         

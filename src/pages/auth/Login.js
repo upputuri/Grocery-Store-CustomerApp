@@ -105,7 +105,8 @@ const Login = (props) =>
                     </IonList>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
-                            <IonLabel position="stacked">Password</IonLabel>
+                            <IonLabel position="stacked">Password
+                                <IonText color="danger">*</IonText></IonLabel>
                             <IonInput placeholder="Enter Password" required type="password"
                              onIonChange={setPassword}
                              value={passwordState}></IonInput>
@@ -123,8 +124,8 @@ const Login = (props) =>
                 </div>
                 <div className="p-3 border-top">
                     <IonButton color="secondary" routerDirection="forward" expand="block" onClick={loginRequestHandler} className="ion-no-margin">Submit</IonButton>
-                    <div className='ion-text-center m-3'>or</div>
-                    <IonButton color="secondary" routerDirection="forward" expand="block" className="ion-no-margin">Login with Phone</IonButton>
+                    <div className='ion-text-center m-3'></div>
+                    <IonButton color="secondary" routerDirection="forward" expand="block" onClick={()=>history.push('/resetpass')} className="ion-no-margin">Forgot Password?</IonButton>
                     <div className='ion-text-center m-3'>New User?</div>
                     <IonButton color="secondary" routerDirection="forward" expand="block" onClick={()=>history.push('/register')} className="ion-no-margin">Sign Up</IonButton>                    
                 </div>

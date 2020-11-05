@@ -6,9 +6,9 @@ import { chevronDownOutline as arrowDownIcon, chevronForwardOutline as arrowRigh
 const FAQ = () =>{
 
     const faqdata = ['This is the answer for the first question. But this answer has to be little detailed, so I am adding some additional content without any idea what the content should be',
-                    'This is the answer for the first question. But this answer has to be little detailed, so I am adding some additional content without any idea what the content should be',
-                    'This is the answer for the first question. But this answer has to be little detailed, so I am adding some additional content without any idea what the content should be',
-                    'This is the answer for the first question. But this answer has to be little detailed, so I am adding some additional content without any idea what the content should be'];
+                    'This is the answer for the second question. But this answer has to be little detailed, so I am adding some additional content without any idea what the content should be',
+                    'This is the answer for the third question. But this answer has to be little detailed, so I am adding some additional content without any idea what the content should be',
+                    'This is the answer for the fourth question. But this answer has to be little detailed, so I am adding some additional content without any idea what the content should be'];
     const [selectedIndex , setSelectedIndex] = useState(-1);
 
     const toggleSelectedIndex = (i) =>{

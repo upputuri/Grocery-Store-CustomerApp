@@ -107,7 +107,7 @@ const SingleProduct = (props) => {
 
             <IonPage>
                 <IonHeader className="osahan-nav">
-                    <BaseToolbar title="Product Detail"/>
+                    <BaseToolbar title=""/>
                     <GrocSearch/>      
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>              
@@ -164,11 +164,14 @@ const SingleProduct = (props) => {
                                         </span>
                                     </small>                                                      
                                     <div className="small text-gray-500 d-flex align-items-center justify-content-between">
-                                        <div>
+                                        {/* <div>
                                             <IonIcon color="tertiary" icon={starIcon}></IonIcon>
                                             4.4
-                                        </div>
+                                        </div> */}
+                                        {productState.variations[variantIndexState].inStock ? 
                                         <AddToCartButton productId={productState.id} variationId={productState.variations[variantIndexState].id}/>
+                                        :
+                                        <IonText color="secondary">Out of Stock</IonText>}
                                         {/* <!-- <div className="input-group shop-cart-value">
                                             <span className="input-group-btn"><button disabled="disabled" className="btn btn-sm" type="button">-</button></span>
                                             <input type="text" max="10" min="1" value="1" className="form-control border-form-control form-control-sm input-number bg-black text-white" name="quant[1]">
@@ -181,7 +184,7 @@ const SingleProduct = (props) => {
                             </div>
                             <div className="mb-2 card p-3 single-page-info">
                                 <div className="short-description">
-                                <small className="float-right">Availability: <span className="badge badge-success">{productState.inStock ? 'In Stock': 'Out of Stock'}</span></small>
+                                <small className="float-right">Availability: <span className="badge badge-success">{productState.variations[variantIndexState].inStock ? 'In Stock': 'Out of Stock'}</span></small>
                                 <h6 className="font-weight-bold mb-3">
                                     Quick Overview  
                                 </h6>
