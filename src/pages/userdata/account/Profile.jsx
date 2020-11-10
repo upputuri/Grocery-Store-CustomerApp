@@ -106,7 +106,7 @@ const Profile = () => {
                 "lname": lNameState,
                 "dob": dobState && dobState.length >= 10 ? new Date(dobState.substr(0,10)+"T00:00:00") : '',
             }).then((result) => {
-                if (result.success) {
+                if (result === 200) {
                     setEditableState(false);
                     setLoadingState(false);
                     setInfoAlertState({show: true, msg: 'Profile updated!'});

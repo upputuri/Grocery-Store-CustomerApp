@@ -3,14 +3,28 @@ import { Client } from 'ketting'
 
 // Login 
 
-const serviceBaseURL = "http://grocservicecustomer-env.eba-bpju9vw3.ap-south-1.elasticbeanstalk.com/groc";
+// const serviceBaseURL = "http://grocservicecustomer-env.eba-bpju9vw3.ap-south-1.elasticbeanstalk.com/groc";
+const serviceBaseURL = "http://vegitcustomerrunnerservice-env.eba-3gjvheqy.ap-south-1.elasticbeanstalk.com/groc";
 // const serviceBaseURL = "http://localhost:8080/groc";
-const logoURL = "http://lhhs.in/vegit/themes/nyk/images/logo-1.jpeg";
+
+// const logoURL = "http://lhhs.in/vegit/themes/nyk/images/logo-1.jpeg";
+const logoURL = "http://thevegitclub.com/themes/nyk/images/logo-1.jpeg";
 const logoIconURL = "";
-const smallImageStoreURL = "http://lhhs.in/vegitfiles/item/small";
-const mediumImageStoreURL = "http://lhhs.in/vegitfiles/item/medium";
-const largeImageStoreURL = "http://lhhs.in/vegitfiles/item/large";
-const thumbNailImageStoreURL = "http://lhhs.in/vegitfiles/item/small_thumbnail";
+// const smallImageStoreURL = "http://lhhs.in/vegitfiles/item/small";
+// const mediumImageStoreURL = "http://lhhs.in/vegitfiles/item/medium";
+// const largeImageStoreURL = "http://lhhs.in/vegitfiles/item/large";
+// const thumbNailImageStoreURL = "http://lhhs.in/vegitfiles/item/small_thumbnail";
+const smallImageStoreURL = "http://thevegitclub.com/vegitfiles/item/small";
+const mediumImageStoreURL = "http://thevegitclub.com/vegitfiles/item/medium";
+const largeImageStoreURL = "http://thevegitclub.com/vegitfiles/item/large";
+const thumbNailImageStoreURL = "http://thevegitclub.com/vegitfiles/item/small_thumbnail";
+
+const coverImageStoreURL = "http://thevegitclub.com/vegitfiles/cover/small";
+const categoryImageStoreURL = "http://thevegitclub.com/vegitfiles/category/small";
+
+const defaultImageURL = "http://thevegitclub.com/vegitfiles/default.png";
+
+
 // interface RequestObj{
 //     method: string,
 //     body: string,
@@ -174,4 +188,4 @@ class ServiceRequest {
 }
 
 export default ServiceRequest;
-export { serviceBaseURL, smallImageStoreURL, mediumImageStoreURL, largeImageStoreURL, logoURL, logoIconURL, thumbNailImageStoreURL };
+export { defaultImageURL, serviceBaseURL, smallImageStoreURL, mediumImageStoreURL, largeImageStoreURL, logoURL, logoIconURL, thumbNailImageStoreURL, coverImageStoreURL, categoryImageStoreURL };

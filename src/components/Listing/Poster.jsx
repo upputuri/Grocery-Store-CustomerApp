@@ -1,7 +1,6 @@
 import { IonBadge, IonCard, IonCardContent, IonCol, IonGrid, IonRow, IonSlide, IonText } from '@ionic/react';
 import React from 'react';
 import { useHistory } from 'react-router';
-import { thumbNailImageStoreURL } from '../Utilities/ServiceCaller';
 import './posterSlider.css';
 
 const Poster = (props) => {
@@ -36,7 +35,9 @@ const Poster = (props) => {
                     </IonRow>
                 </div>
             </IonGrid>
-            <img alt="img" className="not-found-img" src={thumbNailImageStoreURL+"/"+props.image}/>
+            <div className="side-crop">
+                <img alt="img" className="not-found-img" src={props.image}/>
+            </div>
             <IonCardContent className="p-1 poster-text-section">
                 <IonText color="success"><small>{props.mainText}</small></IonText>
                 <IonText className="poster-subtext" color="primary"><div>{props.subText}</div></IonText>

@@ -121,6 +121,7 @@ class App extends React.Component {
 
   async registerNewUser(mobile, emailId, fName, lName, password)
   {
+    this.setState({showLoading: true});
     console.log("Sending registration request for: "+mobile+","+emailId+","+fName+","+lName+",");
     let path = serviceBaseURL + '/customers';
 
@@ -144,6 +145,7 @@ class App extends React.Component {
     {
         console.log("Service call failed with - "+e);
         // alert(JSON.stringify(e));
+        this.setState({showLoading: false});
         return Promise.resolve(e.status);
     }
     const receivedData = receivedState.data;
@@ -160,6 +162,7 @@ class App extends React.Component {
       showToast: true,
       toastMsg: 'Registration successful!'
     });
+    this.setState({showLoading: false});
     return Promise.resolve(200);
   }
 
@@ -200,6 +203,7 @@ class App extends React.Component {
 
   loginHandler = async (user, password) =>
   {
+    this.setState({showLoading: true});
     let serviceRequest = new ServiceRequest();
     await serviceRequest.loginRequest({loginId: user, password: password});
 
@@ -227,15 +231,18 @@ class App extends React.Component {
         showToast: true
       });
       this.storeUser(authenticatedCustomer);
+      this.setState({showLoading: false});
       return serviceRequest;
     }
     else if (serviceRequest.hasResponse){
       // alert("Server responded with error - Status:"+serviceRequest.responseObject.status+", error: "+serviceRequest.responseObject.message);
+      this.setState({showLoading: false});
       return serviceRequest;
     }
     else
     {
       // alert("Failed to make service call!!")
+      this.setState({showLoading: false});
       return serviceRequest;
     }
   }
@@ -320,7 +327,7 @@ class App extends React.Component {
   {
     //alert('adding to cart'+productId+variationId+qty);
     // alert(JSON.stringify(this.state.customer));
-
+    this.setState({showLoading: true});
     let path = serviceBaseURL + '/customers/'+this.state.customer.id+'/cart';
     // alert(this.state.customer.email+","+this.state.customer.password);
     const client = new Client(path);
@@ -347,19 +354,21 @@ class App extends React.Component {
     catch(e)
     {
         console.log("Service call failed with - "+e);
+        this.setState({showLoading: false});
         return;
-    }
-    console.log("Received response from service call: "+resource.uri);
-    this.setState({
-      cart: {
-        itemCount: this.state.cart.itemCount + qty
       }
-    });
-    this.setState({
-      showToast: true,
-      toastMsg: qty>0?'One item added to cart':'One item removed from cart'
-    })
-  }
+      console.log("Received response from service call: "+resource.uri);
+      this.setState({
+        cart: {
+          itemCount: this.state.cart.itemCount + qty
+        }
+      });
+      this.setState({
+        showToast: true,
+        toastMsg: qty>0?'One item added to cart':'One item removed from cart',
+        showLoading: false
+      })
+    }
 
   setDeliveryAddress(addressId){
     this.setState({order: {
@@ -406,6 +415,7 @@ class App extends React.Component {
   // }
 
   async placeOrder(){
+    this.setState({showLoading: true});
     let path = serviceBaseURL + '/orders';
     const client = new Client(path);
     const resource = client.go();
@@ -413,31 +423,33 @@ class App extends React.Component {
     this.setOrderId(0);
     let receivedState;
     try{
-        console.log("Making service call: "+resource.uri);  
-        const authHeaderBase64Value = btoa(this.state.customer.mobile+':'+this.state.customer.password);
-        const loginHeaders = new Headers();
-        loginHeaders.append("Content-Type", "application/json");
-        loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);
-        receivedState = await resource.post(
-          {
-            data: {...this.state.order, customerId: this.state.customer.id},
-            headers: loginHeaders
-          }
+      console.log("Making service call: "+resource.uri);  
+      const authHeaderBase64Value = btoa(this.state.customer.mobile+':'+this.state.customer.password);
+      const loginHeaders = new Headers();
+      loginHeaders.append("Content-Type", "application/json");
+      loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);
+      receivedState = await resource.post(
+        {
+          data: {...this.state.order, customerId: this.state.customer.id},
+          headers: loginHeaders
+        }
         );
-    }
-    catch(e)
-    {
+      }
+      catch(e)
+      {
         console.log("Service call failed with - "+e);
+        this.setState({showLoading: false});
         return 0;
+      }
+      console.log("Received response from service call: "+resource.uri);
+      console.log("Order successfully created on server - Order Id: "+receivedState.data.id);
+      // alert(JSON.stringify(receivedState));
+      // this.setOrderId(receivedState.data.id);
+      this.resetCart();
+      this.setState({showLoading: false});
+      return receivedState.data.id;
     }
-    console.log("Received response from service call: "+resource.uri);
-    console.log("Order successfully created on server - Order Id: "+receivedState.data.id);
-    // alert(JSON.stringify(receivedState));
-    // this.setOrderId(receivedState.data.id);
-    this.resetCart();
-    return receivedState.data.id;
-  }
-
+    
   render(){
     console.log("Rendering App");
     return (

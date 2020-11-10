@@ -10,7 +10,7 @@ import AddToCartButton from '../components/Menu/AddToCartButton';
 import BaseToolbar from '../components/Menu/BaseToolbar';
 import GrocSearch from '../components/Menu/GrocSearch';
 import { serviceBaseURL, smallImageStoreURL } from '../components/Utilities/ServiceCaller';
-import { mediumImageStoreURL } from '../components/Utilities/ServiceCaller';
+import { defaultImageURL, mediumImageStoreURL } from '../components/Utilities/ServiceCaller';
 
 const SingleProduct = (props) => {
     const [productState, setProductState] = useState(null);
@@ -117,7 +117,7 @@ const SingleProduct = (props) => {
                         <IonSlides pager="true">
                             {productState.images && productState.images.map((image) => {
                             return <IonSlide key={image}>
-                                        <img alt="img" className="single-img" src={smallImageStoreURL+"/"+image}/>
+                                        <img alt="img" className="single-img" src={image?mediumImageStoreURL+"/"+image:defaultImageURL}/>
                                     </IonSlide>
                             })}
                         </IonSlides>
@@ -163,7 +163,7 @@ const SingleProduct = (props) => {
                                             })}
                                         </span>
                                     </small>                                                      
-                                    <div className="small text-gray-500 d-flex align-items-center justify-content-between">
+                                    <div className="small text-gray-500 d-flex align-items-center justify-content-end">
                                         {/* <div>
                                             <IonIcon color="tertiary" icon={starIcon}></IonIcon>
                                             4.4
@@ -209,7 +209,7 @@ const SingleProduct = (props) => {
         return (
         <IonPage>
             <IonHeader className="osahan-nav">
-                <BaseToolbar title="Product Detail"/>
+                <BaseToolbar />
                 <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>      
             </IonHeader>
             <IonLoading isOpen={loadingState}/>                

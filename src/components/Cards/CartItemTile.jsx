@@ -3,7 +3,7 @@ import React from 'react'
 import { CartContext } from '../../App'
 import { addCircle as addIcon, removeCircle as removeIcon, trash as trashIcon } from 'ionicons/icons';
 import { useHistory } from 'react-router';
-import { thumbNailImageStoreURL } from '../Utilities/ServiceCaller';
+import { defaultImageURL, thumbNailImageStoreURL } from '../Utilities/ServiceCaller';
 
 const CartItemTile = (props) =>
 {
@@ -17,7 +17,7 @@ const CartItemTile = (props) =>
         <IonCard onClick={viewProduct.bind(this, props.productId)} className="bg-black">
             <IonRow>
                 <IonCol size="auto">
-                    <img alt="img" className="not-found-img m-2" width="70px" height="70px" src={thumbNailImageStoreURL+'/'+props.image}/>
+                    <img alt="img" className="not-found-img m-2" width="70px" height="70px" src={props.image?thumbNailImageStoreURL+'/'+props.image:defaultImageURL}/>
                 </IonCol>
                 <IonCol>
                     <IonRow>

@@ -48,8 +48,11 @@ const PasswordResetForm = (props) => {
 
     const submitClicked = () => {
         if (checkInput() && checkPasswordMatch()) {
-            props.onNewPasswordInput(newPasswordState);
+            setCurrentPasswordState('');
+            setNewPasswordState('');
+            setRePasswordState('');
             setEditingState(false);
+            props.onNewPasswordInput(newPasswordState);
         }
     }
 

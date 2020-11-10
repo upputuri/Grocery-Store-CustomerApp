@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonSearchbar } from '@ionic/react';
+import { IonContent, IonHeader, IonLoading, IonPage, IonSearchbar } from '@ionic/react';
 import Client from 'ketting';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
@@ -16,10 +16,11 @@ const ProductList = () => {
     const [query, setQuery] = useState('');
     const history = useHistory();
     const search = useLocation().search;
-    
+    const [showLoading, setShowLoading] = useState(false);
+
     let loadProducts = async (query) => {
         let path = serviceBaseURL+'/products'+query;     
-        
+        setShowLoading(true);
         console.log("Making service call: "+path);
         const client = new Client(path);
         const resource = client.go();
@@ -30,12 +31,14 @@ const ProductList = () => {
         catch(e)
         {
             console.log("Service call failed with - "+e);
+            setShowLoading(false);
             return;
         }
         const products = productListState.data.products;
         console.log("Loaded products from server");
         // alert(JSON.stringify(products));
         setData(products);
+        setShowLoading(false);
     }
     
     useEffect(()=>{
@@ -64,22 +67,24 @@ const ProductList = () => {
                     <BaseToolbar title="Products"/>
                     <GrocSearch/>      
                 </IonHeader>            
-        
+                <IonLoading isOpen={showLoading}/>
                 <IonContent color="dark">
                     {data && data.map(
                         (product) =>{
-                            return <ProductCard 
-                                    productId={product.id}
-                                    key={product.id}
-                                    name={product.name}
-                                    image={product.images[0]}
-                                    variationId={product.variations[0].id}
-                                    originalPrice={product.variations[0].price}
-                                    discountPrice={product.variations[0].priceAfterDiscount}
-                                    discount={product.discount}
-                                    inStock={product.variations[0].inStock}
-                                    unitLabel={product.variations[0].name}   
-                                    productClickHandler={viewProductDetail} />
+                            return product.variations.length>0 ? <ProductCard 
+                                                                    productId={product.id}
+                                                                    key={product.id}
+                                                                    name={product.name}
+                                                                    image={product.images[0]}
+                                                                    variationId={product.variations[0].id}
+                                                                    originalPrice={product.variations[0].price}
+                                                                    discountPrice={product.variations[0].priceAfterDiscount}
+                                                                    discount={product.discount}
+                                                                    inStock={product.variations[0].inStock}
+                                                                    unitLabel={product.variations[0].name}   
+                                                                    productClickHandler={viewProductDetail} />
+                                                                :
+                                                                    '';
         
                         }
                     )}

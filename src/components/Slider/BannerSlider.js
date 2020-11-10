@@ -1,6 +1,6 @@
 import { IonSlide, IonSlides } from '@ionic/react'
 import React, { useEffect, useState } from 'react'
-import { smallImageStoreURL } from '../Utilities/ServiceCaller'
+import { coverImageStoreURL } from '../Utilities/ServiceCaller'
 
 const BannerSlider = (props) => {
     const slideOpts = {
@@ -19,7 +19,7 @@ const BannerSlider = (props) => {
             </IonSlide> */}
             {props.images && props.images.map((image) => {
                 return  <IonSlide key={image}>
-                            <img alt="img" className="single-img" src={smallImageStoreURL+"/"+image}/>
+                            <img alt="img" className="single-img" src={coverImageStoreURL+"/"+image}/>
                         </IonSlide>
             })}
         </IonSlides>

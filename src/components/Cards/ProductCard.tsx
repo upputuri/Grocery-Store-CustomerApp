@@ -1,7 +1,7 @@
 import { IonBadge, IonButton, IonText } from '@ionic/react';
 import React from 'react';
 import AddToCartButton from '../Menu/AddToCartButton';
-import { smallImageStoreURL } from '../Utilities/ServiceCaller';
+import { defaultImageURL, smallImageStoreURL } from '../Utilities/ServiceCaller';
 
 type ProductCardProps = {
     productId: string,
@@ -21,7 +21,7 @@ const ProductCard = (props: ProductCardProps) =>
     return (
         <div onClick={()=>props.productClickHandler(props.productId)} className="d-flex p-3 bg-black mb-2">
             <div className="shop-cart-left">
-                <img alt="img" className="not-found-img" src={smallImageStoreURL+'/'+props.image}/>
+                <img alt="img" className="not-found-img" src={props.image?smallImageStoreURL+'/'+props.image:defaultImageURL}/>
             </div>
             <div className="shop-cart-right">
                 <div className="font-weight-normal mb-2 price ml-3">

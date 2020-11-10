@@ -6,11 +6,14 @@ import ListingSection from '../components/Listing/ListingSection';
 import PosterSlider from '../components/Listing/PosterSlider';
 import CartButton from '../components/Menu/CartButton';
 import BannerSlider from '../components/Slider/BannerSlider';
-import { serviceBaseURL } from '../components/Utilities/ServiceCaller';
+import { logoURL, serviceBaseURL } from '../components/Utilities/ServiceCaller';
 import {card as cardIcon, people as peopleIcon} from 'ionicons/icons';
 import '../App.scss';
 import GrocSearch from '../components/Menu/GrocSearch';
 import { Plugins } from '@capacitor/core';
+import PosterSkeleton from '../components/Listing/PosterSkeleton';
+import { defaultImageURL, thumbNailImageStoreURL, categoryImageStoreURL } from '../components/Utilities/ServiceCaller';
+
 const { MobileApp } = Plugins;
 
   document.addEventListener('ionBackButton', (ev) => {
@@ -21,7 +24,7 @@ const { MobileApp } = Plugins;
 
 const Home = () => {
 
-  const [posterListsState, setPosterListsState] = useState([]);
+  const [posterListsState, setPosterListsState] = useState(null);
   const [bannersState, setBannersState] = useState([]);
 
   useEffect(() => {
@@ -52,7 +55,7 @@ const Home = () => {
   const loadPosters = async () =>{
     //Categories posters
     try{
-      let result = await loadCategoryPosters(posterListsState);
+      let result = await loadCategoryPosters([]);
       // alert(JSON.stringify(result));
       result = await loadBestSellingItemPosters(result);
       // alert(JSON.stringify(result));
@@ -91,7 +94,7 @@ const Home = () => {
         title: '',
         mainText: cat.metaDescription,
         subText: 'on all '+cat.name,
-        image: cat.image,
+        image: cat.image ? (categoryImageStoreURL + "/" + cat.image) : defaultImageURL,
         leadType: 'productlist',
         leadQuery: 'category='+cat.id
       }
@@ -118,16 +121,16 @@ const Home = () => {
     // alert("TWO"+JSON.stringify(receivedData));
     console.log("Received response from service call: "+resource.uri);
     const products = receivedData.data.products;
-    const posters = products.map((product) =>{
+    const posters = products.filter(product=>product.variations.length>0).map((product) =>{
       return {
-        id: product.id,
-        title: product.discount ? product.discount+"% off": '',
-        mainText: product.name,
-        subText: product.variations[0].priceAfterDiscount,
-        image: product.image,
-        leadType: 'product',
-        leadQuery: product.id
-      }
+              id: product.id,
+              title: product.discount ? product.discount+"% off": '',
+              mainText: product.name,
+              subText: product.variations[0].priceAfterDiscount,
+              image: product.images.length>0?(thumbNailImageStoreURL+"/"+product.images[0]) : defaultImageURL,
+              leadType: 'product',
+              leadQuery: product.id
+            }
     });
     const posterList = {slot: 2, title: 'Best Selling Products', viewAllRoute: "products/list"+query, posters: posters};
     const newPosterLists = [...posterLists, posterList];
@@ -151,13 +154,13 @@ const Home = () => {
     // alert(JSON.stringify(receivedData));
     console.log("Received response from service call: "+resource.uri);
     const products = receivedData.data.products;
-    const posters = products.map((product) =>{
+    const posters = products.filter(product=>product.variations.length>0).map((product) =>{
       return {
         id: product.id,
         title: product.discount ? product.discount+"% off": '',
         mainText: product.name,
         subText: product.variations[0].priceAfterDiscount,
-        image: product.image,
+        image: product.images.length>0?(thumbNailImageStoreURL+"/"+product.images[0]) : defaultImageURL,
         leadType: 'product',
         leadQuery: product.id
       }
@@ -175,8 +178,11 @@ const Home = () => {
               <IonMenuButton/>
           </IonButtons>
           <IonTitle>
-              <div><small>Delivery Location</small></div>Bengaluru, India
-              <IonIcon icon={createOutlineIcon}></IonIcon>
+              {/* <div><small>Delivery Location</small></div>Bengaluru, India
+              <IonIcon icon={createOutlineIcon}></IonIcon> */}
+                <div className="text-center p-3">
+                  <img alt="img" className="single-img" src={logoURL}/>
+                </div>
           </IonTitle>
           <CartButton/>
         </IonToolbar>
@@ -185,29 +191,32 @@ const Home = () => {
       <IonContent color="dark">
         <BannerSlider images={bannersState}/>
         {/*Slot 1 posterslider*/}
-        <ListingSection title={posterListsState[0] && posterListsState[0].title} viewAllRoute={"/products/categories"}>
-          <PosterSlider slidesPerView={2.6} 
-                        loop={false} 
-                        centeredSlides={false} 
-                        spaceBetween={10} 
-                        posters={posterListsState[0] && posterListsState[0].posters}/>
-        </ListingSection>
-        <ListingSection title={posterListsState[1] && posterListsState[1].title} 
-                        viewAllRoute={(posterListsState[1]  && posterListsState[1].viewAllRoute)}>
-          <PosterSlider slidesPerView={2.6} 
-                        loop={false} 
-                        centeredSlides={false} 
-                        spaceBetween={10} 
-                        posters={posterListsState[1] && posterListsState[1].posters}/>
-        </ListingSection>
-        <ListingSection title={posterListsState[2] && posterListsState[2].title} 
-                        viewAllRoute={(posterListsState[2] && posterListsState[2].viewAllRoute)}>
-          <PosterSlider slidesPerView={2.6} 
-                        loop={false} 
-                        centeredSlides={false} 
-                        spaceBetween={10} 
-                        posters={posterListsState[2] && posterListsState[2].posters}/>
-        </ListingSection>
+        {posterListsState &&
+        <div>
+          <ListingSection title={posterListsState[0].title} viewAllRoute={"/products/categories"}>
+            <PosterSlider slidesPerView={2.6} 
+                          loop={false} 
+                          centeredSlides={false} 
+                          spaceBetween={10} 
+                          posters={posterListsState[0].posters}/>
+          </ListingSection>
+          <ListingSection title={posterListsState[1] && posterListsState[1].title} 
+                          viewAllRoute={(posterListsState[1]  && posterListsState[1].viewAllRoute)}>
+            <PosterSlider slidesPerView={2.6} 
+                          loop={false} 
+                          centeredSlides={false} 
+                          spaceBetween={10} 
+                          posters={posterListsState[1] && posterListsState[1].posters}/>
+          </ListingSection> 
+          <ListingSection title={posterListsState[2] && posterListsState[2].title} 
+                          viewAllRoute={(posterListsState[2] && posterListsState[2].viewAllRoute)}>
+            <PosterSlider slidesPerView={2.6} 
+                          loop={false} 
+                          centeredSlides={false} 
+                          spaceBetween={10} 
+                          posters={posterListsState[2] && posterListsState[2].posters}/>
+          </ListingSection>
+        </div>}
         <IonSlides options={{watchOverflow : true}}>
           <IonSlide>
             <div className="content-banner-canvas">

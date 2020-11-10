@@ -222,3 +222,6 @@ ion-input,ion-textarea{
     font-size: 13px;
   }
 }
+
+.side-crop { max-height: 100px; overflow: hidden; }
+.side-crop img { max-width: initial; /* Maybe optional. See note below */ }

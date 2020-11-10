@@ -240,13 +240,14 @@ const Security = () => {
         setLoadingState(true);
         loginContext.updateProfile({password: newPassword}).then((result)=>{
             if (result) {
+                setLoadingState(false);
                 setInfoAlertState({show: true, msg: "Password successfully updated!"});
             }
             else {
+                setLoadingState(false);
                 setServiceRequestAlertState({show: true, msg: "Failed to update on server, please try again"});
             }
         });
-        setLoadingState(false);
     }
 
     return (
