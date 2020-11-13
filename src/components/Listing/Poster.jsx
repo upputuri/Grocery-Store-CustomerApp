@@ -39,8 +39,8 @@ const Poster = (props) => {
                 <img alt="img" className="not-found-img" src={props.image}/>
             </div>
             <IonCardContent className="p-1 poster-text-section">
-                <IonText color="success"><small>{props.mainText}</small></IonText>
-                <IonText className="poster-subtext" color="primary"><div>{props.subText}</div></IonText>
+                <IonText className="ion-text-nowrap" color="success"><small>{props.mainText}</small></IonText>
+                <IonText className="poster-subtext ion-text-nowrap" color="primary"><div>{props.subText}</div></IonText>
             </IonCardContent>
         </IonCard>
     )

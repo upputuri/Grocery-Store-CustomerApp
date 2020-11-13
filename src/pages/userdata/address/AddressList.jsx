@@ -14,6 +14,7 @@ const AddressList = () => {
     const [editableAddressId, setEditableAddressId] = useState(0);
     const [loadingState, setLoadingState] = useState(false);
     const [serviceRequestAlertState, setServiceRequestAlertState] = useState({show: false, msg: ''});
+    const [deleteAlertState, setDeleteAlertState] = useState({show: false, msg: 'Are you sure you want to delete the address?', addressId: 0});
     const [infoAlertState, setInfoAlertState] = useState({show: false, msg: ''});
     const [retryState, setRetryState] = useState(false);
     const loginContext = useContext(LoginContext);
@@ -152,6 +153,39 @@ const AddressList = () => {
         setLoadingState(false);          
     }
 
+    const deleteAddressRequest = async (addressId) => {
+        console.log("Updating addressId: "+JSON.stringify(addressId));
+        let path = serviceBaseURL + '/customers/'+loginContext.customer.id+'/addresses/'+addressId;
+        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
+        const loginHeaders = new Headers();
+        loginHeaders.append("Content-Type", "application/json");
+        loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
+        setLoadingState(true);
+        let response;
+        try{
+            response = await fetch(path, {method: 'DELETE',
+                            headers: loginHeaders});
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e); 
+            setLoadingState(false);
+            setInfoAlertState({show: true, msg: "Unable to reach server. Please check your connectivity and try again!"});
+            return;
+        }
+        if (response.ok){
+            console.log("Deleted address on server - address Id "+addressId);
+            setInfoAlertState({show: true, msg: "Address deleted!"});
+            setLoadingState(false);          
+        }
+        else {
+            let responseObj = await response.json();
+            console.log("Server returned a failure response to address delete request :"+responseObj.message);
+            setInfoAlertState({show: true, msg: responseObj.message});
+            setLoadingState(false);          
+        }
+    }
+
     const addAddress = () => {
         console.log("Opening address form for new address, addressId is -1");
         setEditableAddressId(-1);
@@ -160,6 +194,15 @@ const AddressList = () => {
     const editAddress = (addressId) => {
         console.log("Making address editable "+addressId);
         setEditableAddressId(addressId);
+    }
+
+    const deleteAddress = (addressId) => {
+        console.log("Deleting address :"+addressId);
+        deleteAddressRequest(addressId).then(()=>{loadAddressList()});
+    }
+
+    const checkAndProceedToDeletion = (addressId) => {
+        setDeleteAlertState({...deleteAlertState, show: true, addressId: addressId});
     }
 
     const cancelEdit = (addressId) => {
@@ -188,6 +231,11 @@ const AddressList = () => {
                             header={''}
                             message={infoAlertState.msg}
                             buttons={['OK']}/>
+                <IonAlert isOpen={deleteAlertState.show}
+                            onDidDismiss={()=> setDeleteAlertState({...deleteAlertState, show: false})}
+                            header={''}
+                            message={deleteAlertState.msg}
+                            buttons={[{text: 'Yes', handler: deleteAddress.bind(this, deleteAlertState.addressId)}, 'No']}/>             
                 <IonContent className="ion-padding" color="dark">
                 {editableAddressId !== -1 ?
                 <IonButton color="secondary" expand="block" onClick={addAddress} className="ion-no-margin">Add New Address</IonButton>
@@ -225,6 +273,7 @@ const AddressList = () => {
                                 zipCode={address.zipcode}
                                 phone={address.phoneNumber} 
                                 editClickHandler={editAddress.bind(this, address.id)}
+                                deleteClickHandler={checkAndProceedToDeletion.bind(this, address.id)}
                                 />
                             :
                                 <AddressForm 

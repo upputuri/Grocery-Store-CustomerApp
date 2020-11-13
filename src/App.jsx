@@ -88,7 +88,8 @@ class App extends React.Component {
   constructor(props){
     super(props);
     
-    const user = this.retrieveUser();
+    this.retrieveUser();
+    this.retrieveCart();
 
     this.state =
       {
@@ -159,6 +160,9 @@ class App extends React.Component {
         mobile: receivedData.mobile,
         password: password
       },
+      cart: {
+        itemCount: 0
+      },
       showToast: true,
       toastMsg: 'Registration successful!'
     });
@@ -221,16 +225,18 @@ class App extends React.Component {
 
       // alert(JSON.stringify(fetchedCustomer));
       const authenticatedCustomer = {...fetchedCustomer, password: password};
+      const cart = {
+        itemCount: serviceRequest.responseObject.cartItemCount
+      };
       this.setState({
         isAuthenticated: true,
         customer: authenticatedCustomer,
-        cart: {
-          itemCount: serviceRequest.responseObject.cartItemCount
-        },
+        cart: cart,
         toastMsg: 'Login Successful!',
         showToast: true
       });
       this.storeUser(authenticatedCustomer);
+      this.storeCart(cart);
       this.setState({showLoading: false});
       return serviceRequest;
     }
@@ -283,6 +289,10 @@ class App extends React.Component {
       mobile: '',
       image: '',
     });
+
+    this.storeCart({
+      itemCount: 0
+    })
   }
 
   async storeUser(user) {
@@ -290,6 +300,14 @@ class App extends React.Component {
     await Storage.set({
       key: "user",
       value: JSON.stringify(user)
+    })
+  }
+
+  async storeCart(cart) {
+    console.log("Storing in app: "+JSON.stringify(cart));
+    await Storage.set({
+      key: "cart",
+      value: JSON.stringify(cart)
     })
   }
 
@@ -321,6 +339,15 @@ class App extends React.Component {
                   (user && user.mobile && user.mobile.length>0)});
     // alert(JSON.stringify(ret));
     // JSON.parse(ret);
+  }
+
+  async retrieveCart() {
+    const ret = await Storage.get({key: "cart"});
+    const cart = JSON.parse(ret.value);
+    let cartState = (cart === null) ? {
+      itemCount: 0
+    }:cart;
+    this.setState({cart: cartState});
   }
 
   async addItemToCart(productId, variationId, qty)
@@ -358,11 +385,13 @@ class App extends React.Component {
         return;
       }
       console.log("Received response from service call: "+resource.uri);
+      const newCartCount = this.state.cart.itemCount + qty;
       this.setState({
         cart: {
-          itemCount: this.state.cart.itemCount + qty
+          itemCount: newCartCount
         }
       });
+      this.storeCart({itemCount: newCartCount});
       this.setState({
         showToast: true,
         toastMsg: qty>0?'One item added to cart':'One item removed from cart',

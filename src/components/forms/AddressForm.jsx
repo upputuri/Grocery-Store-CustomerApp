@@ -48,13 +48,15 @@ const AddressForm = (props) => {
     const isInputValid = () => {
         var zipCodeRegEx = /^\d{6}?$/;
         var phoneRegEx = /^\d{10}?$/;
+        var cityRegEx = /^[A-Z]+$/i;
         return (fNameState && fNameState.trim().length > 1) &&
         (lNameState && lNameState.trim().length > 0) &&
         (line1State && line1State.trim().length > 0) &&
         (cityState && cityState.trim().length > 0) &&
         (stateIdState && stateIdState > 0) &&
         (zipCodeState && zipCodeRegEx.test(zipCodeState.trim())) &&
-        (mobileState && phoneRegEx.test(mobileState.trim()));
+        (mobileState && phoneRegEx.test(mobileState.trim())) &&
+        (cityState && cityRegEx.test(cityState.trim()));
     }
 
     const submitAddress = () => {

@@ -59,7 +59,7 @@ const OrderDetail = (props) => {
         let displayTS = receivedOrderTS;
         if (receivedOrderTS){
             const date = new Date(receivedOrderTS);
-            displayTS = date.getDate()+"-"+date.getMonth()+"-"+date.getFullYear()+" "+date.getHours()+":"+date.getMinutes();
+            displayTS = date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear()+" "+date.getHours()+":"+date.getMinutes();
         }
         else{
             displayTS = "Unavailable";

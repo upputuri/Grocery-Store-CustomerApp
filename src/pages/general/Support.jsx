@@ -1,18 +1,70 @@
-import { IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonMenuToggle, IonPage, IonRow, IonText, IonTextarea, IonTitle } from '@ionic/react';
-import React, { useState } from 'react';
+import { IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonLoading, IonMenuToggle, IonPage, IonRow, IonText, IonTextarea, IonTitle } from '@ionic/react';
+import React, { useEffect, useState } from 'react';
 import BaseToolbar from '../../components/Menu/BaseToolbar';
-import { callOutline as phoneIcon, logoTwitter as twitterIcon, logoFacebook as fbIcon, logoInstagram as instaIcon, navigate as navigateIcon} from 'ionicons/icons';
+import { callOutline as phoneIcon, logoTwitter as twitterIcon, logoYoutube as youtubeIcon, logoFacebook as fbIcon, logoInstagram as instaIcon, navigate as navigateIcon} from 'ionicons/icons';
+import { serviceBaseURL } from '../../components/Utilities/ServiceCaller';
+import Client from 'ketting';
 const Support = () => {
-    const [selectedIndex , setSelectedIndex] = useState(-1);
+    const [loadingState, setLoadingState] = useState(false);
+    const [variablesState, setVariablesState] = useState(null);
+    const [socialHandlesState, setSocialHandlesState] = useState(null);
 
-    const toggleSelectedIndex = (i) =>{
-        setSelectedIndex(selectedIndex !== i ? i : -1);
+    useEffect(() => {
+        loadVariables();
+        loadSocialHandles();
+    }, []);
+
+    const loadVariables = async () => {
+        let path = serviceBaseURL + '/application/variables?keys=contact_no,contact_email,company_name,address_line_1,address_line_2,city';
+        const client = new Client(path);
+        const resource = client.go();
+        let receivedState;
+        setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
+        try{
+            receivedState = await resource.get();
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e);
+            setLoadingState(false);
+            return;
+        }
+        const variablesMap = receivedState.data;
+        // alert(JSON.stringify(variables));
+        setVariablesState(variablesMap.variables);
+        setLoadingState(false);  
     }
 
-    return <IonPage>
+    const loadSocialHandles = async () => {
+        let path = serviceBaseURL + '/application/socialhandles';
+        const client = new Client(path);
+        const resource = client.go();
+        let receivedState;
+        setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
+        try{
+            receivedState = await resource.get();
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e);
+            setLoadingState(false);
+            return;
+        }
+        const socialHandlesMap = receivedState.data;
+        // alert(JSON.stringify(variables));
+        setSocialHandlesState(socialHandlesMap.variables);
+        setLoadingState(false);  
+    }
+
+    if (variablesState != null)
+    {
+        return <IonPage>
                 <IonHeader className="osahan-nav">
                     <BaseToolbar title="Support"/>     
-                </IonHeader>                                           
+                </IonHeader> 
+                <IonLoading isOpen={loadingState}/>                                           
                 <IonContent className="ion-padding" color="dark">
                 <IonGrid color="night">
                     <IonRow className="ion-text-left border-bottom border-secondary">
@@ -24,31 +76,24 @@ const Support = () => {
                                 <IonMenuToggle auto-hide="false" >
                                 <IonItem color="night" detail="false">
                                     <IonIcon color="primary" icon={phoneIcon} slot="start"/>
-                                    <IonText color="">98989898989</IonText>
-                                </IonItem>
-                                </IonMenuToggle>
-
-                                <IonMenuToggle auto-hide="false" >
-                                <IonItem color="night" detail="false">
-                                    <IonIcon color="primary" icon={fbIcon} slot="start"/>
-                                    <IonText color="">vegitclub</IonText>
-                                </IonItem>
-                                </IonMenuToggle>
-
-                                <IonMenuToggle auto-hide="false" >
-                                <IonItem color="night" detail="false">
-                                    <IonIcon color="primary" icon={twitterIcon} slot="start"/>
-                                    <IonText color="">@vegitclub</IonText>
-                                </IonItem>
-                                </IonMenuToggle>
-
-                                <IonMenuToggle auto-hide="false" >
-                                <IonItem color="night" detail="false">
-                                    <IonIcon color="primary" icon={instaIcon} slot="start"/>
-                                    <IonText color="">@vegitclub</IonText>
+                                    <IonText color="">{variablesState.contact_no}</IonText>
                                 </IonItem>
                                 </IonMenuToggle>
                             </IonList>
+                        </IonCol>
+                    </IonRow>
+                    <IonRow className="ion-text-left border-bottom border-secondary p-3">
+                        <IonCol>
+                            <div className="d-flex justify-content-around">
+                                {socialHandlesState && socialHandlesState.youtube && 
+                                <a href={socialHandlesState.youtube}><IonIcon  size="large" color="primary" icon={youtubeIcon}/></a>}
+                                {socialHandlesState && socialHandlesState.twitter && 
+                                <a href={socialHandlesState.twitter}><IonIcon  size="large" color="primary" icon={twitterIcon}/></a>}
+                                {socialHandlesState && socialHandlesState.instagram && 
+                                <a href={socialHandlesState.instagram}><IonIcon  size="large" color="primary" icon={instaIcon}/></a>}
+                                {socialHandlesState && socialHandlesState.facebook && 
+                                <a href={socialHandlesState.facebook}><IonIcon  size="large" color="primary" icon={fbIcon}/></a>}
+                            </div>
                         </IonCol>
                     </IonRow>
                     <IonRow>
@@ -58,11 +103,11 @@ const Support = () => {
                                     <IonCol size="1"></IonCol>
                                     <IonCol className="ion-text-wrap" size="11">
                                         <IonText className="maintext">Our Head office:</IonText>
-                                        <IonText className="headtext" color="primary"><h5>The Vegit Club</h5></IonText>
-                                        <IonLabel className="ion-text-wrap">34, East Street<br/>
-                                                    West Side colony<br/>
-                                                    City: Hyderabad<br/>
-                                                    Pin: 500001
+                                        <IonText className="headtext" color="primary"><h5>{variablesState.company_name}</h5></IonText>
+                                        <IonLabel className="ion-text-wrap">{variablesState.address_line_1}<br/>
+                                                    {variablesState.address_line_2}<br/>
+                                                    {variablesState.city}<br/>
+                                                    {variablesState.contact_email}
                                         </IonLabel><br/>
                                     </IonCol>
                                 </IonRow>
@@ -72,6 +117,19 @@ const Support = () => {
                 </IonGrid>
                 </IonContent>
             </IonPage>
+    }
+    else
+    {
+        return  <IonPage>
+                    <IonHeader className="osahan-nav">
+                        <BaseToolbar title="Support"/>     
+                    </IonHeader> 
+                    <IonLoading isOpen={loadingState}/>                                           
+                    <IonContent className="ion-padding" color="dark">
+                
+                    </IonContent>
+            </IonPage>
+    }
 }
 
 export default Support;

@@ -14,22 +14,25 @@ import { Plugins } from '@capacitor/core';
 import PosterSkeleton from '../components/Listing/PosterSkeleton';
 import { defaultImageURL, thumbNailImageStoreURL, categoryImageStoreURL } from '../components/Utilities/ServiceCaller';
 
-const { MobileApp } = Plugins;
 
-  document.addEventListener('ionBackButton', (ev) => {
-    ev.detail.register(-1, () => {
-          MobileApp.exitApp();
-    });
-  });
+  // document.addEventListener('ionBackButton', (ev) => {
+  //   alert('registering app closer');
+  //   // ev.detail.register(-1, () => {
+  //         // MobileApp.exitApp();
+
+  //   // });
+  // });
 
 const Home = () => {
 
   const [posterListsState, setPosterListsState] = useState(null);
   const [bannersState, setBannersState] = useState([]);
+  Plugins.App.addListener('backButton', Plugins.App.exitApp);
 
   useEffect(() => {
     loadBanners();
     loadPosters();
+    return ()=>Plugins.App.removeAllListeners();
   }, []);
 
   const loadBanners = async () => {

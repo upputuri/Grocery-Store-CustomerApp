@@ -1,16 +1,12 @@
-import { IonAlert, IonBadge, IonButton, IonContent, IonHeader, IonIcon, IonLoading, IonPage, IonSearchbar, IonSlide, IonSlides, IonText } from '@ionic/react';
-import { checkmarkCircle as checkMarkIcon, star as starIcon } from 'ionicons/icons';
+import { IonAlert, IonBadge, IonContent, IonHeader, IonIcon, IonLoading, IonPage, IonSearchbar, IonSlide, IonSlides, IonText } from '@ionic/react';
+import { checkmarkCircle as checkMarkIcon } from 'ionicons/icons';
 import Client from 'ketting';
 import React, { useEffect, useState } from 'react';
 import { useHistory, withRouter } from "react-router-dom";
-import { CartContext, LoginContext } from '../App';
-import ListingSection from '../components/Listing/ListingSection';
-import PosterSlider from '../components/Listing/PosterSlider';
 import AddToCartButton from '../components/Menu/AddToCartButton';
 import BaseToolbar from '../components/Menu/BaseToolbar';
 import GrocSearch from '../components/Menu/GrocSearch';
-import { serviceBaseURL, smallImageStoreURL } from '../components/Utilities/ServiceCaller';
-import { defaultImageURL, mediumImageStoreURL } from '../components/Utilities/ServiceCaller';
+import { defaultImageURL, mediumImageStoreURL, serviceBaseURL } from '../components/Utilities/ServiceCaller';
 
 const SingleProduct = (props) => {
     const [productState, setProductState] = useState(null);
@@ -184,7 +180,7 @@ const SingleProduct = (props) => {
                             </div>
                             <div className="mb-2 card p-3 single-page-info">
                                 <div className="short-description">
-                                <small className="float-right">Availability: <span className="badge badge-success">{productState.variations[variantIndexState].inStock ? 'In Stock': 'Out of Stock'}</span></small>
+                                <small className="float-right"><span className="badge badge-success">{productState.variations[variantIndexState].inStock ? 'In Stock': 'Out of Stock'}</span></small>
                                 <h6 className="font-weight-bold mb-3">
                                     Quick Overview  
                                 </h6>

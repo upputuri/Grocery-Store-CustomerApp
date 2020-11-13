@@ -141,7 +141,7 @@ const Account = (props) => {
                 <div className="mt-3 card bg-black profile-box text-center">
                     <IonItem color="night">
                         <IonCheckbox slot="start" onClick={toggleSubscription} checked={subscribedState} />
-                        <IonText className="maintext" color="primary">Receive offers and updates</IonText>
+                        <IonText className="maintext" color="primary">{!subscribedState ? 'Sign Up ': 'You are signed up '}for our newsletter and to get updates</IonText>
                     </IonItem>
                 </div>
             </IonContent>
