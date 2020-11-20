@@ -407,6 +407,7 @@ class App extends React.Component {
   {
     //alert('adding to cart'+productId+variationId+qty);
     // alert(JSON.stringify(this.state.customer));
+    // alert(qty);
     this.setState({showLoading: true});
     let path = serviceBaseURL + '/customers/'+this.state.customer.id+'/cart';
     // alert(this.state.customer.email+","+this.state.customer.password);
@@ -447,7 +448,7 @@ class App extends React.Component {
       this.storeCart({itemCount: newCartCount});
       this.setState({
         showToast: true,
-        toastMsg: qty>0?'One item added to cart':'One item removed from cart',
+        toastMsg: Math.abs(qty)+(qty>0?' items added to cart':' items removed from cart'),
         showLoading: false
       })
     }

@@ -86,9 +86,13 @@ const Cart = (props) =>{
 
     const qtyChangeHandler = (productId, variationId, qty) =>
     {
+        console.log("Cart page received request from cartqtychangecontrol: "+productId+":"+variationId+","+qty)
         cartContext.addItem(productId, variationId, qty).then(()=>loadCart());
     }
 
+    // const cartItemDeleteHandler = (id) => {
+
+    // }
 
     return (
         <IonPage>
@@ -96,7 +100,7 @@ const Cart = (props) =>{
                 <BaseToolbar title="Your Cart"/>
                 <GrocSearch/>      
             </IonHeader>              
-            <IonContent color="dark" >
+            <IonContent color="dark" className="ion-padding">
                 {
                     cartItemsState.data && cartItemsState.data.map(
                     (item) => {
@@ -113,7 +117,9 @@ const Cart = (props) =>{
                                     unitLabel={item.unitLabel}
                                     qty={item.qty}
                                     totalPriceAfterDiscount={item.totalPriceAfterDiscount}
-                                    qtyChangeHandler={qtyChangeHandler.bind(this)}/>
+                                    qtyChangeHandler={qtyChangeHandler.bind(this, item.productId, item.variationId)}
+                                    // onDeleteClick={cartItemDeleteHandler}
+                                    />
                         )
                     }
                 )}

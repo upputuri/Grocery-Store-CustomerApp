@@ -226,7 +226,17 @@ ion-input,ion-textarea{
 .side-crop { max-height: 100px; overflow: hidden; }
 .side-crop img { max-width: initial; /* Maybe optional. See note below */ }
 
-ion-button img {
+.pgi-button {
   height: 75%;
   width: 50%
+}
+
+div.cart-qty-value {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.poster .subtext {
+  color: var(--ion-color-secondary);
 }

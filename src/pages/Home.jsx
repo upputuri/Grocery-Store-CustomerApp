@@ -108,13 +108,13 @@ const Home = () => {
         id: cat.id,
         title: '',
         mainText: cat.metaDescription,
-        subText: 'on all '+cat.name,
+        subText: cat.name,
         image: cat.image ? (categoryImageStoreURL + "/" + cat.image) : defaultImageURL,
         leadType: 'productlist',
         leadQuery: 'category='+cat.id
       }
     });
-    const posterList = {slot: 1, title: 'Everyday Essentials', posters: posters}
+    const posterList = {slot: 1, title: 'Categories', posters: posters}
     const newPosterLists = [...posterLists, posterList];
     return Promise.resolve(newPosterLists);      
   }
@@ -141,13 +141,13 @@ const Home = () => {
               id: product.id,
               title: product.discount ? product.discount+"% off": '',
               mainText: product.name,
-              subText: product.variations[0].priceAfterDiscount,
+              subText: '₹'+product.variations[0].priceAfterDiscount,
               image: product.images.length>0?(thumbNailImageStoreURL+"/"+product.images[0]) : defaultImageURL,
               leadType: 'product',
               leadQuery: product.id
             }
     });
-    const posterList = {slot: 2, title: 'Best Selling Products', viewAllRoute: "products/list"+query, posters: posters};
+    const posterList = {slot: 2, title: 'Most Selling', viewAllRoute: "products/list"+query, posters: posters};
     const newPosterLists = [...posterLists, posterList];
     return Promise.resolve(newPosterLists);       
   }
@@ -174,7 +174,7 @@ const Home = () => {
         id: product.id,
         title: product.discount ? product.discount+"% off": '',
         mainText: product.name,
-        subText: product.variations[0].priceAfterDiscount,
+        subText: '₹'+product.variations[0].priceAfterDiscount,
         image: product.images.length>0?(thumbNailImageStoreURL+"/"+product.images[0]) : defaultImageURL,
         leadType: 'product',
         leadQuery: product.id
@@ -234,17 +234,12 @@ const Home = () => {
         </div>}
         <IonSlides options={{watchOverflow : true}}>
           <IonSlide>
-            <div className="content-banner-canvas">
+            <div className="container content-banner-canvas">
               <IonGrid className="ion-padding">
                 <IonRow className="ion-text-center">
                   <IonCol className="p-1">
                     <IonIcon className="mr-1" icon={peopleIcon} size="small" color="primary"/>
-                    <IonText color="primary">Membership</IonText>
-                  </IonCol>
-                </IonRow>
-                <IonRow className="ion-text-center">
-                  <IonCol className="p-1">
-                    <div className="poster-subtext">Enrol as a member and become a part of the Vegit family. Apply now for great offers and enjoy a plethora of benefits as a member. </div>
+                    <IonText color="light">Membership</IonText>
                   </IonCol>
                 </IonRow>
                 <IonRow className="ion-text-center">

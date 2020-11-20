@@ -23,7 +23,6 @@ const CategoryCard = (props: CategoryProps) => {
                             <IonText color="primary">
                                 <h5 className="mb-2 font-weight-bold">{props.title}</h5>
                             </IonText>
-                            <p className="mb-0 small text-secondary">{props.description}</p>
                             </div>
                         </div>
                     {/* </div> */}

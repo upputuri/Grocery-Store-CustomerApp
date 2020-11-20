@@ -1,6 +1,5 @@
 import { IonCard, IonCardContent, IonCol, IonGrid, IonRow, IonSkeletonText, IonThumbnail } from '@ionic/react';
 import React from 'react';
-import './posterSlider.css';
 
 const PosterSkeleton = (props) => {
 

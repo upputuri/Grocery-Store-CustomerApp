@@ -1,9 +1,9 @@
-import { IonButton, IonButtons, IonCard, IonCol, IonIcon, IonicSafeString, IonRow, IonText } from '@ionic/react'
-import React from 'react'
-import { CartContext } from '../../App'
-import { addCircle as addIcon, removeCircle as removeIcon, trash as trashIcon } from 'ionicons/icons';
+import { IonCard, IonCol, IonGrid, IonIcon, IonRow, IonText } from '@ionic/react';
+import React from 'react';
 import { useHistory } from 'react-router';
+import CartItemQtyControl from '../Menu/CartItemQtyControl';
 import { defaultImageURL, thumbNailImageStoreURL } from '../Utilities/ServiceCaller';
+import { close as trashIcon } from 'ionicons/icons';
 
 const CartItemTile = (props) =>
 {
@@ -13,10 +13,21 @@ const CartItemTile = (props) =>
         history.push('/products/single/'+productId);
     }
 
+    const deleteItemClicked = () => {
+        if (props.qty >= 1) {
+            // alert(props.qty*-1);
+            props.qtyChangeHandler(props.qty*-1);
+        }
+    }
+
     return (
-        <IonCard onClick={viewProduct.bind(this, props.productId)} className="bg-black">
+        <IonGrid className="p-2">
             <IonRow>
                 <IonCol size="auto">
+                    {/* <IonText className="subtext" color="danger">Remove</IonText> */}
+                    <IonIcon onClick={deleteItemClicked} size="small" icon={trashIcon} color="danger"></IonIcon>
+                </IonCol>
+                <IonCol onClick={viewProduct.bind(this, props.productId)} size="auto">
                     <img alt="img" className="not-found-img m-2" width="70px" height="70px" src={props.image?thumbNailImageStoreURL+'/'+props.image:defaultImageURL}/>
                 </IonCol>
                 <IonCol>
@@ -29,36 +40,21 @@ const CartItemTile = (props) =>
                         </IonCol>
                     </IonRow>
                     <IonRow>
-                        <IonCol>
+                        <IonCol size="7">
                             <IonText color="primary">{props.unitLabel}</IonText>
+                        </IonCol>                         
+                        <IonCol size="5">
+                            <div className="d-flex justify-content-end">
+                            <CartItemQtyControl qty={props.qty}
+                                            productId={props.productId}
+                                            variantId={props.variationId} 
+                                            onQtyUpdate={props.qtyChangeHandler} />
+                            </div>
                         </IonCol>
-                        <CartContext.Consumer>
-                            {context =>                            
-                            <IonCol>
-                                <IonIcon size="large" icon={props.qty>1 ? removeIcon: trashIcon} onClick={(event) => 
-                                                {
-                                                    //context.addItem(props.productId, props.variationId, -1);
-                                                    props.qtyChangeHandler(props.productId, props.variationId, -1);
-                                                    event.stopPropagation();
-                                                }} 
-                                            color='danger'>
-                                                </IonIcon>
-                                    <IonText className="m-2 text-white ion-text-center">{props.qty}</IonText>
-                                <IonIcon size="large" icon={addIcon} onClick={(event) => 
-                                                {
-                                                    //context.addItem(props.productId, props.variationId, 1);
-                                                    props.qtyChangeHandler(props.productId, props.variationId, 1);
-                                                    event.stopPropagation();
-                                                }} 
-                                            color="secondary">
-                                                </IonIcon>
-                            </IonCol>
-                            }
-                        </CartContext.Consumer>   
                     </IonRow>
                 </IonCol>
             </IonRow>
-        </IonCard>
+        </IonGrid>
     )
 }
 

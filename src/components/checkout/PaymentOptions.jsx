@@ -78,7 +78,7 @@ const PaymentOptions = (props) => {
                 </IonRow>
                 <IonRow className="p-2">
                     <IonCol>
-                        <IonButton color="secondary" routerDirection="forward" expand="block" onClick={razorPayPOClicked} className="ion-no-margin">
+                        <IonButton color="secondary" routerDirection="forward" expand="block" onClick={razorPayPOClicked} className="pgi-button ion-no-margin">
                         <img alt="razorpay" className="single-img" src="assets/320px-Razorpay_logo.svg.png"/>
                         </IonButton>
                     </IonCol>

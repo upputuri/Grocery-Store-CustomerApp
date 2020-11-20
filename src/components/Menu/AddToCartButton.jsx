@@ -3,6 +3,7 @@ import React from 'react';
 import { useHistory } from 'react-router';
 import { CartContext, LoginContext } from '../../App';
 
+
 const AddToCartButton = (props) => {
     const history = useHistory();
     const addToCart = (loginContext, cartContext, productId, variantId, qty) => 
@@ -19,7 +20,7 @@ const AddToCartButton = (props) => {
     }
 
     return (
-        <div className="input-group shop-cart-value">
+        <div className="">
             <LoginContext.Consumer>
                 {loginContext => 
                     <CartContext.Consumer>

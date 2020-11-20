@@ -59,7 +59,6 @@ const Categories = (props) => {
                                 title={category.title}
                                 image={category.image} 
                                 uspText={category.metaDescription} 
-                                description={category.description}
                                 categoryClickHandler={props.categoryClickHandler}/>
                             /* </IonRouterLink> */
                         )
