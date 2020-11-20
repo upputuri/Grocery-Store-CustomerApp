@@ -37,8 +37,8 @@ const CartItemTile = (props) =>
                             <IonCol>
                                 <IonIcon size="large" icon={props.qty>1 ? removeIcon: trashIcon} onClick={(event) => 
                                                 {
-                                                    context.addItem(props.productId, props.variationId, -1);
-                                                    props.qtyChangeHandler();
+                                                    //context.addItem(props.productId, props.variationId, -1);
+                                                    props.qtyChangeHandler(props.productId, props.variationId, -1);
                                                     event.stopPropagation();
                                                 }} 
                                             color='danger'>
@@ -46,8 +46,8 @@ const CartItemTile = (props) =>
                                     <IonText className="m-2 text-white ion-text-center">{props.qty}</IonText>
                                 <IonIcon size="large" icon={addIcon} onClick={(event) => 
                                                 {
-                                                    context.addItem(props.productId, props.variationId, 1);
-                                                    props.qtyChangeHandler();
+                                                    //context.addItem(props.productId, props.variationId, 1);
+                                                    props.qtyChangeHandler(props.productId, props.variationId, 1);
                                                     event.stopPropagation();
                                                 }} 
                                             color="secondary">

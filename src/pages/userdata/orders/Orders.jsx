@@ -3,6 +3,7 @@ import { Client,  basicAuth } from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { LoginContext } from '../../../App';
+import InfoMessageTile from '../../../components/Cards/InfoMessageTile';
 import OrderTile from '../../../components/Cards/OrderTile';
 import BaseToolbar from '../../../components/Menu/BaseToolbar';
 import ServiceRequest, { serviceBaseURL } from '../../../components/Utilities/ServiceCaller';
@@ -109,29 +110,18 @@ const Orders = () => {
                             message={cancelAlertState.msg}
                             buttons={[{text: 'Yes', handler: processOrderCancel.bind(this, cancelAlertState.orderId)}, 'No']}/>                    
                 <IonContent className="ion-padding" color="dark">
-                    {newOrderId === 0 && 
-                    <IonGrid className="m-0">
-                        <IonRow className="p-3 ion-text-center border border-succes">
-                            <IonCol>
-                                <h6>Failed to get a response from server. Check your orders below before placing a new order!</h6>
-                            </IonCol>
-                        </IonRow>
-                    </IonGrid>
+                    {ordersState && ordersState.length > 0 ?
+                        ordersState.map((order) =>{
+                            // console.log(order.orderId);
+                            return <OrderTile key={order.orderId} newOrderId = {newOrderId}
+                                                order = {order}
+                                                cancelClickHandler = {checkAndProceedToCancel.bind(this, order.orderId)}/>
+                        })
+                        :
+
+                    <InfoMessageTile subject="You have not placed any orders yet!"/>
+
                     }
-                    {newOrderId > 0  &&
-                    <IonRow className="p-3 ion-text-center border border-success">
-                        <IonCol>
-                            <h6>Your Order has been placed successfully!</h6>
-                            <IonText color="primary">{'Order# '+newOrderId}</IonText>
-                        </IonCol>
-                    </IonRow>
-                    }
-                    {ordersState && ordersState.map((order) =>{
-                        // console.log(order.orderId);
-                        return <OrderTile key={order.orderId} newOrderId = {newOrderId}
-                                            order = {order}
-                                            cancelClickHandler = {checkAndProceedToCancel.bind(this, order.orderId)}/>
-                    })}  
                 </IonContent>
 
             </IonPage>

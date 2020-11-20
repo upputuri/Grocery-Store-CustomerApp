@@ -1,11 +1,11 @@
 import { IonAlert, IonButton, IonCheckbox, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonItemGroup, IonLabel, IonPage, IonRadio, IonRouterLink, IonRow, IonText } from '@ionic/react';
-import { keyOutline as keyIcon, lockClosedOutline as lockClosedIcon, navigateCircleOutline as navigateIcon, personCircleOutline as personIcon } from 'ionicons/icons';
+import { mail as mailIcon, call as phoneIcon, create as editIcon, keyOutline as keyIcon, lockClosedOutline as lockClosedIcon, navigateCircleOutline as navigateIcon, personCircleOutline as personIcon } from 'ionicons/icons';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { LoginContext } from '../../../App';
 import BaseToolbar from '../../../components/Menu/BaseToolbar';
-import { serviceBaseURL } from '../../../components/Utilities/ServiceCaller';
+import { profileImageStoreURL, serviceBaseURL } from '../../../components/Utilities/ServiceCaller';
 import './account.css';
 
 const Account = (props) => {
@@ -96,8 +96,11 @@ const Account = (props) => {
                             <IonCol>
                                 <div className="border-bottom border-secondary">
                                     <div className="profile-picture-box mt-3 mb-3">
-                                        <img alt="profile_picture" src="assets/user/blank_profile.png"/>     
+                                        <img alt="profile_picture" src={loginContext.customer.image ? profileImageStoreURL + "/" + loginContext.customer.image : "assets/user/blank_profile.png"}/>     
                                     </div>
+                                    {/* <div className="d-flex justify-content-center">
+                                    <IonText color="medium"><IonIcon size="small" icon={editIcon}></IonIcon>Edit</IonText>
+                                    </div> */}
                                 </div>
                             </IonCol>
                         </IonRow>
@@ -131,9 +134,21 @@ const Account = (props) => {
                             </IonItem>
                         </IonRouterLink>
                         <IonRouterLink routerLink="/account/addresslist">
-                            <IonItem color="night" lines="full">
+                            <IonItem color="night" lines="full" className="border-bottom border-secondary">
                                 <IonIcon slot="start" icon={navigateIcon} color="primary" size="small"/>
                                 <IonLabel>Addresses</IonLabel>
+                            </IonItem>
+                        </IonRouterLink>
+                        <IonRouterLink routerLink="/contactus">
+                            <IonItem color="night" lines="full" className="border-bottom border-secondary">
+                                <IonIcon slot="start" icon={mailIcon} color="primary" size="small"/>
+                                <IonLabel>Submit a query</IonLabel>
+                            </IonItem>
+                        </IonRouterLink>
+                        <IonRouterLink routerLink="/support">
+                            <IonItem color="night" lines="full">
+                                <IonIcon slot="start" icon={phoneIcon} color="primary" size="small"/>
+                                <IonLabel>Contact Us</IonLabel>
                             </IonItem>
                         </IonRouterLink>
                     </IonItemGroup>

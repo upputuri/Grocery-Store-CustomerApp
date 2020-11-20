@@ -184,7 +184,7 @@ const Checkout = (props) => {
         //Create order and show success page
         cartContext.placeOrder().then((newOrderId)=>{
             console.log("Promise resolved new orderId "+newOrderId);
-            history.push("/orders?id="+newOrderId);
+            history.push("/orderplaced?id="+newOrderId);
                 // setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before placing the order again!'});
         });
         //history.push('/orderplaced');

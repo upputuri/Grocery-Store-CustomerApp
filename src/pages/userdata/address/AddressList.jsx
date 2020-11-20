@@ -223,7 +223,7 @@ const AddressList = () => {
         return (
             <IonPage>
                 <IonHeader className="osahan-nav">
-                    <BaseToolbar title="Shipping Addresses"/>     
+                    <BaseToolbar title="Manage Addresses"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>
                 <IonAlert isOpen={infoAlertState.show}
@@ -304,7 +304,7 @@ const AddressList = () => {
             return (
             <IonPage>
                 <IonHeader className="osahan-nav">
-                    <BaseToolbar title="Shipping Addresses"/>     
+                    <BaseToolbar title="Manage Addresses"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>                
                 <IonContent color="dark">

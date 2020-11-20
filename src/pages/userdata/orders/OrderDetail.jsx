@@ -137,7 +137,7 @@ const OrderDetail = (props) => {
                                 <IonText className="subtext ml-2">Status: </IonText><StatusText status={orderDetailState.status.trim()}/>
                             </IonCol>
                         </IonRow>
-                        {(orderDetailState.status.trim() === 'Initial' || orderDetailState.status.trim() === 'Executing') &&
+                        {(orderDetailState.status.trim() === 'Initial' || orderDetailState.status.trim() === 'Running') &&
                         <IonRow className="border-bottom border-secondary">
                             <IonCol>
                                 <div className="d-flex justify-content-end">

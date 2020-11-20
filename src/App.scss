@@ -209,7 +209,7 @@ ion-card.address-card {
   box-shadow: 1px 1px 25px 1px var(--ion-color-night);
 }
 
-ion-grid {
+ion-grid, ion-grid.card {
   margin-top: 1em;
   margin-bottom: 1em;
   border-radius: 2%; 
@@ -225,3 +225,8 @@ ion-input,ion-textarea{
 
 .side-crop { max-height: 100px; overflow: hidden; }
 .side-crop img { max-width: initial; /* Maybe optional. See note below */ }
+
+ion-button img {
+  height: 75%;
+  width: 50%
+}

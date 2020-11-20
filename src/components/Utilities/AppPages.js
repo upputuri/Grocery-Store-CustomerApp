@@ -19,37 +19,13 @@ const AppPages =
       title: 'My Orders',
       url: '/orders',
       icon: 'create'
-    },
+    }
     // {
     //   title: 'About Us',
     //   url: '/about',
     //   icon: 'heart'
     // },
-    {
-      title: 'Contact Us',
-      url: '/contactus',
-      icon: 'mail'
-    },
-    {
-      title: 'Policies',
-      url: '/policies',
-      icon: 'document'
-    },
-    {
-      title: 'Support',
-      url: '/support',
-      icon: 'phone'
-    },
-    {
-      title: 'FAQs',
-      url: '/faq',
-      icon: 'help'
-    },
-    {
-      title: 'Blog',
-      url: '/',
-      icon: 'blog'
-    }
+
 ];
 
 export default AppPages;

@@ -47,7 +47,7 @@ const OrderTile = (props) =>
                 </IonRow>
                 <IonRow>
                     <IonCol>
-                        {(props.order.orderStatus.trim() === 'Initial' || props.order.orderStatus.trim() === 'Executing') &&
+                        {(props.order.orderStatus.trim() === 'Initial' || props.order.orderStatus.trim() === 'Running') &&
                         <IonButton onclick={cancelClicked} className="ml-2" color="tertiary" size="small">Cancel Order</IonButton>
                         }
                     </IonCol>

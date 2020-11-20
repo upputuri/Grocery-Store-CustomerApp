@@ -1,7 +1,7 @@
 import { IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonLoading, IonMenuToggle, IonPage, IonRow, IonText, IonTextarea, IonTitle } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import BaseToolbar from '../../components/Menu/BaseToolbar';
-import { callOutline as phoneIcon, logoTwitter as twitterIcon, logoYoutube as youtubeIcon, logoFacebook as fbIcon, logoInstagram as instaIcon, navigate as navigateIcon} from 'ionicons/icons';
+import { mail as mailIcon, callOutline as phoneIcon, logoTwitter as twitterIcon, logoYoutube as youtubeIcon, logoFacebook as fbIcon, logoInstagram as instaIcon, navigate as navigateIcon} from 'ionicons/icons';
 import { serviceBaseURL } from '../../components/Utilities/ServiceCaller';
 import Client from 'ketting';
 const Support = () => {
@@ -62,13 +62,13 @@ const Support = () => {
     {
         return <IonPage>
                 <IonHeader className="osahan-nav">
-                    <BaseToolbar title="Support"/>     
+                    <BaseToolbar title="Contact Us"/>     
                 </IonHeader> 
                 <IonLoading isOpen={loadingState}/>                                           
                 <IonContent className="ion-padding" color="dark">
                 <IonGrid color="night">
                     <IonRow className="ion-text-left border-bottom border-secondary">
-                        <IonCol className="p-3 ion-text-center"><IonText className="headtext" color="primary">We are happy to hear from you!</IonText></IonCol>
+                        <IonCol className="p-3 ion-text-center"><IonText className="headtext" color="primary">Got a question? Call or Email Us</IonText></IonCol>
                     </IonRow>
                     <IonRow className="ion-text-left border-bottom border-secondary">
                         <IonCol>
@@ -79,10 +79,16 @@ const Support = () => {
                                     <IonText color="">{variablesState.contact_no}</IonText>
                                 </IonItem>
                                 </IonMenuToggle>
+                                <IonMenuToggle auto-hide="false" >
+                                <IonItem color="night" detail="false">
+                                    <IonIcon color="primary" icon={mailIcon} slot="start"/>
+                                    <IonText color="">{variablesState.contact_email}</IonText>
+                                </IonItem>
+                                </IonMenuToggle>
                             </IonList>
                         </IonCol>
                     </IonRow>
-                    <IonRow className="ion-text-left border-bottom border-secondary p-3">
+                    <IonRow className="ion-text-left p-3">
                         <IonCol>
                             <div className="d-flex justify-content-around">
                                 {socialHandlesState && socialHandlesState.youtube && 
@@ -94,6 +100,11 @@ const Support = () => {
                                 {socialHandlesState && socialHandlesState.facebook && 
                                 <a href={socialHandlesState.facebook}><IonIcon  size="large" color="primary" icon={fbIcon}/></a>}
                             </div>
+                        </IonCol>
+                    </IonRow>
+                    <IonRow className="ion-text-center border-bottom border-secondary">
+                        <IonCol>
+                            <IonText>STAY IN TOUCH</IonText>
                         </IonCol>
                     </IonRow>
                     <IonRow>
@@ -122,7 +133,7 @@ const Support = () => {
     {
         return  <IonPage>
                     <IonHeader className="osahan-nav">
-                        <BaseToolbar title="Support"/>     
+                        <BaseToolbar title="Contact Us"/>     
                     </IonHeader> 
                     <IonLoading isOpen={loadingState}/>                                           
                     <IonContent className="ion-padding" color="dark">

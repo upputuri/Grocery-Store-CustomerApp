@@ -78,7 +78,7 @@ const ContactForm = () => {
     return (
         <IonPage>
             <IonHeader className="osahan-nav">
-                <BaseToolbar title="Contact Us"/>     
+                <BaseToolbar title="Submit a Query"/>     
             </IonHeader>
             <IonLoading isOpen={loadingState}/>
             <IonAlert

@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider } from '@ionic/react';
+import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider, IonCheckbox } from '@ionic/react';
 import React, { useContext, useState } from 'react';
 import { Redirect, useHistory } from 'react-router';
 import { LoginContext } from '../../App';
@@ -15,8 +15,12 @@ const Registration = () =>
     const [rePasswordState, setRePasswordState] = useState('');
     const [fNameState, setFNameState] = useState('');
     const [lNameState, setLNameState] = useState('');
+    const [acceptedState, setAcceptedState] = useState(false);
     const [errorState, setErrorState] = useState('');
 
+    const toggleAccept = () => {
+      setAcceptedState(!acceptedState);
+    }
 
     const setEmail = (event) => {
       setEmailIdState(event.detail.value);
@@ -47,13 +51,9 @@ const Registration = () =>
       setErrorState('');
     }
 
-    const checkPasswordMatch = (event) => {
-        return passwordState.localeCompare(rePasswordState) === 0;
-    }
-
     const sendRegisterRequest = async () =>
     {
-        if (checkInput() && checkPasswordMatch()){
+        if (checkInput() && passwordState === rePasswordState){
 
           let result = loginContext.register(mobileState, emailIdState, fNameState, lNameState, passwordState).then(
               (result) => {
@@ -101,9 +101,16 @@ const Registration = () =>
       }else if (!isPasswordValid(emailIdState, passwordState)) {
         setErrorState(passwordFormatError);
         return false;
-      } else{
-        return true;
+      } else if (passwordState !== rePasswordState){
+        setErrorState("Please re-enter password!");
+        return false;
       }
+      
+      if (acceptedState !== true) {
+        setErrorState("Please accept the terms & conditions");
+        return false;
+      }
+      return true;
     }
 
     return (
@@ -187,7 +194,13 @@ const Registration = () =>
                              onIonChange={setRePassword}
                              value={rePasswordState}></IonInput>
                         </IonItem>
-                    </IonList>                    
+                    </IonList>
+                    <IonList lines="full" className="ion-no-margin ion-no-padding">
+                      <IonItem>
+                          <IonCheckbox slot="start" onClick={toggleAccept} checked={acceptedState} />
+                          <IonText className="subtext" color="primary">{'I accept the terms & conditions'}</IonText>
+                      </IonItem>
+                    </IonList>                   
                     {errorState !== '' &&
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>

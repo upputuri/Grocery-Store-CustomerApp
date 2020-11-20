@@ -1,19 +1,16 @@
-import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonMenuButton, IonPage, IonRow, IonSearchbar, IonSlide, IonSlides, IonText, IonTitle, IonToolbar } from '@ionic/react';
-import { createOutline as createOutlineIcon } from 'ionicons/icons';
+import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonMenuButton, IonPage, IonRow, IonSlide, IonSlides, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { card as cardIcon, people as peopleIcon } from 'ionicons/icons';
 import Client from 'ketting';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import '../App.scss';
 import ListingSection from '../components/Listing/ListingSection';
 import PosterSlider from '../components/Listing/PosterSlider';
 import CartButton from '../components/Menu/CartButton';
-import BannerSlider from '../components/Slider/BannerSlider';
-import { logoURL, serviceBaseURL } from '../components/Utilities/ServiceCaller';
-import {card as cardIcon, people as peopleIcon} from 'ionicons/icons';
-import '../App.scss';
 import GrocSearch from '../components/Menu/GrocSearch';
+import BannerSlider from '../components/Slider/BannerSlider';
+import { categoryImageStoreURL, defaultImageURL, logoURL, serviceBaseURL, thumbNailImageStoreURL } from '../components/Utilities/ServiceCaller';
 import { Plugins } from '@capacitor/core';
-import PosterSkeleton from '../components/Listing/PosterSkeleton';
-import { defaultImageURL, thumbNailImageStoreURL, categoryImageStoreURL } from '../components/Utilities/ServiceCaller';
-
+import { LoginContext } from '../App';
 
   // document.addEventListener('ionBackButton', (ev) => {
   //   alert('registering app closer');
@@ -24,16 +21,31 @@ import { defaultImageURL, thumbNailImageStoreURL, categoryImageStoreURL } from '
   // });
 
 const Home = () => {
-
+  const loginContext = useContext(LoginContext);
   const [posterListsState, setPosterListsState] = useState(null);
   const [bannersState, setBannersState] = useState([]);
   Plugins.App.addListener('backButton', Plugins.App.exitApp);
 
   useEffect(() => {
+    // refreshAccount();
     loadBanners();
     loadPosters();
     return ()=>Plugins.App.removeAllListeners();
   }, []);
+
+  // const refreshAccount = () => {
+  //   let loginResult = loginContext.login(loginContext.customer.mobile, loginContext.customer.password);
+  //   loginResult.then((result) => {
+  //     if (!result.hasResponse)
+  //       setError("Server unreachable! Please try after some time.")
+  //     else if (result.hasResponse && !result.isResponseOk && result.responseObject.status === 401)
+  //       setError("Login failed. Please check credentials or contact support!");
+  //     else{ 
+  //       redirectTo ? history.push(redirectTo): history.push("/home");
+  //       return;
+  //     }
+  //   });
+  // }
 
   const loadBanners = async () => {
     const client = new Client(serviceBaseURL+'/application/coverimages');
@@ -196,29 +208,29 @@ const Home = () => {
         {/*Slot 1 posterslider*/}
         {posterListsState &&
         <div>
-          <ListingSection title={posterListsState[0].title} viewAllRoute={"/products/categories"}>
+          {posterListsState[0].posters.length > 0 && <ListingSection title={posterListsState[0].title} viewAllRoute={"/products/categories"}>
             <PosterSlider slidesPerView={2.6} 
                           loop={false} 
                           centeredSlides={false} 
                           spaceBetween={10} 
                           posters={posterListsState[0].posters}/>
-          </ListingSection>
-          <ListingSection title={posterListsState[1] && posterListsState[1].title} 
+          </ListingSection>}
+          {posterListsState[1].posters.length > 0 && <ListingSection title={posterListsState[1] && posterListsState[1].title} 
                           viewAllRoute={(posterListsState[1]  && posterListsState[1].viewAllRoute)}>
             <PosterSlider slidesPerView={2.6} 
                           loop={false} 
                           centeredSlides={false} 
                           spaceBetween={10} 
                           posters={posterListsState[1] && posterListsState[1].posters}/>
-          </ListingSection> 
-          <ListingSection title={posterListsState[2] && posterListsState[2].title} 
+          </ListingSection>} 
+          {posterListsState[2].posters.length > 0 && <ListingSection title={posterListsState[2] && posterListsState[2].title} 
                           viewAllRoute={(posterListsState[2] && posterListsState[2].viewAllRoute)}>
             <PosterSlider slidesPerView={2.6} 
                           loop={false} 
                           centeredSlides={false} 
                           spaceBetween={10} 
                           posters={posterListsState[2] && posterListsState[2].posters}/>
-          </ListingSection>
+          </ListingSection>}
         </div>}
         <IonSlides options={{watchOverflow : true}}>
           <IonSlide>

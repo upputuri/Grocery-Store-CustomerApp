@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { IonAvatar, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterLink, IonText, IonTitle } from "@ionic/react"
-import { paperPlane as paperPlanceIcon, cafe as cafeIcon} from 'ionicons/icons'
-import { home, informationCircle as blog, document, call as phone, list, grid, pricetag, basket, card, person, location, create, heart, mail, helpCircle as help, sad, logInOutline as logInIcon} from 'ionicons/icons';
+import { pencil, paperPlane as paperPlanceIcon, cafe as cafeIcon} from 'ionicons/icons'
+import { lockClosed as privacy, home, informationCircle as aboutus, documentText as document, call as phone, list, grid, pricetag, basket, card, person, location, create, heart, mail, helpCircle as help, sadOutline as sad, refresh as refund, logOut as logOutIcon, logIn as logInIcon} from 'ionicons/icons';
 import { LoginContext } from '../../App';
 import '../../App.scss';
+import { aboutUrl, blogUrl, faqUrl, privacyPolicyUrl, profileImageStoreURL, returnPolicyUrl, termsUrl } from '../Utilities/ServiceCaller';
+import Login from '../../pages/auth/Login';
+import { useHistory } from 'react-router';
 
 const menuIcons = {
   home: <IonIcon slot="start" icon={home}></IonIcon>,
@@ -21,7 +24,6 @@ const menuIcons = {
   sad: <IonIcon slot="start" icon={sad}></IonIcon>,
   document: <IonIcon slot="start" icon={document}></IonIcon>,
   phone: <IonIcon slot="start" icon={phone}></IonIcon>,
-  blog: <IonIcon slot="start" icon={blog}></IonIcon>
 };
 
 const SampleMenu = () => {
@@ -43,6 +45,13 @@ const SampleMenu = () => {
 
 const GrocMenu = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const loginContext = useContext(LoginContext);
+  const history = useHistory();
+
+  const handleLogout = () => {
+    loginContext.logout();
+    history.push("/home");
+  }
 
   return (
       <IonMenu contentId="main-content" type="overlay">
@@ -54,13 +63,19 @@ const GrocMenu = (props) => {
                 context.isAuthenticated ? 
                 (
                   <IonList className="bg-black menu-top-section">
-                      <IonAvatar class="ion-margin-start ios hydrated mb-2"><img alt="img" src="assets/user/blank_profile.png"></img></IonAvatar>
-                      {context.customer.fname && <IonItem color="night" detail="false">  
-                        <IonTitle color="primary">{context.customer.fname+" "+context.customer.lname}</IonTitle>
+                    <IonRouterLink routerLink="/account">
+                      <IonMenuToggle auto-hide="false" >
+                      <IonAvatar class="ion-margin-start ios hydrated mb-2">
+                        <img alt="img" src={context.customer.image ? profileImageStoreURL + "/" + context.customer.image : "assets/user/blank_profile.png"}>
+                        </img></IonAvatar>
+                      {(context.customer.fname || context.customer.lname) && <IonItem color="night" detail="false">  
+                        <IonText color="primary">{"Hello, "+context.customer.fname+" "+context.customer.lname}</IonText>
                       </IonItem>}
                       {/* {context.customer.email && <IonItem color="night" detail="false">
                         <IonNote>{context.customer.email}</IonNote>
                       </IonItem> } */}
+                      </IonMenuToggle>
+                    </IonRouterLink>
                   </IonList>   
                 ) : (
                     <IonList className="bg-black menu-top-section">
@@ -68,7 +83,7 @@ const GrocMenu = (props) => {
                         <IonMenuToggle auto-hide="false" >
                           <IonItem color="night" detail="false">
                             <IonIcon color="secondary" icon={logInIcon} slot="start"/>
-                            <IonText color="secondary">Login</IonText>
+                            <IonText color="secondary">Login/Register</IonText>
                           </IonItem>
                         </IonMenuToggle>
                       </IonRouterLink>
@@ -93,14 +108,75 @@ const GrocMenu = (props) => {
 
         </IonList>
 
-        {/* <IonList id="labels-list">
-          <IonListHeader>Trending</IonListHeader>
+        <IonList className="bg-black menu-top-section">
+          <IonRouterLink href={termsUrl}>
+            <IonMenuToggle auto-hide="false" >
+              <IonItem color="night" detail="false">
+                <IonIcon icon={pencil} slot="start"/>
+                <IonText>Terms/Conditions</IonText>
+              </IonItem>
+            </IonMenuToggle>
+          </IonRouterLink>
+          <IonRouterLink href={privacyPolicyUrl}>
+            <IonMenuToggle auto-hide="false" >
+              <IonItem color="night" detail="false">
+                <IonIcon icon={privacy} slot="start"/>
+                <IonText>Privacy Policy</IonText>
+              </IonItem>
+            </IonMenuToggle>
+          </IonRouterLink>
+          <IonRouterLink href={returnPolicyUrl}>
+            <IonMenuToggle auto-hide="false" >
+              <IonItem color="night" detail="false">
+                <IonIcon icon={refund} slot="start"/>
+                <IonText>Return/Refund Policy</IonText>
+              </IonItem>
+            </IonMenuToggle>
+          </IonRouterLink>
+          <IonRouterLink href={faqUrl}>
+            <IonMenuToggle auto-hide="false" >
+              <IonItem color="night" detail="false">
+                <IonIcon icon={help} slot="start"/>
+                <IonText>FAQ</IonText>
+              </IonItem>
+            </IonMenuToggle>
+          </IonRouterLink>
+          <IonRouterLink href={blogUrl}>
+            <IonMenuToggle auto-hide="false" >
+              <IonItem color="night" detail="false">
+                <IonIcon icon={document} slot="start"/>
+                <IonText>Blog</IonText>
+              </IonItem>
+            </IonMenuToggle>
+          </IonRouterLink>
+        </IonList>
 
-          <IonItem lines="none">
-            <IonIcon slot="start" ios="trending-up-outline" md="trending-up-outline"></IonIcon>
-              <IonLabel>{}</IonLabel>
-          </IonItem>
-        </IonList> */}
+        <IonList className="bg-black menu-top-section">
+          <IonRouterLink href={aboutUrl}>
+            <IonMenuToggle auto-hide="false" >
+              <IonItem color="night" detail="false">
+                <IonIcon icon={aboutus} slot="start"/>
+                <IonText>About Us</IonText>
+              </IonItem>
+            </IonMenuToggle>
+          </IonRouterLink>
+          <IonRouterLink routerLink="/support">
+            <IonMenuToggle auto-hide="false" >
+              <IonItem color="night" detail="false">
+                <IonIcon icon={phone} slot="start"/>
+                <IonText>Contact Us</IonText>
+              </IonItem>
+            </IonMenuToggle>
+          </IonRouterLink>
+
+          {loginContext.isAuthenticated && <IonMenuToggle auto-hide="false" >
+            <IonItem onClick={handleLogout} color="night" detail="false">
+              <IonIcon color="danger" icon={logOutIcon} slot="start"/>
+              <IonText>Logout</IonText>
+            </IonItem>
+          </IonMenuToggle>}
+        </IonList>
+
       </IonContent>
     </IonMenu>
   )

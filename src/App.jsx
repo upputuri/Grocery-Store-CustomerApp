@@ -42,29 +42,34 @@ import Policies from './pages/general/Policies';
 import Support from './pages/general/Support';
 import OTPLogin from './pages/auth/OTPLogin';
 import PasswordReset from './pages/auth/PasswordReset';
+import "@codetrix-studio/capacitor-google-auth";
+import OrderPlaced from './pages/general/OrderPlaced';
 
 const { Storage } = Plugins;
 const LoginContext = React.createContext(
   {
+    authObject: undefined,
+    authProvider: undefined,
     isAuthenticated: true,
     customer: {
       id: '',
-      password: '',
+      password: undefined,
       fname: '',
       lname: '',
       email: '',
-      mobile: '',
-      image: '',
+      mobile: undefined,
+      image: undefined,
     },
     login: () => {},
     register: () => {},
     updateProfile: () => {},
+    loginWithGoogle: () => {}
 });
 
 const CartContext = React.createContext(
   {
     itemCount: 0,
-    addItem: (p,v,q)=>{},
+    addItem: async (p,v,q)=>{},
     removeItem: (p,v,q)=>{},
     placeOrder: () =>{},
     setDeliveryAddress: ()=>{},
@@ -88,20 +93,26 @@ class App extends React.Component {
   constructor(props){
     super(props);
     
-    this.retrieveUser();
-    this.retrieveCart();
+    this.retrieveUser().then((user)=>{
+      // alert(JSON.stringify(user));
+      user && user.mobile && user.password && this.refreshAccount(user.mobile, user.password);
+    });
+
+    // this.retrieveCart();
 
     this.state =
       {
+        authObject: undefined,
+        authProvider: undefined,
         isAuthenticated: false,
         customer: {
           id: '',
           fname: '',
           lname: '',
           email: '',
-          password: '',
-          mobile: '',
-          image: '',
+          password: undefined,
+          mobile: undefined,
+          image: undefined,
         },
         cart: {
           itemCount: 0,
@@ -151,6 +162,8 @@ class App extends React.Component {
     }
     const receivedData = receivedState.data;
     this.setState({
+      authObject: undefined,
+      authProvider: 'service',
       isAuthenticated: true,
       customer: {
         id: receivedData.id,
@@ -229,6 +242,8 @@ class App extends React.Component {
         itemCount: serviceRequest.responseObject.cartItemCount
       };
       this.setState({
+        authObject: undefined,
+        authProvider: 'service',
         isAuthenticated: true,
         customer: authenticatedCustomer,
         cart: cart,
@@ -253,17 +268,54 @@ class App extends React.Component {
     }
   }
 
+  refreshAccount = (mobile, password) => {
+      let loginResult = this.loginHandler(mobile, password);
+      loginResult.then((result) => {
+        if (result.hasResponse && !result.isResponseOk) {
+          this.logoutHandler();
+        }
+      });
+  }
+
+  loginWithGoogle = async () => {
+    console.log("Redirecting to Google for authentication");
+    const result = await Plugins.GoogleAuth.signIn();
+    console.log("Result of google login: "+JSON.stringify(result));
+
+    if (result) {
+      this.setState({
+        authObject: result,
+        authProvider: 'google',
+        isAuthenticated: true,
+        customer: {
+          ...this.state.customer,
+          email: result.email,
+          fname: result.givenName,
+          lname: result.familyName,
+          image: result.imageUrl
+        }
+      });
+    }
+  }
+
   logoutHandler = () => {
+    if (this.state.isAuthenticated) {
+      if (this.state.authProvider === 'google') {
+        Plugins.GoogleAuth.signOut();
+      }
+    }
     this.setState( {
+      authObject: undefined,
+      authProvider: undefined,
       isAuthenticated: false,
       customer: {
         id: '',
         fname: '',
         lname: '',
         email: '',
-        password: '',
-        mobile: '',
-        image: '',
+        password: undefined,
+        mobile: undefined,
+        image: undefined,
       },
       cart: {
         itemCount: 0,
@@ -285,9 +337,9 @@ class App extends React.Component {
       fname: '',
       lname: '',
       email: '',
-      password: '',
-      mobile: '',
-      image: '',
+      password: undefined,
+      mobile: undefined,
+      image: undefined,
     });
 
     this.storeCart({
@@ -315,28 +367,29 @@ class App extends React.Component {
     const ret = await Storage.get({key: "user"});
     // console.log("Retrieved user from storage: "+ret.value);
     const user = JSON.parse(ret.value);
+    return Promise.resolve(user);
     // alert(JSON.parse(JSON.stringify(user)).fname);
-    let customer = (user === null) ? {
-      id: '',
-      fname: '',
-      lname: '',
-      email: '',
-      mobile: '',
-      password: '',
-      image: ''
-    }:{
-      id: user.id,
-      fname: user.fname,
-      lname: user.lname,
-      email: user.email,
-      mobile: user.mobile,
-      password: user.password,
-      image: user.image
-    }
-    this.setState({customer: customer});
-    this.setState({isAuthenticated: 
-                  (user && user.email && user.email.length>0) || 
-                  (user && user.mobile && user.mobile.length>0)});
+    // let customer = (user === null) ? {
+    //   id: '',
+    //   fname: '',
+    //   lname: '',
+    //   email: '',
+    //   mobile: '',
+    //   password: undefined,
+    //   image: undefined
+    // }:{
+    //   id: user.id,
+    //   fname: user.fname,
+    //   lname: user.lname,
+    //   email: user.email,
+    //   mobile: user.mobile,
+    //   password: user.password,
+    //   image: user.image
+    // }
+    // this.setState({customer: customer});
+    // this.setState({isAuthenticated: 
+    //               (user && user.email && user.email.length>0) || 
+    //               (user && user.mobile && user.mobile.length>0)});
     // alert(JSON.stringify(ret));
     // JSON.parse(ret);
   }
@@ -483,12 +536,14 @@ class App extends React.Component {
     console.log("Rendering App");
     return (
     <IonReactRouter>
-      <LoginContext.Provider value={{isAuthenticated: this.state.isAuthenticated, 
+      <LoginContext.Provider value={{authProvider: this.state.authProvider,
+                                    isAuthenticated: this.state.isAuthenticated, 
                                     customer: this.state.customer, 
                                     login: (u, p)=>this.loginHandler(u, p),
                                     logout: this.logoutHandler, 
                                     register: this.registerNewUser.bind(this),
                                     updateProfile: this.saveEditedProfile.bind(this),
+                                    loginWithGoogle: this.loginWithGoogle.bind(this)
                                     }}>
         <CartContext.Provider value={{itemCount: this.state.cart.itemCount, 
                                       order: this.state.order,
@@ -523,6 +578,7 @@ class App extends React.Component {
                     <Route path="/checkout" component={Checkout} exact={true} />
                     <Route path="/orders" component={Orders} exact={true} />
                     <Route path="/orders/:id" component={OrderDetail} exact={true} />
+                    <Route path="/orderplaced" component={OrderPlaced} exact={true} />
                   </Switch>
                   :
                   <Redirect to={"/login"}/>
