@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { IonAvatar, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterLink, IonText, IonTitle } from "@ionic/react"
 import { pencil, paperPlane as paperPlanceIcon, cafe as cafeIcon} from 'ionicons/icons'
-import { lockClosed as privacy, home, informationCircle as aboutus, documentText as document, call as phone, list, grid, pricetag, basket, card, person, location, create, heart, mail, helpCircle as help, sadOutline as sad, refresh as refund, logOut as logOutIcon, logIn as logInIcon} from 'ionicons/icons';
+import { people, lockClosed as privacy, home, informationCircle as aboutus, documentText as document, call as phone, list, grid, pricetag, basket, card, person, location, create, heart, mail, helpCircle as help, sadOutline as sad, refresh as refund, logOut as logOutIcon, logIn as logInIcon} from 'ionicons/icons';
 import { LoginContext } from '../../App';
 import '../../App.scss';
 import { aboutUrl, blogUrl, faqUrl, privacyPolicyUrl, profileImageStoreURL, returnPolicyUrl, termsUrl } from '../Utilities/ServiceCaller';
@@ -21,7 +21,7 @@ const menuIcons = {
   heart: <IonIcon slot="start" icon={heart}></IonIcon>,
   mail: <IonIcon slot="start" icon={mail}></IonIcon>,
   help: <IonIcon slot="start" icon={help}></IonIcon>,
-  sad: <IonIcon slot="start" icon={sad}></IonIcon>,
+  people: <IonIcon slot="start" icon={people}></IonIcon>,
   document: <IonIcon slot="start" icon={document}></IonIcon>,
   phone: <IonIcon slot="start" icon={phone}></IonIcon>,
 };
@@ -113,7 +113,7 @@ const GrocMenu = (props) => {
             <IonMenuToggle auto-hide="false" >
               <IonItem color="night" detail="false">
                 <IonIcon icon={pencil} slot="start"/>
-                <IonText>Terms/Conditions</IonText>
+                <IonText>{'Terms & Conditions'}</IonText>
               </IonItem>
             </IonMenuToggle>
           </IonRouterLink>

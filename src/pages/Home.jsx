@@ -11,6 +11,7 @@ import BannerSlider from '../components/Slider/BannerSlider';
 import { categoryImageStoreURL, defaultImageURL, logoURL, serviceBaseURL, thumbNailImageStoreURL } from '../components/Utilities/ServiceCaller';
 import { Plugins } from '@capacitor/core';
 import { LoginContext } from '../App';
+import AdvertSlider from '../components/Slider/AdvertSlider';
 
   // document.addEventListener('ionBackButton', (ev) => {
   //   alert('registering app closer');
@@ -215,6 +216,7 @@ const Home = () => {
                           spaceBetween={10} 
                           posters={posterListsState[0].posters}/>
           </ListingSection>}
+          <AdvertSlider/>
           {posterListsState[1].posters.length > 0 && <ListingSection title={posterListsState[1] && posterListsState[1].title} 
                           viewAllRoute={(posterListsState[1]  && posterListsState[1].viewAllRoute)}>
             <PosterSlider slidesPerView={2.6} 

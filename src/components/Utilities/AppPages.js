@@ -19,12 +19,12 @@ const AppPages =
       title: 'My Orders',
       url: '/orders',
       icon: 'create'
-    }
-    // {
-    //   title: 'About Us',
-    //   url: '/about',
-    //   icon: 'heart'
-    // },
+    },
+    {
+      title: 'Memberships',
+      url: '/home',
+      icon: 'people'
+    },
 
 ];
 

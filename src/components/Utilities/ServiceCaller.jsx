@@ -25,11 +25,15 @@ const categoryImageStoreURL = "http://thevegitclub.com/vegitfiles/category/small
 const defaultImageURL = "http://thevegitclub.com/vegitfiles/default.png";
 
 const aboutUrl = "http://thevegitclub.com/?urlq=page/static/about-us";
-const blogUrl = "http://thevegitclub.com";
+const blogUrl = "http://thevegitclub.com/?urlq=blog";
 const termsUrl = "http://thevegitclub.com/?urlq=page/static/Terms%20and%20Conditions";
 const returnPolicyUrl = "http://thevegitclub.com/?urlq=page/static/Refund%20Policy";
 const privacyPolicyUrl = "http://thevegitclub.com/?urlq=page/static/Privacy%20Policy";
 const faqUrl = "http://thevegitclub.com/?urlq=page/static/FAQ";
+
+const advertUrl1 = "http://thevegitclub.com/themes/nyk/images/e435af26d54ecd5b21d7a9af8ec58994.png";
+const advertUrl2 = "http://thevegitclub.com/themes/nyk/images/15-Discount-on-Vegetables-1.png";
+const advertUrl3 = "http://thevegitclub.com/themes/nyk/images/IMG-20200626-WA0009.png";
 
 // interface RequestObj{
 //     method: string,
@@ -199,3 +203,4 @@ export { defaultImageURL, serviceBaseURL, smallImageStoreURL, mediumImageStoreUR
     profileImageStoreURL };
 
 export {aboutUrl, termsUrl, returnPolicyUrl, privacyPolicyUrl, blogUrl, faqUrl};
+export {advertUrl1, advertUrl2, advertUrl3};

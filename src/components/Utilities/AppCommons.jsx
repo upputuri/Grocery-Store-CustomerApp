@@ -1,6 +1,8 @@
 
 const passwordFormatError = "Password must contain at least six characters, one lowercase, one uppercase and one numeric and can not be same as email!";
 
+const productListPageSize = 15;
+
 const isPasswordValid =(username, password) => {
     let re;
     if(password.length < 6) {
@@ -25,4 +27,4 @@ const isPasswordValid =(username, password) => {
 }
 
 
-export {isPasswordValid, passwordFormatError};
+export {isPasswordValid, passwordFormatError, productListPageSize};
