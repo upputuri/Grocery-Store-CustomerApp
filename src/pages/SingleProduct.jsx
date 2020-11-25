@@ -1,4 +1,4 @@
-import { IonAlert, IonBadge, IonContent, IonHeader, IonIcon, IonLoading, IonPage, IonSearchbar, IonSlide, IonSlides, IonText } from '@ionic/react';
+import { IonAlert, IonBadge, IonContent, IonGrid, IonHeader, IonIcon, IonLoading, IonPage, IonSearchbar, IonSlide, IonSlides, IonText } from '@ionic/react';
 import { checkmarkCircle as checkMarkIcon } from 'ionicons/icons';
 import Client from 'ketting';
 import React, { useEffect, useState } from 'react';
@@ -102,7 +102,7 @@ const SingleProduct = (props) => {
         return (
 
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title=""/>
                     <GrocSearch/>      
                 </IonHeader>
@@ -110,31 +110,22 @@ const SingleProduct = (props) => {
                 <IonContent color="dark">
                     {productState && 
                     <div>
-                        <IonSlides pager="true">
+                        <IonSlides pager="true" className="ion-padding">
                             {productState.images && productState.images.map((image) => {
-                            return <IonSlide key={image}>
+                            return <IonGrid><IonSlide key={image}>
                                         <img alt="img" className="single-img" src={image?mediumImageStoreURL+"/"+image:defaultImageURL}/>
-                                    </IonSlide>
+                                    </IonSlide></IonGrid>
                             })}
                         </IonSlides>
                         <div className="p-3">
+                            <IonGrid>
                             <div className="mb-2 card p-3 single-page-info">
                                 <div>
                                 <div className="single-page-shop">
                                     <IonText color="primary">
                                         <h6 className="mb-1">{productState.name} - {productState.variations[variantIndexState].name}</h6>
                                     </IonText>
-
-
-                                    {/* <p className="font-weight-normal text-white mb-2 price">
-                                    <span className="old-price mr-2">₹338.99</span> <span className="regular-price text-secondary font-weight-normal">₹190.99</span> 
-                                    <IonBadge color="success">25% OFF</IonBadge>
-                                    </p> */}
                                     <div className="font-weight-normal mb-2 price">
-                                        {/* <span><IonText><h5 className="mb-2 text-white">{'₹'+productState.variations[variantIndexState].price}
-                                            <span>
-                                            <IonText color="success">  {productState.discount > 0 ? productState.discount+'% OFF':''}</IonText></span></h5></IonText>
-                                        </span> */}
                                         {productState.discount > 0 &&
                                         <IonText>
                                             <span className="price-before-discount">{'₹'+productState.variations[variantIndexState].price}</span>
@@ -146,38 +137,28 @@ const SingleProduct = (props) => {
                                         </IonText>}                                          
                                     </div>
                                     <small className="text-secondary">
-                                        <strong>
-                                            <IonIcon color="success" icon={checkMarkIcon}></IonIcon>
-                                            Available in - 
-                                        </strong>
-                                        <span>
+                                        <div className="d-flex">
+                                        <div><IonIcon color="success" icon={checkMarkIcon}></IonIcon>Available in - </div>
+                                        <div>
                                             {productState.variations.map((v, index) => {
-                                                
                                                 return <IonBadge color={
                                                     index === variantIndexState? 'red':'tertiary'
                                                 }className='ml-1' key={v.id} onClick={variantSelected.bind(this, index)}>{v.name}</IonBadge>
                                             })}
-                                        </span>
+                                        </div>
+                                        </div>
                                     </small>                                                      
-                                    <div className="small text-gray-500 d-flex align-items-center justify-content-end">
-                                        {/* <div>
-                                            <IonIcon color="tertiary" icon={starIcon}></IonIcon>
-                                            4.4
-                                        </div> */}
+                                    <div className="small text-gray-500 d-flex align-middle justify-content-end">
                                         {productState.variations[variantIndexState].inStock ? 
                                         <AddToCartButton productId={productState.id} variationId={productState.variations[variantIndexState].id}/>
                                         :
                                         <IonText color="secondary">Out of Stock</IonText>}
-                                        {/* <!-- <div className="input-group shop-cart-value">
-                                            <span className="input-group-btn"><button disabled="disabled" className="btn btn-sm" type="button">-</button></span>
-                                            <input type="text" max="10" min="1" value="1" className="form-control border-form-control form-control-sm input-number bg-black text-white" name="quant[1]">
-                                            <span className="input-group-btn"><button className="btn btn-sm" type="button">+</button>
-                                            </span>
-                                        </div> --> */}
                                     </div>
                                 </div>
                                 </div>
                             </div>
+                            </IonGrid>
+                            <IonGrid>
                             <div className="mb-2 card p-3 single-page-info">
                                 <div className="short-description">
                                 <small className="float-right"><span className="badge badge-success">{productState.variations[variantIndexState].inStock ? 'In Stock': 'Out of Stock'}</span></small>
@@ -189,11 +170,8 @@ const SingleProduct = (props) => {
                                 <p className="mb-0 text-secondary">{productState.variations[variantIndexState].description}</p>
                                 </div>
                             </div>
+                            </IonGrid>
                         </div>
-                        {/* <ListingSection title="Other similar products">
-                            <PosterSlider/>
-                        </ListingSection> */}
-                        
                     </div>
                     }
                     </IonContent>
@@ -204,7 +182,7 @@ const SingleProduct = (props) => {
     else{
         return (
         <IonPage>
-            <IonHeader className="osahan-nav">
+            <IonHeader className="osahan-nav border-white border-bottom">
                 <BaseToolbar />
                 <IonSearchbar className="pt-1" placeholder="Search for products"></IonSearchbar>      
             </IonHeader>

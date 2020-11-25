@@ -1,6 +1,6 @@
 {
   "name": "Grocery-Store-CustomerApp",
-  "version": "0.0.1",
+  "version": "0.3.0",
   "private": true,
   "dependencies": {
     "@capacitor/android": "2.4.2",

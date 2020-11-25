@@ -43,7 +43,7 @@ const Categories = (props) => {
 
     return (
         <IonPage>
-            <IonHeader className="osahan-nav">
+            <IonHeader className="osahan-nav border-white border-bottom">
                 <BaseToolbar title="Categories"/>
                 <GrocSearch/>     
             </IonHeader>

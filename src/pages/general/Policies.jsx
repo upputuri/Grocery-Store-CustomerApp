@@ -15,7 +15,7 @@ const Policies = () => {
     'This is our policy on topic 4. But this policy has to be little detailed, so I am adding some additional content without any idea what the content should be'];
 
     return <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-bottom border-white">
                     <BaseToolbar title="Policies"/>     
                 </IonHeader>                                           
                 <IonContent className="faq ion-padding" color="dark">

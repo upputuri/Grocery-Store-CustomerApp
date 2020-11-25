@@ -95,7 +95,7 @@ const Orders = () => {
         console.log("Rendering Orders page");
         return (
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Your Orders"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>
@@ -131,7 +131,7 @@ const Orders = () => {
         console.log("show alert "+serviceRequestAlertState.show);
             return (
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Your Orders"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>                

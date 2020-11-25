@@ -120,7 +120,7 @@ const Registration = () =>
               (context) => context.isAuthenticated ? <Redirect to='/home'/>: ''
             }
           </LoginContext.Consumer>
-            <IonHeader className="osahan-nav">
+            <IonHeader className="osahan-nav border-bottom border-white">
             <IonToolbar>
                 <IonButtons slot="start">
                     <IonMenuButton></IonMenuButton>

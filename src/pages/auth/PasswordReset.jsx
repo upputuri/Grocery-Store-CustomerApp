@@ -68,7 +68,7 @@ const PasswordReset = () => {
                 (context) => context.isAuthenticated ? <Redirect to='/home'/>: ''
             }
             </LoginContext.Consumer>
-            <IonHeader className="osahan-nav">
+            <IonHeader className="osahan-nav border-bottom border-white">
             <IonAlert isOpen={infoAlertState.show}
                         onDidDismiss={navigateToLoginPage}
                         header={''}

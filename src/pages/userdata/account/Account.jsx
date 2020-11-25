@@ -6,7 +6,7 @@ import { useHistory } from 'react-router';
 import { LoginContext } from '../../../App';
 import BaseToolbar from '../../../components/Menu/BaseToolbar';
 import { profileImageStoreURL, serviceBaseURL } from '../../../components/Utilities/ServiceCaller';
-import './account.css';
+
 
 const Account = (props) => {
     const loginContext = useContext(LoginContext);
@@ -81,7 +81,7 @@ const Account = (props) => {
 
     return (
         <IonPage>
-            <IonHeader className="osahan-nav">
+            <IonHeader className="osahan-nav border-bottom border-white">
                 <BaseToolbar title="Account"/>     
             </IonHeader>
             <IonAlert isOpen={infoAlertState.show}
@@ -119,7 +119,7 @@ const Account = (props) => {
 
                 </div>
 
-                <div className="menu-box">
+                <IonGrid className="menu-box">
                     <IonItemGroup>
                         <IonRouterLink routerLink="/account/security">
                             <IonItem color="night" lines="full" className="border-bottom border-secondary">
@@ -152,17 +152,17 @@ const Account = (props) => {
                             </IonItem>
                         </IonRouterLink>
                     </IonItemGroup>
-                </div>
-                <div className="mt-3 card bg-black profile-box text-center">
+                </IonGrid>
+                <IonGrid className="mt-3 card bg-black profile-box text-center">
                     <IonItem color="night">
                         <IonCheckbox slot="start" onClick={toggleSubscription} checked={subscribedState} />
                         <IonText className="maintext" color="primary">{!subscribedState ? 'Sign Up ': 'You are signed up '}for our newsletter and to get updates</IonText>
                     </IonItem>
-                </div>
+                </IonGrid>
             </IonContent>
 
-            <IonFooter className="border-0">
-                <IonButton onClick={handleLogout} size="large" className="button-block p-0 m-0" expand="full" color="secondary">
+            <IonFooter className="border-white border-top">
+                <IonButton onClick={handleLogout} size="large" className="button-block p-0 m-0" expand="full" color="night">
                     <IonIcon icon={lockClosedIcon}></IonIcon>
                     Logout
                 </IonButton>

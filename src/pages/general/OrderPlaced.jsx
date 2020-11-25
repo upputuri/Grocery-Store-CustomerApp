@@ -11,7 +11,7 @@ const OrderPlaced = () => {
 
     return (
         <IonPage>
-            <IonHeader className="osahan-nav">
+            <IonHeader className="osahan-nav border-white border-bottom">
                 <BaseToolbar title="Order Status"/>     
             </IonHeader>
             <IonContent className="ion-padding" color="dark">
@@ -27,6 +27,11 @@ const OrderPlaced = () => {
                             subject={"#"+newOrderId}
                             leftButtonText="View Orders"
                             leftButtonClickHandler={()=>history.push("/orders")}/>
+            }
+            {newOrderId < 0 && 
+            <InfoMessageTile headerTextLeft="Payment error"
+                            subject={"We have not received payment confirmation for your order"}
+                            detail="If the amount is debited from your bank account, it will be returned to the same account automatically"/>
             }
             </IonContent>
         </IonPage>

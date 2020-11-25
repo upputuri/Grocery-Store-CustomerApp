@@ -222,7 +222,7 @@ const AddressList = () => {
     if (addressListState !== null) {
         return (
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Manage Addresses"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>
@@ -303,7 +303,7 @@ const AddressList = () => {
         console.log("show alert "+serviceRequestAlertState.show);
             return (
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Manage Addresses"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>                

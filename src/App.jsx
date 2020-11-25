@@ -37,7 +37,7 @@ import OrderDetail from './pages/userdata/orders/OrderDetail';
 import Orders from './pages/userdata/orders/Orders';
 import { Plugins } from '@capacitor/core';
 /* Theme variables */
-import './theme/variables.css';
+import './theme/variables.scss';
 import Policies from './pages/general/Policies';
 import Support from './pages/general/Support';
 import OTPLogin from './pages/auth/OTPLogin';
@@ -75,12 +75,14 @@ const CartContext = React.createContext(
     setDeliveryAddress: ()=>{},
     setPromoCodes: ()=>{},
     setPaymentOption: ()=>{},
+    setTransactionId: ()=>{},
+    setCartCount: () => {},
     order: {
       id: '',
       deliveryAddressId: 0,
       promoCodes: [],
-      paymentOptionId: '',
-      transactionId: '',
+      paymentOptionId: undefined,
+      transactionId: undefined,
       instructions: '',
     }
   }
@@ -121,8 +123,8 @@ class App extends React.Component {
           id: '',
           deliveryAddressId: 0,
           promoCodes: [],
-          paymentOptionId: 0,
-          transactionId: '',
+          paymentOptionId: undefined,
+          transactionId: undefined,
           instructions: ''
         },
         showToast: false,
@@ -324,8 +326,8 @@ class App extends React.Component {
         id: '',
         deliveryAddressId: 0,
         promoCodes: [],
-        paymentOptionId: 0,
-        transactionId: '',
+        paymentOptionId: undefined,
+        transactionId: undefined,
         instructions: ''
       },
       showToast: true,
@@ -453,6 +455,10 @@ class App extends React.Component {
       })
     }
 
+  setCartCount(count){
+    this.setState({cart: {itemCount: count}});
+  }
+
   setDeliveryAddress(addressId){
     this.setState({order: {
       ...this.state.order, deliveryAddressId: addressId
@@ -477,6 +483,18 @@ class App extends React.Component {
     }})
   }
 
+  setTransactionId(tranId){
+    this.setState({order: {
+      ...this.state.order, transactionId: tranId
+    }})
+  }
+
+  // setTransactionResponse(response){
+  //   alert("setting tran resp in cart context : "+response);
+  //   this.setState({order: {
+  //     ...this.state.order, pgiResponse: response
+  //   }})
+  // }
   resetCart(){
     this.setState({
       cart: {
@@ -497,7 +515,7 @@ class App extends React.Component {
   //   })
   // }
 
-  async placeOrder(){
+  async placeOrder(paymentTransactionResponse){
     this.setState({showLoading: true});
     let path = serviceBaseURL + '/orders';
     const client = new Client(path);
@@ -513,7 +531,7 @@ class App extends React.Component {
       loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);
       receivedState = await resource.post(
         {
-          data: {...this.state.order, customerId: this.state.customer.id},
+          data: {...this.state.order, customerId: this.state.customer.id, pgiResponse: paymentTransactionResponse},
           headers: loginHeaders
         }
         );
@@ -551,9 +569,12 @@ class App extends React.Component {
                                       setDeliveryAddress: this.setDeliveryAddress.bind(this),
                                       setPromoCodes: this.setPromoCodes.bind(this),
                                       setPaymentOption: this.setPaymentOption.bind(this),
+                                      setTransactionId: this.setTransactionId.bind(this),
+                                      // setTransactionResponse: this.setTransactionResponse.bind(this),
                                       placeOrder: this.placeOrder.bind(this),
                                       // resetOrderState: this.clearOrderId.bind(this),
-                                      addItem: (pId, vId, qty)=>this.addItemToCart(pId, vId, qty)
+                                      addItem: (pId, vId, qty)=>this.addItemToCart(pId, vId, qty),
+                                      setCartCount: this.setCartCount.bind(this)
                                       }}>
           <IonApp>
             <IonSplitPane contentId="main-content">

@@ -5,7 +5,6 @@ import { useHistory } from 'react-router';
 import { LoginContext } from '../../../App';
 import BaseToolbar from '../../../components/Menu/BaseToolbar';
 import { serviceBaseURL } from '../../../components/Utilities/ServiceCaller';
-import './account.css';
 
 const Profile = () => {
     const [profileState, setProfileState] = useState(null);
@@ -138,7 +137,7 @@ const Profile = () => {
     if (profileState !== null) {
         return (
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Profile"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>
@@ -236,7 +235,7 @@ const Profile = () => {
         console.log("show alert "+serviceRequestAlertState.show);
             return (
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Profile"/>
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>                

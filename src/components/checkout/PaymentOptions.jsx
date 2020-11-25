@@ -1,46 +1,28 @@
 import { IonButton, IonCol, IonContent, IonGrid, IonItem, IonLabel, IonList, IonListHeader, IonRadio, IonRadioGroup, IonRow, IonText } from '@ionic/react';
-import React, { useState } from 'react';
+import Client from 'ketting';
+import React, { useContext, useState } from 'react';
+import { useHistory } from 'react-router';
+import { LoginContext } from '../../App';
+import { serviceBaseURL } from '../Utilities/ServiceCaller';
 
 var RazorpayCheckout = require('com.razorpay.cordova/www/RazorpayCheckout');
 
 
 const PaymentOptions = (props) => {
     const [selectedOption, setSelectionOption] = useState(props.selectedOption);
+    const [razorPayOrderIdState, setRazorPayOrderIdState] = useState(undefined);
+    const loginContext = useContext(LoginContext);
+    const [loadingState, setLoadingState] = useState(false);
+    const [serviceRequestAlertState, setServiceRequestAlertState] = useState({show: false, msg: ''});
+    const history = useHistory();
+
 
     const updateSelection = (event) => {
-        setSelectionOption(event.detail.value)
+        setSelectionOption(event.detail.value);
         props.paymentOptionSelectHandler(event.detail.value);
     }
 
-    const razorPayPOClicked = () => {
-        var options = {
-            description: 'Payment towards Vegit order',
-            image: 'https://i.imgur.com/3g7nmJC.png',
-            order_id: 'order_G2CEwOKqpCZ7jv',
-            currency: 'INR',
-            key:'rzp_test_gtgk7x1URhgpBg',
-            amount:'1',
-            name: 'Acme Corp',
-            theme: {
-                color: '#3399cc'
-                }
-        };
-        console.log(RazorpayCheckout);
-        RazorpayCheckout.on('payment.success', successCallback);
-        RazorpayCheckout.on('payment.cancel', cancelCallback);
-        RazorpayCheckout.open(options);
-    }
 
-    const successCallback = (success) => {
-        alert('payment_id: ' + success.razorpay_payment_id);
-        var orderId = success.razorpay_order_id;
-        var signature = success.razorpay_signature;
-        console.log("OrderId: "+orderId+", signature: "+signature);
-    }
-    
-    const cancelCallback = (error) => {
-        alert(error.description + ' (Error '+error.code+')')
-    }
 
     return (
         <IonContent className="ion-padding" color="dark">
@@ -55,9 +37,29 @@ const PaymentOptions = (props) => {
                         <IonList className="p-0">
                             <IonRadioGroup color="night" value={selectedOption} onIonChange={updateSelection}>
                                 <IonListHeader color="night" >
+                                    Instant Payment
+                                </IonListHeader>
+                                {props.paymentOptions.instant && props.paymentOptions.instant.map((instantOption) => {
+                                    // alert(instanOption.name)
+                                    return <IonItem color="night" lines="none" key={instantOption.id}>
+                                                <IonLabel>
+                                                    {instantOption.name}
+                                                </IonLabel>
+                                                <IonRadio slot="start" value={instantOption.id}/>
+                                            </IonItem>
+                                })}
+                            </IonRadioGroup>
+                        </IonList>
+                    </IonCol>
+                </IonRow>
+                <IonRow className="p-2">
+                    <IonCol>
+                        <IonList className="p-0">
+                            <IonRadioGroup color="night" value={selectedOption} onIonChange={updateSelection}>
+                                <IonListHeader color="night" >
                                     Pay On Delivery
                                 </IonListHeader>
-                                {props.onDeliveryOptions && props.onDeliveryOptions.map((onDelOption) => {
+                                {props.paymentOptions.ondelivery && props.paymentOptions.ondelivery.map((onDelOption) => {
                                     return <IonItem color="night" lines="none" key={onDelOption.id}>
                                                 <IonLabel>
                                                     {onDelOption.name}
@@ -69,7 +71,7 @@ const PaymentOptions = (props) => {
                         </IonList>
                     </IonCol>
                 </IonRow>
-                <IonRow className="p-2">
+                {/* <IonRow className="p-2">
                     <IonCol>
                         <IonList className="p-0">
                             <IonListHeader color="night">Credit cards, Debit cards, Netbanking</IonListHeader>
@@ -82,7 +84,24 @@ const PaymentOptions = (props) => {
                         <img alt="razorpay" className="single-img" src="assets/320px-Razorpay_logo.svg.png"/>
                         </IonButton>
                     </IonCol>
-                </IonRow>
+                </IonRow> */}
+                {/* <IonRow className="p-2 border-bottom border-secondary">
+                    <IonCol>
+                        <IonList className="p-0">
+                            <IonRadioGroup color="night" value={selectedOption} onIonChange={updateSelection}>
+                                <IonListHeader color="night" >
+                                    Credit/Debit Cards
+                                </IonListHeader>
+                                <IonItem color="night" lines="none">
+                                    <IonLabel>
+                                        Razor Pay
+                                    </IonLabel>
+                                    <IonRadio slot="start" value="razorpay"/>
+                                </IonItem>
+                            </IonRadioGroup>
+                        </IonList>
+                    </IonCol>
+                </IonRow> */}
             </IonGrid>                        
         </IonContent>
     )

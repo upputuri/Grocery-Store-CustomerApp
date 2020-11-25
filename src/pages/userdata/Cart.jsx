@@ -70,8 +70,12 @@ const Cart = (props) =>{
             return;
         }
         console.log("Service call response received");
+        // alert(JSON.stringify(receivedState));
         // const items = receivedState.getEmbedded().map((itemState) => itemState.data);
         const items = receivedState.data.cartItems;
+        const totalCartCount = items.map((item)=>item.qty).reduce((a, c)=>a+c,0);
+        // alert(totalCartCount);
+        cartContext.setCartCount(totalCartCount);
         // alert(items.length);
         // const cartTotal = items.reduce((a, item) => a+item.totalPrice, 0.0);
         const cartTotal = receivedState.data.cartTotal;
@@ -96,7 +100,7 @@ const Cart = (props) =>{
 
     return (
         <IonPage>
-            <IonHeader className="osahan-nav">
+            <IonHeader className="osahan-nav border-white border-bottom">
                 <BaseToolbar title="Your Cart"/>
                 <GrocSearch/>      
             </IonHeader>              

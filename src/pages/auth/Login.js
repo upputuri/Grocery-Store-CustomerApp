@@ -80,7 +80,7 @@ const Login = (props) =>
               (context) => context.isAuthenticated ? <Redirect to={redirectTo ? redirectTo: '/home'}/>: ''
             }
           </LoginContext.Consumer>
-            <IonHeader className="osahan-nav">
+            <IonHeader className="osahan-nav border-white border-bottom">
             <IonToolbar>
                 <IonButtons slot="start">
                     <IonMenuButton></IonMenuButton>

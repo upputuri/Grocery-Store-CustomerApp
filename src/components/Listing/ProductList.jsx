@@ -83,16 +83,16 @@ const ProductList = () => {
     console.log("Rendering product list");
     return (
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Products"/>
                     <GrocSearch/>      
                 </IonHeader>            
                 <IonLoading isOpen={showLoading}/>
                 <IonContent color="dark" className="ion-padding">
-                    <div className="d-flex justify-content-between">
+                    {/* <div className="d-flex justify-content-between">
                         <IonButton onClick={loadPreviousPage} size="small" color="secondary"><IonIcon size="small" slot="start" icon={previous}></IonIcon>Prev</IonButton>
                         <IonButton onClick={loadNextPage} size="small" color="secondary"><IonIcon size="small" slot="end" icon={next}></IonIcon>Next</IonButton>
-                    </div>
+                    </div> */}
                     {data && data.map(
                         (product) =>{
                             return product.variations.length>0 ? <ProductCard 
@@ -113,8 +113,8 @@ const ProductList = () => {
                         }
                     )}
                     <div className="d-flex justify-content-between">
-                        <IonButton size="small" color="secondary"><IonIcon size="small" slot="start" icon={previous}></IonIcon>Prev</IonButton>
-                        <IonButton size="small" color="secondary"><IonIcon size="small" slot="end" icon={next}></IonIcon>Next</IonButton>
+                        <IonButton disabled={currentPageOffset > 0 ? false: true} onClick={loadPreviousPage} size="small" color="secondary"><IonIcon size="small" slot="start" icon={previous}></IonIcon>Prev</IonButton>
+                        <IonButton disabled={currentPageOffset+pageSize < queryResultCount ? false: true} onClick={loadNextPage} size="small" color="secondary"><IonIcon size="small" slot="end" icon={next}></IonIcon>Next</IonButton>
                     </div>
                 </IonContent>
             </IonPage>        

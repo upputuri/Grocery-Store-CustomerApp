@@ -252,7 +252,7 @@ const Security = () => {
 
     return (
         <IonPage>
-            <IonHeader className="osahan-nav">
+            <IonHeader className="osahan-nav border-bottom border-white">
                 <BaseToolbar title={'Login & Security'}/>     
             </IonHeader>
             <IonLoading isOpen={loadingState}/>

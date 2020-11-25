@@ -5,8 +5,8 @@ import { Client } from 'ketting'
 
 // const serviceBaseURL = "http://grocservicecustomer-env.eba-bpju9vw3.ap-south-1.elasticbeanstalk.com/groc";
 // const serviceBaseURL = "http://vegitcustomerrunnerservice-env.eba-3gjvheqy.ap-south-1.elasticbeanstalk.com/groc";
-// const serviceBaseURL = "http://api.thevegitclub.com";
-const serviceBaseURL = "http://192.168.0.110:8080";
+const serviceBaseURL = "http://api.thevegitclub.com";
+// const serviceBaseURL = "http://192.168.0.110:8080";
 
 // const logoURL = "http://lhhs.in/vegit/themes/nyk/images/logo-1.jpeg";
 const logoURL = "http://thevegitclub.com/themes/nyk/images/logo-1.jpeg";
@@ -35,6 +35,7 @@ const advertUrl1 = "http://thevegitclub.com/themes/nyk/images/e435af26d54ecd5b21
 const advertUrl2 = "http://thevegitclub.com/themes/nyk/images/15-Discount-on-Vegetables-1.png";
 const advertUrl3 = "http://thevegitclub.com/themes/nyk/images/IMG-20200626-WA0009.png";
 
+const razorPayKey = "rzp_test_gtgk7x1URhgpBg";
 // interface RequestObj{
 //     method: string,
 //     body: string,
@@ -204,3 +205,4 @@ export { defaultImageURL, serviceBaseURL, smallImageStoreURL, mediumImageStoreUR
 
 export {aboutUrl, termsUrl, returnPolicyUrl, privacyPolicyUrl, blogUrl, faqUrl};
 export {advertUrl1, advertUrl2, advertUrl3};
+export {razorPayKey};

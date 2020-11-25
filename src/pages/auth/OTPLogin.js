@@ -128,7 +128,7 @@ const OTPLogin = () => {
                 (context) => context.isAuthenticated ? <Redirect to='/home'/>: ''
             }
             </LoginContext.Consumer>
-            <IonHeader className="osahan-nav">
+            <IonHeader className="osahan-nav border-white border-bottom">
             <IonAlert isOpen={infoAlertState.show}
                         onDidDismiss={()=> setInfoAlertState(false)}
                         header={''}

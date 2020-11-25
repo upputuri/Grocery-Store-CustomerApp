@@ -17,7 +17,7 @@ const FAQ = () =>{
 
     return (
         <IonPage>
-            <IonHeader className="osahan-nav">
+            <IonHeader className="osahan-nav border-white border-bottom">
                 <BaseToolbar title="FAQs"/>     
             </IonHeader>                                           
             <IonContent className="faq ion-padding" color="dark">

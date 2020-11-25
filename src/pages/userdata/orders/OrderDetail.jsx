@@ -103,7 +103,7 @@ const OrderDetail = (props) => {
     if (orderDetailState !== null){
         return (
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Your Orders"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>
@@ -230,7 +230,7 @@ const OrderDetail = (props) => {
         console.log("show alert "+serviceRequestAlertState.show);
             return (
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Your Orders"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>                

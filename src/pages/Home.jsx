@@ -188,7 +188,7 @@ const Home = () => {
 
   return (
     <IonPage>
-      <IonHeader class="osahan-nav">
+      <IonHeader class="osahan-nav border-white border-bottom">
         <IonToolbar>
           <IonButtons slot="start">
               <IonMenuButton/>
@@ -234,26 +234,20 @@ const Home = () => {
                           posters={posterListsState[2] && posterListsState[2].posters}/>
           </ListingSection>}
         </div>}
-        <IonSlides options={{watchOverflow : true}}>
-          <IonSlide>
-            <div className="container content-banner-canvas">
-              <IonGrid className="ion-padding">
-                <IonRow className="ion-text-center">
-                  <IonCol className="p-1">
-                    <IonIcon className="mr-1" icon={peopleIcon} size="small" color="primary"/>
-                    <IonText color="light">Membership</IonText>
-                  </IonCol>
-                </IonRow>
-                <IonRow className="ion-text-center">
-                  <IonCol>
-                    <IonButton color="secondary" size="small"><IonIcon className="mr-1" icon={cardIcon} size="small"/>Apply here</IonButton>
-                  </IonCol>
-                </IonRow>
-              </IonGrid>
+            <div className="home-page-slide ion-padding">
+              <IonRow className="ion-text-center">
+                <IonCol className="p-1">
+                  <IonIcon className="mr-1" icon={peopleIcon} size="small" color="primary"/>
+                  <IonText color="light" className="headtext">Membership</IonText>
+                </IonCol>
+              </IonRow>
+              <IonRow className="ion-text-center">
+                <IonCol>
+                  <IonButton color="secondary" size="small"><IonIcon className="mr-1" icon={cardIcon} size="small"/>Buy Now</IonButton>
+                </IonCol>
+              </IonRow>
             </div>
-          </IonSlide>
-                        
-        </IonSlides>
+        <div  className="ion-text-center"><IonText>Thanks for scrolling till the end!</IonText></div>
         {/*Slot 2 posterslider*/}
         {/* <ListingSection title="Everyday essentials">
           <PosterSlider/>

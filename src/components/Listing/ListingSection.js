@@ -13,7 +13,7 @@ const ListingSection = (props) => {
             <div className="listing-section-canvas p-2">
                 <div className="d-flex justify-content-around">
                     <IonText className="headtext mb-2 text-white text-center">{props.title}</IonText>
-                    <IonText onClick={viewAllClicked} color="secondary" size="small" class="ios button button-small ml-auto">View All</IonText>
+                    <IonText onClick={viewAllClicked} color="primary" size="small" class="ios button button-small ml-auto">View All</IonText>
                 </div>
                 {props.children}
             </div>

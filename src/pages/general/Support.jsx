@@ -61,7 +61,7 @@ const Support = () => {
     if (variablesState != null)
     {
         return <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-bottom border-white">
                     <BaseToolbar title="Contact Us"/>     
                 </IonHeader> 
                 <IonLoading isOpen={loadingState}/>                                           
@@ -132,7 +132,7 @@ const Support = () => {
     else
     {
         return  <IonPage>
-                    <IonHeader className="osahan-nav">
+                    <IonHeader className="osahan-nav border-white border-bottom">
                         <BaseToolbar title="Contact Us"/>     
                     </IonHeader> 
                     <IonLoading isOpen={loadingState}/>                                           

@@ -25,7 +25,7 @@ const CartItemTile = (props) =>
             <IonRow>
                 <IonCol size="auto">
                     {/* <IonText className="subtext" color="danger">Remove</IonText> */}
-                    <IonIcon onClick={deleteItemClicked} size="small" icon={trashIcon} color="danger"></IonIcon>
+                    <IonIcon onClick={deleteItemClicked} size="small" icon={trashIcon} color="primary"></IonIcon>
                 </IonCol>
                 <IonCol onClick={viewProduct.bind(this, props.productId)} size="auto">
                     <img alt="img" className="not-found-img m-2" width="70px" height="70px" src={props.image?thumbNailImageStoreURL+'/'+props.image:defaultImageURL}/>

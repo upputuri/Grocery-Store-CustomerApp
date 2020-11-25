@@ -56,7 +56,6 @@ const GrocMenu = (props) => {
   return (
       <IonMenu contentId="main-content" type="overlay">
       <IonContent color="dark">
-        <IonList className="bg-black" id="inbox-list">
           <LoginContext.Consumer>
             {(context)=>{
               return (
@@ -82,8 +81,8 @@ const GrocMenu = (props) => {
                       <IonRouterLink routerLink="/login">
                         <IonMenuToggle auto-hide="false" >
                           <IonItem color="night" detail="false">
-                            <IonIcon color="secondary" icon={logInIcon} slot="start"/>
-                            <IonText color="secondary">Login/Register</IonText>
+                            <IonIcon color="primary" icon={logInIcon} slot="start"/>
+                            <IonText color="primary"><strong>Login/Register</strong></IonText>
                           </IonItem>
                         </IonMenuToggle>
                       </IonRouterLink>
@@ -92,6 +91,7 @@ const GrocMenu = (props) => {
               );
             }}
           </LoginContext.Consumer>
+          <IonList className="bg-black menu-top-section">
           {props.entries.map((entry, index) =>
           {
             return (
@@ -105,7 +105,6 @@ const GrocMenu = (props) => {
                     </IonRouterLink>
             );
           })}
-
         </IonList>
 
         <IonList className="bg-black menu-top-section">
@@ -151,7 +150,7 @@ const GrocMenu = (props) => {
           </IonRouterLink>
         </IonList>
 
-        <IonList className="bg-black menu-top-section">
+        <IonList className="bg-black">
           <IonRouterLink href={aboutUrl}>
             <IonMenuToggle auto-hide="false" >
               <IonItem color="night" detail="false">
