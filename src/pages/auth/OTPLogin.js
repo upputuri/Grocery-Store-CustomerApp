@@ -132,6 +132,7 @@ const OTPLogin = () => {
             <IonAlert isOpen={infoAlertState.show}
                         onDidDismiss={()=> setInfoAlertState(false)}
                         header={''}
+                        cssClass='groc-alert'
                         message={infoAlertState.msg}
                         buttons={['OK']}/>   
             <IonLoading isOpen={loadingState}/>

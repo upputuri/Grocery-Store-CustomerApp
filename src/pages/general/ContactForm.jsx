@@ -84,6 +84,7 @@ const ContactForm = () => {
             <IonAlert
                         isOpen={serviceRequestAlertState.show}
                         header={'Error'}
+                        cssClass='groc-alert'
                         subHeader={serviceRequestAlertState.msg}
                         message={'Failed to load'}
                         buttons={[{text: 'Cancel', 
@@ -94,6 +95,7 @@ const ContactForm = () => {
             <IonAlert isOpen={infoAlertState.show}
                         onDidDismiss={()=> {setInfoAlertState(false); history.push("/home")}}
                         header={''}
+                        cssClass='groc-alert'
                         message={infoAlertState.msg}
                         buttons={['OK']}/>                                            
             <IonContent className="ion-padding" color="dark">

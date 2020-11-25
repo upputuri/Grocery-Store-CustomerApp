@@ -144,11 +144,13 @@ const Profile = () => {
                 <IonAlert isOpen={infoAlertState.show}
                             onDidDismiss={()=> setInfoAlertState(false)}
                             header={''}
+                            cssClass='groc-alert'
                             message={infoAlertState.msg}
                             buttons={['OK']}/>
                 <IonAlert
                     isOpen={serviceRequestAlertState.show}
                     header={'Error'}
+                    cssClass='groc-alert'
                     subHeader={serviceRequestAlertState.msg}
                     message={'Failed to load'}
                     buttons={[{text: 'Cancel', 
@@ -243,6 +245,7 @@ const Profile = () => {
                     <IonAlert
                         isOpen={serviceRequestAlertState.show}
                         header={'Error'}
+                        cssClass='groc-alert'
                         subHeader={serviceRequestAlertState.msg}
                         message={'Failed to load'}
                         buttons={[{text: 'Cancel', 

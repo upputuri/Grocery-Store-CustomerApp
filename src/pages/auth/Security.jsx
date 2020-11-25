@@ -259,6 +259,7 @@ const Security = () => {
             <IonAlert isOpen={infoAlertState.show}
                         onDidDismiss={()=> setInfoAlertState(false)}
                         header={''}
+                        cssClass='groc-alert'
                         message={infoAlertState.msg}
                         buttons={['OK']}/>                   
             <IonContent className="ion-padding" color="dark">

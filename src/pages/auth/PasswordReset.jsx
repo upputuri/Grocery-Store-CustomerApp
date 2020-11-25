@@ -72,6 +72,7 @@ const PasswordReset = () => {
             <IonAlert isOpen={infoAlertState.show}
                         onDidDismiss={navigateToLoginPage}
                         header={''}
+                        cssClass='groc-alert'
                         message={infoAlertState.msg}
                         buttons={['OK']}/>   
             <IonLoading isOpen={loadingState}/>

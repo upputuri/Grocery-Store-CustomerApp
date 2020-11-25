@@ -229,11 +229,13 @@ const AddressList = () => {
                 <IonAlert isOpen={infoAlertState.show}
                             onDidDismiss={()=> setInfoAlertState(false)}
                             header={''}
+                            cssClass='groc-alert'
                             message={infoAlertState.msg}
                             buttons={['OK']}/>
                 <IonAlert isOpen={deleteAlertState.show}
                             onDidDismiss={()=> setDeleteAlertState({...deleteAlertState, show: false})}
                             header={''}
+                            cssClass='groc-alert'
                             message={deleteAlertState.msg}
                             buttons={[{text: 'Yes', handler: deleteAddress.bind(this, deleteAlertState.addressId)}, 'No']}/>             
                 <IonContent className="ion-padding" color="dark">
@@ -311,6 +313,7 @@ const AddressList = () => {
                     <IonAlert
                         isOpen={serviceRequestAlertState.show}
                         header={'Error'}
+                        cssClass='groc-alert'
                         subHeader={serviceRequestAlertState.msg}
                         message={'Failed to load'}
                         buttons={[{text: 'Cancel', 

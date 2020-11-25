@@ -110,11 +110,13 @@ const OrderDetail = (props) => {
                 <IonAlert isOpen={infoAlertState.show}
                             onDidDismiss={()=> setInfoAlertState(false)}
                             header={''}
+                            cssClass='groc-alert'
                             message={infoAlertState.msg}
                             buttons={['OK']}/> 
                 <IonAlert isOpen={cancelAlertState.show}
                             onDidDismiss={()=> setCancelAlertState({...cancelAlertState, show: false})}
                             header={''}
+                            cssClass='groc-alert'
                             message={cancelAlertState.msg}
                             buttons={[{text: 'Yes', handler: processOrderCancel}, 'No']}/>                                              
                 <IonContent className="ion-padding order-review-table" color="dark">
@@ -238,6 +240,7 @@ const OrderDetail = (props) => {
                     <IonAlert
                         isOpen={serviceRequestAlertState.show}
                         header={'Error'}
+                        cssClass='groc-alert'
                         subHeader={serviceRequestAlertState.msg}
                         message={'Failed to load'}
                         buttons={[{text: 'Cancel', 

@@ -191,6 +191,7 @@ const SingleProduct = (props) => {
                 <IonAlert
                     isOpen={alertState.show}
                     header={'Error'}
+                    cssClass='groc-alert'
                     subHeader={alertState.msg}
                     message={'Failed to load'}
                     buttons={[{text: 'Cancel', handler: ()=>{history.push('/home')}}, 

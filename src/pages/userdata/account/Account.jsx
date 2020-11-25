@@ -87,6 +87,7 @@ const Account = (props) => {
             <IonAlert isOpen={infoAlertState.show}
                         onDidDismiss={()=> setInfoAlertState(false)}
                         header={''}
+                        cssClass='groc-alert'
                         message={infoAlertState.msg}
                         buttons={['OK']}/>  
             <IonContent className="account-info-table ion-padding my-profile-page" color="dark">

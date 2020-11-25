@@ -351,6 +351,7 @@ const Checkout = (props) => {
                 <IonAlert isOpen={infoAlertState.show}
                             onDidDismiss={()=> setInfoAlertState(false)}
                             header={''}
+                            cssClass='groc-alert'
                             message={infoAlertState.msg}
                             buttons={['OK']}/>
                 <IonFooter>
@@ -388,6 +389,7 @@ const Checkout = (props) => {
                     <IonAlert
                         isOpen={serviceRequestAlertState.show}
                         header={'Error'}
+                        cssClass='groc-alert'
                         subHeader={serviceRequestAlertState.msg}
                         message={'Failed to load'}
                         buttons={[{text: 'Cancel', 
