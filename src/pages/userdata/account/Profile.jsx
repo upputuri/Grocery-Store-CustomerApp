@@ -1,4 +1,4 @@
-import { IonAlert, IonButton, IonContent, IonDatetime, IonHeader, IonInput, IonItem, IonLabel, IonList, IonLoading, IonPage, IonSearchbar, IonText } from '@ionic/react';
+import { IonAlert, IonButton, IonContent, IonDatetime, IonHeader, IonInput, IonItem, IonLabel, IonList, IonLoading, IonPage } from '@ionic/react';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
@@ -100,11 +100,13 @@ const Profile = () => {
         {
             // alert(fNameState+lNameState+mobileState+","+dobState)
             setLoadingState(true);
-            loginContext.updateProfile({
+            // const dob = dobState && dobState.length >= 10 ? new Date(dobState.substr(0,10)+"T00:00:00") : '';
+            let profileObj = {
                 "fname": fNameState,
                 "lname": lNameState,
-                "dob": dobState && dobState.length >= 10 ? new Date(dobState.substr(0,10)+"T00:00:00") : '',
-            }).then((result) => {
+            };
+            profileObj = dobState ? {...profileObj, "dob": dobState.substr(0,10)} : profileObj;
+            loginContext.updateProfile(profileObj).then((result) => {
                 if (result === 200) {
                     setEditableState(false);
                     setLoadingState(false);
