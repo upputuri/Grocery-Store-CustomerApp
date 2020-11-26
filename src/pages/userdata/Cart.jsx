@@ -1,9 +1,9 @@
-import { IonButton, IonButtons, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonLoading, IonPage, IonRouterLink, IonRow, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonLoading, IonPage, IonRouterLink, IonRow, IonSearchbar, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import { chevronForwardOutline as nextIcon } from 'ionicons/icons';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, withRouter } from "react-router-dom";
-import { LoginContext } from '../../App';
+import { CartContext, LoginContext } from '../../App';
 import CartItemTile from '../../components/Cards/CartItemTile';
 import BaseToolbar from '../../components/Menu/BaseToolbar';
 import GrocSearch from '../../components/Menu/GrocSearch';
@@ -13,22 +13,18 @@ import { serviceBaseURL } from '../../components/Utilities/ServiceCaller.jsx';
 const Cart = (props) =>{
     const [cartItemsState, setCartItemsState] = useState({
         data: null,
-        resource: null,
         cartTotal: 0.0
     });
 
     const [showLoading, setShowLoading] = useState(false);
 
     useEffect(()=>{
-        if (cartItemsState.data === null)
-        {
-            loadCart();        
-            setShowLoading(true);
-        }
-    });
+        loadCart();        
+    }, []);
 
 
     const loginContext = useContext(LoginContext);
+    const cartContext = useContext(CartContext);
     const history = useHistory();
     // componentDidUpdate()
     // {
@@ -49,11 +45,11 @@ const Cart = (props) =>{
             return;
         }
         let path = serviceBaseURL + '/customers/'+customerId+'/cart';
-
+        setShowLoading(true);
         const client = new Client(path);
         const resource = client.go();
         let receivedState;
-        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
+        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);
@@ -70,43 +66,49 @@ const Cart = (props) =>{
             {
                 history.push("/login");
             } 
+            setShowLoading(false);
             return;
         }
         console.log("Service call response received");
+        // alert(JSON.stringify(receivedState));
         // const items = receivedState.getEmbedded().map((itemState) => itemState.data);
         const items = receivedState.data.cartItems;
+        const totalCartCount = items.map((item)=>item.qty).reduce((a, c)=>a+c,0);
+        // alert(totalCartCount);
+        cartContext.setCartCount(totalCartCount);
         // alert(items.length);
         // const cartTotal = items.reduce((a, item) => a+item.totalPrice, 0.0);
         const cartTotal = receivedState.data.cartTotal;
         console.log('cart total'+cartTotal);
+        //alert(JSON.stringify(items));
         setCartItemsState({
             data: items,
-            resource: resource,
             cartTotal: cartTotal
         });
         setShowLoading(false);   
     }
 
-    const qtyChangeHandler = () =>
+    const qtyChangeHandler = (productId, variationId, qty) =>
     {
-        setCartItemsState({
-            data: null,
-            resource: null,
-            cartTotal: 0.0
-        });
+        console.log("Cart page received request from cartqtychangecontrol: "+productId+":"+variationId+","+qty)
+        cartContext.addItem(productId, variationId, qty).then(()=>loadCart());
     }
 
+    // const cartItemDeleteHandler = (id) => {
+
+    // }
 
     return (
         <IonPage>
-            <IonHeader className="osahan-nav">
+            <IonHeader className="osahan-nav border-white border-bottom">
                 <BaseToolbar title="Your Cart"/>
                 <GrocSearch/>      
             </IonHeader>              
-            <IonContent color="dark" >
+            <IonContent color="dark" className="ion-padding">
                 {
                     cartItemsState.data && cartItemsState.data.map(
                     (item) => {
+                        //alert(JSON.stringify(item));
                         return ( 
                                 <CartItemTile
                                     id={item.cartItemId}
@@ -119,7 +121,9 @@ const Cart = (props) =>{
                                     unitLabel={item.unitLabel}
                                     qty={item.qty}
                                     totalPriceAfterDiscount={item.totalPriceAfterDiscount}
-                                    qtyChangeHandler={qtyChangeHandler.bind(this)}/>
+                                    qtyChangeHandler={qtyChangeHandler.bind(this, item.productId, item.variationId)}
+                                    // onDeleteClick={cartItemDeleteHandler}
+                                    />
                         )
                     }
                 )}
@@ -128,8 +132,8 @@ const Cart = (props) =>{
             <IonFooter>
                 <IonToolbar color="secondary">
                     <IonRow>
-                        <IonCol>
-                            <IonTitle><small>Cart Total: </small>{'₹'+cartItemsState.cartTotal}</IonTitle>
+                        <IonCol className="ion-padding">
+                            <IonText className="headtext"><small>Cart Total: </small>{'₹'+cartItemsState.cartTotal}</IonText>
                         </IonCol>
                         <IonCol>
                             <IonButtons >

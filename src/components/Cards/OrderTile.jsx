@@ -11,7 +11,7 @@ const OrderTile = (props) =>
     let displayTS = receivedOrderTS;
     if (receivedOrderTS){
         const date = new Date(receivedOrderTS);
-        displayTS = date.getDate()+"-"+date.getMonth()+"-"+date.getFullYear()+" "+date.getHours()+":"+date.getMinutes();
+        displayTS = date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear()+" "+date.getHours()+":"+date.getMinutes();
     }
     else{
         displayTS = "Unavailable";
@@ -27,7 +27,7 @@ const OrderTile = (props) =>
 
     return  <IonGrid className="ordertile">
 
-                <IonRow className="ion-text-center border-bottom">
+                <IonRow className="ion-text-center border-bottom border-secondary">
                     <IonCol className="p-3">
                         <IonText color="primary">{'Order# '+props.order.orderId}</IonText>
                     </IonCol>
@@ -47,7 +47,7 @@ const OrderTile = (props) =>
                 </IonRow>
                 <IonRow>
                     <IonCol>
-                        {(props.order.orderStatus.trim() === 'Initial' || props.order.orderStatus.trim() === 'Executing') &&
+                        {(props.order.orderStatus.trim() === 'Initial' || props.order.orderStatus.trim() === 'Running') &&
                         <IonButton onclick={cancelClicked} className="ml-2" color="tertiary" size="small">Cancel Order</IonButton>
                         }
                     </IonCol>

@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonSearchbar } from '@ionic/react';
+import { IonContent, IonHeader, IonLoading, IonPage, IonSearchbar } from '@ionic/react';
 import Client from 'ketting';
 import React, { useEffect, useState } from 'react';
 import CategoryCard from '../components/Cards/CategoryCard';
@@ -10,15 +10,16 @@ import { serviceBaseURL } from '../components/Utilities/ServiceCaller';
 const Categories = (props) => {
 
     const [categoriesState, setCategoriesState] = useState(null);
-
+    const [showLoading, setShowLoading] = useState(false);
     useEffect(()=>{
         loadCategories();
     }, [])
-
+    
     const loadCategories = async () => {
         // let serviceRequest = new ServiceRequest();
         // let categories = await serviceRequest.listCategories();
         // categories && this.setState({categories});\
+        setShowLoading(true);
         const client = new Client(serviceBaseURL+'/products/categories');
         const resource = client.go();
         let categoriesState;
@@ -29,22 +30,24 @@ const Categories = (props) => {
         catch(e)
         {
             console.log("Service call failed with - "+e);
+            setShowLoading(false);
             return;
         }
         // alert(JSON.stringify(categoriesState));
         console.log("Received response from service call: "+resource.uri);
         const categoriesListState = categoriesState.getEmbedded();
         const categories = categoriesListState.map((categoryState) => categoryState.data)
-        setCategoriesState(categories);       
+        setCategoriesState(categories);
+        setShowLoading(false);       
     }
 
     return (
         <IonPage>
-            <IonHeader className="osahan-nav">
+            <IonHeader className="osahan-nav border-white border-bottom">
                 <BaseToolbar title="Categories"/>
                 <GrocSearch/>     
             </IonHeader>
-
+            <IonLoading isOpen={showLoading}/>
             <IonContent className="ion-padding" color="dark">
                 {categoriesState && categoriesState.map(
                     (category) => {
@@ -53,9 +56,9 @@ const Categories = (props) => {
                                 <CategoryCard
                                 id={category.id}
                                 key={category.id} 
-                                title={category.title} 
+                                title={category.title}
+                                image={category.image} 
                                 uspText={category.metaDescription} 
-                                description={category.description}
                                 categoryClickHandler={props.categoryClickHandler}/>
                             /* </IonRouterLink> */
                         )

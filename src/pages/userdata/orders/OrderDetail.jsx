@@ -28,7 +28,7 @@ const OrderDetail = (props) => {
         let path = serviceBaseURL + '/orders/'+orderId;
         const client = new Client(path);
         const resource = client.go();
-        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
+        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
@@ -59,7 +59,7 @@ const OrderDetail = (props) => {
         let displayTS = receivedOrderTS;
         if (receivedOrderTS){
             const date = new Date(receivedOrderTS);
-            displayTS = date.getDate()+"-"+date.getMonth()+"-"+date.getFullYear()+" "+date.getHours()+":"+date.getMinutes();
+            displayTS = date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear()+" "+date.getHours()+":"+date.getMinutes();
         }
         else{
             displayTS = "Unavailable";
@@ -73,7 +73,7 @@ const OrderDetail = (props) => {
     const sendCancelRequest = async (orderId) => {
         setLoadingState(true);
         let serviceRequest = new ServiceRequest();
-        await serviceRequest.cancelOrder(orderId, {loginId: loginContext.customer.email,
+        await serviceRequest.cancelOrder(orderId, {loginId: loginContext.customer.mobile,
                                                                             password: loginContext.customer.password});
         if (serviceRequest.hasResponse && serviceRequest.isResponseOk)
         {
@@ -103,23 +103,25 @@ const OrderDetail = (props) => {
     if (orderDetailState !== null){
         return (
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Your Orders"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>
                 <IonAlert isOpen={infoAlertState.show}
                             onDidDismiss={()=> setInfoAlertState(false)}
                             header={''}
+                            cssClass='groc-alert'
                             message={infoAlertState.msg}
                             buttons={['OK']}/> 
                 <IonAlert isOpen={cancelAlertState.show}
                             onDidDismiss={()=> setCancelAlertState({...cancelAlertState, show: false})}
                             header={''}
+                            cssClass='groc-alert'
                             message={cancelAlertState.msg}
                             buttons={[{text: 'Yes', handler: processOrderCancel}, 'No']}/>                                              
                 <IonContent className="ion-padding order-review-table" color="dark">
                     <IonGrid className="p-2">
-                        <IonRow className="ion-text-center border-bottom">
+                        <IonRow className="ion-text-center border-bottom border-secondary">
                         <IonCol className="p-3">
                             <IonText color="primary">{'Order# '+orderDetailState.id}</IonText>
                         </IonCol>
@@ -137,8 +139,8 @@ const OrderDetail = (props) => {
                                 <IonText className="subtext ml-2">Status: </IonText><StatusText status={orderDetailState.status.trim()}/>
                             </IonCol>
                         </IonRow>
-                        {(orderDetailState.status.trim() === 'Initial' || orderDetailState.status.trim() === 'Executing') &&
-                        <IonRow className="border-bottom">
+                        {(orderDetailState.status.trim() === 'Initial' || orderDetailState.status.trim() === 'Running') &&
+                        <IonRow className="border-bottom border-secondary">
                             <IonCol>
                                 <div className="d-flex justify-content-end">
                                     <IonButton onClick={checkAndProceedToCancel} className="ml-2" color="tertiary" size="small">Cancel Order</IonButton>
@@ -146,7 +148,7 @@ const OrderDetail = (props) => {
                             </IonCol>
                         </IonRow>
                         }
-                        <IonRow className="p-2 border-bottom">
+                        <IonRow className="p-2 border-bottom border-secondary">
                             <IonCol size="6" className="ion-text-left">
                                 <IonText color="primary">Item</IonText>
                             </IonCol>
@@ -158,7 +160,7 @@ const OrderDetail = (props) => {
                             </IonCol>
                         </IonRow>
                         {orderDetailState.orderItems && orderDetailState.orderItems.map((orderItem, index) => {
-                            return <IonRow className="p-2 border-bottom" key={index}>
+                            return <IonRow className="p-2 border-bottom border-secondary" key={index}>
                                         <IonCol size="6">
                                             <small>{orderItem.name+'-'+orderItem.qtyUnit}</small>
                                         </IonCol>
@@ -184,6 +186,14 @@ const OrderDetail = (props) => {
                             </IonCol>
                             <IonCol size="6">
                                 <IonLabel><div>{'₹'+orderDetailState.discountedTotal}</div></IonLabel>
+                            </IonCol>
+                        </IonRow>
+                        <IonRow className="ion-text-right">
+                            <IonCol size="6">
+                                <IonLabel color="primary"><span>Shipping Charge:</span></IonLabel>
+                            </IonCol>
+                            <IonCol size="6">
+                                <IonLabel><div>{'₹'+orderDetailState.totalChargesValue}</div></IonLabel>
                             </IonCol>
                         </IonRow>
                         <IonRow className="ion-text-right">
@@ -222,7 +232,7 @@ const OrderDetail = (props) => {
         console.log("show alert "+serviceRequestAlertState.show);
             return (
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Your Orders"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>                
@@ -230,6 +240,7 @@ const OrderDetail = (props) => {
                     <IonAlert
                         isOpen={serviceRequestAlertState.show}
                         header={'Error'}
+                        cssClass='groc-alert'
                         subHeader={serviceRequestAlertState.msg}
                         message={'Failed to load'}
                         buttons={[{text: 'Cancel', 

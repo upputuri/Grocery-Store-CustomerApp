@@ -41,7 +41,7 @@ const ContactForm = () => {
         let path = serviceBaseURL + '/customers/'+loginContext.customer.id+'/queries';
         const client = new Client(path);
         const resource = client.go();
-        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
+        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
@@ -77,13 +77,14 @@ const ContactForm = () => {
 
     return (
         <IonPage>
-            <IonHeader className="osahan-nav">
-                <BaseToolbar title="Contact Us"/>     
+            <IonHeader className="osahan-nav border-white border-bottom">
+                <BaseToolbar title="Submit a Query"/>     
             </IonHeader>
             <IonLoading isOpen={loadingState}/>
             <IonAlert
                         isOpen={serviceRequestAlertState.show}
                         header={'Error'}
+                        cssClass='groc-alert'
                         subHeader={serviceRequestAlertState.msg}
                         message={'Failed to load'}
                         buttons={[{text: 'Cancel', 
@@ -94,47 +95,52 @@ const ContactForm = () => {
             <IonAlert isOpen={infoAlertState.show}
                         onDidDismiss={()=> {setInfoAlertState(false); history.push("/home")}}
                         header={''}
+                        cssClass='groc-alert'
                         message={infoAlertState.msg}
                         buttons={['OK']}/>                                            
             <IonContent className="ion-padding" color="dark">
-            <form className="card p-3">
-                <IonList lines="full" className="ion-no-margin ion-no-padding">
-                    <IonItem>
-                        <IonLabel position="stacked">Subject
-                            <IonText color="danger">*</IonText>
-                        </IonLabel>
-                        <IonInput placeholder="Short summary" required type="text" minlength="2" maxlength="30" 
-                        onIonChange={setSubject}
-                        value={subjectState}></IonInput>
-                    </IonItem>
-                </IonList>
-                <IonList lines="full" className="ion-no-margin ion-no-padding">
-                    <IonItem>
-                        <IonLabel position="stacked">Detailed query
-                        </IonLabel>
-                        <IonTextarea rows={5} wrap="soft" maxlength="300"  placeholder="Details of your query" type="text"
-                        onIonChange={setDetail}
-                        value={detailState}></IonTextarea>
-                    </IonItem>
-                </IonList>
-                {errorState !== '' &&
-                <IonList lines="full" className="ion-no-margin ion-no-padding">
-                    <IonItem>
-                        <IonLabel className="ion-text-center ion-text-wrap" color="danger">
-                            <small>{errorState}</small>
-                        </IonLabel>
-                    </IonItem>
-                </IonList>}
-                <div className="mt-2">
+            <div>
+                <form>
                     <IonGrid>
                         <IonRow>
                             <IonCol>
-                                <IonButton color="secondary" expand="block" onClick={submitClicked} className="ion-no-margin">Send</IonButton>
+                                <IonList lines="full" className="ion-no-margin ion-no-padding">
+                                    <IonItem>
+                                        <IonLabel position="stacked">Subject
+                                            <IonText color="danger">*</IonText>
+                                        </IonLabel>
+                                        <IonInput placeholder="Short summary" required type="text" minlength="2" maxlength="30" 
+                                        onIonChange={setSubject}
+                                        value={subjectState}></IonInput>
+                                    </IonItem>
+                                </IonList>
+                                <IonList lines="full" className="ion-no-margin ion-no-padding">
+                                    <IonItem>
+                                        <IonLabel position="stacked">Detailed query
+                                        </IonLabel>
+                                        <IonTextarea rows={5} wrap="soft" maxlength="300"  placeholder="Details of your query" type="text"
+                                        onIonChange={setDetail}
+                                        value={detailState}></IonTextarea>
+                                    </IonItem>
+                                </IonList>
+                                {errorState !== '' &&
+                                <IonList lines="full" className="ion-no-margin ion-no-padding">
+                                    <IonItem>
+                                        <IonLabel className="ion-text-center ion-text-wrap" color="danger">
+                                            <small>{errorState}</small>
+                                        </IonLabel>
+                                    </IonItem>
+                                </IonList>}
                             </IonCol>
                         </IonRow>
+                            <IonRow>
+                                <IonCol>
+                                    <IonButton color="secondary" expand="block" onClick={submitClicked} className="ion-no-margin">Send</IonButton>
+                                </IonCol>
+                            </IonRow>
                     </IonGrid>
-                </div>
             </form>
+            </div>
             </IonContent>
         </IonPage>
     )

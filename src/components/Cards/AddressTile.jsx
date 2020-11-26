@@ -15,19 +15,26 @@ const AddressTile = (props) =>
                 <IonCol size="1"></IonCol>
                 <IonCol className="ion-text-wrap" size="11">
                     <IonText color="primary"><h6>{props.fName+" "+props.lName}</h6></IonText>
-                    <IonLabel className="ion-text-wrap">{props.line1}<br/>
-                                {props.line2}<br/>
-                                City: {props.city}, {props.state}<br/>
-                                Pin: {props.zipCode}
-                    </IonLabel><br/>
+                    <div className="ion-text-wrap">{props.line1}</div>
+                    <div className="ion-text-wrap">{props.line2}</div>
+                    <div className="ion-text-wrap">{props.city}, {props.state}</div>
+                    <div className="ion-text-wrap">{props.zipCode}
+                    </div>
                     <h6><IonIcon className="mr-2" icon={phoneIcon} size="small" color="primary"/>{props.phone}</h6>
                 </IonCol>
             </IonRow>
-            {props.editClickHandler && <IonRow>
+             <IonRow>
                 <IonCol>
-                        <IonButton color="secondary" onClick={props.editClickHandler} className="ion-no-margin">Edit</IonButton>
+                <div className="d-flex align-items-center justify-content-between">
+                    {props.deleteClickHandler && 
+                        <IonButton color="secondary" onClick={props.deleteClickHandler} className="ion-no-margin">Delete</IonButton>
+                    }
+                    {props.editClickHandler && 
+                        <IonButton  color="secondary" onClick={props.editClickHandler} className="ion-no-margin">Edit</IonButton>
+                    }
+                    </div>
                 </IonCol>
-            </IonRow>}
+            </IonRow>
             {props.selectClickHandler && props.selectedId === props.addressId && <IonRow>
                 <IonCol>
                     <IonItem color="night">

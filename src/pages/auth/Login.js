@@ -28,7 +28,7 @@ const Login = (props) =>
         setErrorState(errorText);
     }
 
-    const loginRequestHandler = () =>
+    const passwordLoginRequestHandler = () =>
     {
         const result = checkInput();
         if (result === true){
@@ -37,16 +37,20 @@ const Login = (props) =>
           loginResult.then((result) => {
             if (!result.hasResponse)
               setError("Server unreachable! Please try after some time.")
-            else if (result.hasResponse && !result.isResponseOk)
-              setError(result.responseObject.message);
+            else if (result.hasResponse && !result.isResponseOk && result.responseObject.status === 401)
+              setError("Login failed. Please check credentials or contact support!");
             else{ 
               redirectTo ? history.push(redirectTo): history.push("/home");
               return;
             }
-          })
+          });
           setError("Please wait...");
         }
         
+    }
+
+    const googleLoginClicked = async () => {
+      loginContext.loginWithGoogle();
     }
 
     const checkInput = () =>
@@ -55,11 +59,11 @@ const Login = (props) =>
         setError("Username cannot be blank!");
         return false;
       }
-      let re = /([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])/;
-      if(!re.test(userIdState)) {
-        setError("Invalid credentials!");
-        return false;
-      }
+      // let re = /([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])/;
+      // if(!re.test(userIdState)) {
+      //   setError("Invalid credentials!");
+      //   return false;
+      // }
   
       if(passwordState === "") {
         setError("Please enter your password!");
@@ -76,7 +80,7 @@ const Login = (props) =>
               (context) => context.isAuthenticated ? <Redirect to={redirectTo ? redirectTo: '/home'}/>: ''
             }
           </LoginContext.Consumer>
-            <IonHeader className="osahan-nav">
+            <IonHeader className="osahan-nav border-white border-bottom">
             <IonToolbar>
                 <IonButtons slot="start">
                     <IonMenuButton></IonMenuButton>
@@ -95,17 +99,18 @@ const Login = (props) =>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
                             <IonLabel position="stacked">
-                                Email Id 
+                                Email Id/Mobile No.
                                 <IonText color="danger">*</IonText>
                             </IonLabel>
-                            <IonInput placeholder="Enter Email" required type="email" 
+                            <IonInput placeholder="Email Id/Mobile No." required type="email" 
                                     onIonChange={setUserId} 
                                     value={userIdState}></IonInput>
                         </IonItem>
                     </IonList>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
-                            <IonLabel position="stacked">Password</IonLabel>
+                            <IonLabel position="stacked">Password
+                                <IonText color="danger">*</IonText></IonLabel>
                             <IonInput placeholder="Enter Password" required type="password"
                              onIonChange={setPassword}
                              value={passwordState}></IonInput>
@@ -122,9 +127,11 @@ const Login = (props) =>
                     </form>
                 </div>
                 <div className="p-3 border-top">
-                    <IonButton color="secondary" routerDirection="forward" expand="block" onClick={loginRequestHandler} className="ion-no-margin">Submit</IonButton>
-                    <div className='ion-text-center m-3'>or</div>
-                    <IonButton color="secondary" routerDirection="forward" expand="block" className="ion-no-margin">Login with Phone</IonButton>
+                    <IonButton color="secondary" routerDirection="forward" expand="block" onClick={passwordLoginRequestHandler} className="ion-no-margin">Submit</IonButton>
+                    <div className='ion-text-center m-3'></div>
+                    <IonButton color="secondary" routerDirection="forward" expand="block" onClick={()=>history.push('/resetpass')} className="ion-no-margin">Forgot Password?</IonButton>
+                    <div className='ion-text-center m-3'></div>
+                    <IonButton color="danger" routerDirection="forward" expand="block" onClick={googleLoginClicked} className="ion-no-margin">Login With Google</IonButton>
                     <div className='ion-text-center m-3'>New User?</div>
                     <IonButton color="secondary" routerDirection="forward" expand="block" onClick={()=>history.push('/register')} className="ion-no-margin">Sign Up</IonButton>                    
                 </div>

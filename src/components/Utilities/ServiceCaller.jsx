@@ -3,13 +3,39 @@ import { Client } from 'ketting'
 
 // Login 
 
-const serviceBaseURL = "http://grocservicecustomer-env.eba-bpju9vw3.ap-south-1.elasticbeanstalk.com/groc";
-// const serviceBaseURL = "http://localhost:8080/groc";
-const logoURL = "http://lhhs.in/vegit/themes/nyk/images/logo-1.jpeg";
+// const serviceBaseURL = "http://grocservicecustomer-env.eba-bpju9vw3.ap-south-1.elasticbeanstalk.com/groc";
+// const serviceBaseURL = "http://vegitcustomerrunnerservice-env.eba-3gjvheqy.ap-south-1.elasticbeanstalk.com/groc";
+// const serviceBaseURL = "http://api.thevegitclub.com";
+const serviceBaseURL = "http://192.168.0.110:8080";
+
+// const logoURL = "http://lhhs.in/vegit/themes/nyk/images/logo-1.jpeg";
+const logoURL = "http://thevegitclub.com/themes/nyk/images/logo-1.jpeg";
 const logoIconURL = "";
-const smallImageStoreURL = "http://lhhs.in/vegitfiles/item/small";
-const mediumImageStoreURL = "http://lhhs.in/vegitfiles/item/medium";
-const largeImageStoreURL = "http://lhhs.in/vegitfiles/item/large";
+
+const profileImageStoreURL = "http://thevegitclub.com/vegitfiles/customer/small"
+
+const smallImageStoreURL = "http://thevegitclub.com/vegitfiles/item/small";
+const mediumImageStoreURL = "http://thevegitclub.com/vegitfiles/item/medium";
+const largeImageStoreURL = "http://thevegitclub.com/vegitfiles/item/large";
+const thumbNailImageStoreURL = "http://thevegitclub.com/vegitfiles/item/small_thumbnail";
+
+const coverImageStoreURL = "http://thevegitclub.com/vegitfiles/cover/small";
+const categoryImageStoreURL = "http://thevegitclub.com/vegitfiles/category/small";
+
+const defaultImageURL = "http://thevegitclub.com/vegitfiles/default.png";
+
+const aboutUrl = "http://thevegitclub.com/?urlq=page/static/about-us";
+const blogUrl = "http://thevegitclub.com/?urlq=blog";
+const termsUrl = "http://thevegitclub.com/?urlq=page/static/Terms%20and%20Conditions";
+const returnPolicyUrl = "http://thevegitclub.com/?urlq=page/static/Refund%20Policy";
+const privacyPolicyUrl = "http://thevegitclub.com/?urlq=page/static/Privacy%20Policy";
+const faqUrl = "http://thevegitclub.com/?urlq=page/static/FAQ";
+
+const advertUrl1 = "http://thevegitclub.com/themes/nyk/images/e435af26d54ecd5b21d7a9af8ec58994.png";
+const advertUrl2 = "http://thevegitclub.com/themes/nyk/images/15-Discount-on-Vegetables-1.png";
+const advertUrl3 = "http://thevegitclub.com/themes/nyk/images/IMG-20200626-WA0009.png";
+
+const razorPayKey = "rzp_test_gtgk7x1URhgpBg";
 // interface RequestObj{
 //     method: string,
 //     body: string,
@@ -173,4 +199,10 @@ class ServiceRequest {
 }
 
 export default ServiceRequest;
-export { serviceBaseURL, smallImageStoreURL, mediumImageStoreURL, largeImageStoreURL, logoURL, logoIconURL };
+export { defaultImageURL, serviceBaseURL, smallImageStoreURL, mediumImageStoreURL, 
+    largeImageStoreURL, logoURL, logoIconURL, thumbNailImageStoreURL, coverImageStoreURL, categoryImageStoreURL,
+    profileImageStoreURL };
+
+export {aboutUrl, termsUrl, returnPolicyUrl, privacyPolicyUrl, blogUrl, faqUrl};
+export {advertUrl1, advertUrl2, advertUrl3};
+export {razorPayKey};

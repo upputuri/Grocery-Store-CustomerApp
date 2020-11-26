@@ -3,6 +3,7 @@ import { Client,  basicAuth } from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { LoginContext } from '../../../App';
+import InfoMessageTile from '../../../components/Cards/InfoMessageTile';
 import OrderTile from '../../../components/Cards/OrderTile';
 import BaseToolbar from '../../../components/Menu/BaseToolbar';
 import ServiceRequest, { serviceBaseURL } from '../../../components/Utilities/ServiceCaller';
@@ -28,7 +29,7 @@ const Orders = () => {
         let path = serviceBaseURL + '/orders?cuid='+loginContext.customer.id;
         const client = new Client(path);
         const resource = client.go();
-        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
+        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
@@ -64,7 +65,7 @@ const Orders = () => {
     const sendCancelRequest = async (orderId) => {
         setLoadingState(true);
         let serviceRequest = new ServiceRequest();
-        await serviceRequest.cancelOrder(orderId, {loginId: loginContext.customer.email,
+        await serviceRequest.cancelOrder(orderId, {loginId: loginContext.customer.mobile,
                                                                             password: loginContext.customer.password});
         if (serviceRequest.hasResponse && serviceRequest.isResponseOk)
         {
@@ -94,44 +95,35 @@ const Orders = () => {
         console.log("Rendering Orders page");
         return (
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Your Orders"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>
                 <IonAlert isOpen={infoAlertState.show}
                             onDidDismiss={()=> setInfoAlertState(false)}
                             header={''}
+                            cssClass='groc-alert'
                             message={infoAlertState.msg}
                             buttons={['OK']}/>
                 <IonAlert isOpen={cancelAlertState.show}
                             onDidDismiss={()=> setCancelAlertState({...cancelAlertState, show: false})}
                             header={''}
+                            cssClass='groc-alert'
                             message={cancelAlertState.msg}
                             buttons={[{text: 'Yes', handler: processOrderCancel.bind(this, cancelAlertState.orderId)}, 'No']}/>                    
                 <IonContent className="ion-padding" color="dark">
-                    {newOrderId === 0 && 
-                    <IonGrid className="m-0">
-                        <IonRow className="p-3 ion-text-center border border-succes">
-                            <IonCol>
-                                <h6>Failed to get a response from server. Check your orders below before placing a new order!</h6>
-                            </IonCol>
-                        </IonRow>
-                    </IonGrid>
+                    {ordersState && ordersState.length > 0 ?
+                        ordersState.map((order) =>{
+                            // console.log(order.orderId);
+                            return <OrderTile key={order.orderId} newOrderId = {newOrderId}
+                                                order = {order}
+                                                cancelClickHandler = {checkAndProceedToCancel.bind(this, order.orderId)}/>
+                        })
+                        :
+
+                    <InfoMessageTile subject="You have not placed any orders yet!"/>
+
                     }
-                    {newOrderId > 0  &&
-                    <IonRow className="p-3 ion-text-center border border-success">
-                        <IonCol>
-                            <h6>Your Order has been placed successfully!</h6>
-                            <IonText color="primary">{'Order# '+newOrderId}</IonText>
-                        </IonCol>
-                    </IonRow>
-                    }
-                    {ordersState && ordersState.map((order) =>{
-                        // console.log(order.orderId);
-                        return <OrderTile key={order.orderId} newOrderId = {newOrderId}
-                                            order = {order}
-                                            cancelClickHandler = {checkAndProceedToCancel.bind(this, order.orderId)}/>
-                    })}  
                 </IonContent>
 
             </IonPage>
@@ -141,7 +133,7 @@ const Orders = () => {
         console.log("show alert "+serviceRequestAlertState.show);
             return (
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Your Orders"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>                
@@ -149,6 +141,7 @@ const Orders = () => {
                     <IonAlert
                         isOpen={serviceRequestAlertState.show}
                         header={'Error'}
+                        cssClass='groc-alert'
                         subHeader={serviceRequestAlertState.msg}
                         message={'Failed to load'}
                         buttons={[{text: 'Cancel', 

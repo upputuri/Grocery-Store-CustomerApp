@@ -1,55 +1,61 @@
-import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider } from '@ionic/react';
+import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider, IonCheckbox } from '@ionic/react';
 import React, { useContext, useState } from 'react';
 import { Redirect, useHistory } from 'react-router';
 import { LoginContext } from '../../App';
+import { isPasswordValid, passwordFormatError } from '../../components/Utilities/AppCommons';
 import { logoURL } from '../../components/Utilities/ServiceCaller';
 
 const Registration = () =>
 {
     const loginContext = useContext(LoginContext);
     const history = useHistory();
-    const [userIdState, setUserIdState] = useState('');
+    const [emailIdState, setEmailIdState] = useState('');
+    const [mobileState, setMobileState] = useState('');
     const [passwordState, setPasswordState] = useState('');
     const [rePasswordState, setRePasswordState] = useState('');
     const [fNameState, setFNameState] = useState('');
     const [lNameState, setLNameState] = useState('');
+    const [acceptedState, setAcceptedState] = useState(false);
     const [errorState, setErrorState] = useState('');
-    const passwordFormatError = "Password must contain at least six characters, one lowercase, one uppercase and one numeric!";
 
-    const setUserId = (event) => {
-        setUserIdState(event.target.value);
-        setErrorState('');
+    const toggleAccept = () => {
+      setAcceptedState(!acceptedState);
     }
 
+    const setEmail = (event) => {
+      setEmailIdState(event.detail.value);
+      setErrorState('');
+    }
+
+    const setMobile = (event) => {
+      setMobileState(event.detail.value);
+      setErrorState('');
+    }
     const setPassword = (event) => {
-        setPasswordState(event.target.value);
-        setErrorState('');        
+      setPasswordState(event.detail.value);
+      setErrorState('');        
     }
 
     const setRePassword = (event) => {
-        setRePasswordState(event.target.value);
-        passwordState.localeCompare(event.target.value) !== 0 ? setErrorState('Passwords do not match!'): setErrorState('');       
+      setRePasswordState(event.detail.value);
+      passwordState.localeCompare(event.detail.value) !== 0 ? setErrorState('Passwords do not match!'): setErrorState('');       
     }
 
     const setFirstName = (event) => {
-        setFNameState(event.target.value);
-        setErrorState('');
+      setFNameState(event.detail.value);
+      setErrorState('');
     }
 
     const setLastName = (event) => {
-        setLNameState(event.target.value);
-        setErrorState('');
-    }
-
-    const checkPasswordMatch = (event) => {
-        return passwordState.localeCompare(rePasswordState) === 0;
+      setLNameState(event.detail.value);
+      setErrorState('');
     }
 
     const sendRegisterRequest = async () =>
     {
-        if (checkInput() && checkPasswordMatch()){
+        if (checkInput() && passwordState === rePasswordState){
 
-          let result = loginContext.register(userIdState, fNameState, lNameState, passwordState).then(
+          let result = loginContext.register(mobileState, emailIdState, fNameState, lNameState, passwordState).then(
               (result) => {
                 if (result === 400)
                 {
@@ -71,53 +77,39 @@ const Registration = () =>
 
     const checkInput = () =>
     {
-      if(userIdState === "") {
-        setErrorState("Email Id cannot be blank!");
+      if(mobileState === "") {
+        setErrorState("Mobile number cannot be blank!");
         return false;
       }
       let re = /([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])/;
-      if(!re.test(userIdState)) {
+      if(emailIdState !== "" && !re.test(emailIdState)) {
         setErrorState("Email Id must be valid");
         return false;
       }
-      if(fNameState === "") {
-        setErrorState("First name cannot be blank!");
-        return false;
-      }
-      if(lNameState === "") {
-        setErrorState("Last Name cannot be blank!");
-        return false;
-      }
+      // if(fNameState === "") {
+      //   setErrorState("First name cannot be blank!");
+      //   return false;
+      // }
+      // if(lNameState === "") {
+      //   setErrorState("Last Name cannot be blank!");
+      //   return false;
+      // }
   
-      if(passwordState !== "") {
-        if(passwordState.length < 6) {
-          setErrorState(passwordFormatError);
-          return false;
-        }
-        if(passwordState === userIdState) {
-          setErrorState(passwordFormatError);
-          return false;
-        }
-        re = /[0-9]/;
-        if(!re.test(passwordState)) {
-          setErrorState(passwordFormatError);
-          return false;
-        }
-        re = /[a-z]/;
-        if(!re.test(passwordState)) {
-          setErrorState(passwordFormatError);
-          return false;
-        }
-        re = /[A-Z]/;
-        if(!re.test(passwordState)) {
-          setErrorState(passwordFormatError);
-          return false;
-        }
-      } else {
+      if(passwordState === "") {
         setErrorState("Please enter your password!");
         return false;
+      }else if (!isPasswordValid(emailIdState, passwordState)) {
+        setErrorState(passwordFormatError);
+        return false;
+      } else if (passwordState !== rePasswordState){
+        setErrorState("Please re-enter password!");
+        return false;
       }
-
+      
+      if (acceptedState !== true) {
+        setErrorState("Please accept the terms & conditions");
+        return false;
+      }
       return true;
     }
 
@@ -128,7 +120,7 @@ const Registration = () =>
               (context) => context.isAuthenticated ? <Redirect to='/home'/>: ''
             }
           </LoginContext.Consumer>
-            <IonHeader className="osahan-nav">
+            <IonHeader className="osahan-nav border-bottom border-white">
             <IonToolbar>
                 <IonButtons slot="start">
                     <IonMenuButton></IonMenuButton>
@@ -147,20 +139,29 @@ const Registration = () =>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
                             <IonLabel position="stacked">
-                                Email Id 
+                                Mobile No. 
                                 <IonText color="danger">*</IonText>
                             </IonLabel>
-                            <IonInput placeholder="Enter Email" required type="email" 
-                                    onIonChange={setUserId} 
-                                    value={userIdState}></IonInput>
+                            <IonInput placeholder="Mobile No." type="tel" 
+                                    onIonChange={setMobile} 
+                                    value={mobileState}></IonInput>
+                        </IonItem>
+                    </IonList>
+                    <IonList lines="full" className="ion-no-margin ion-no-padding">
+                        <IonItem>
+                            <IonLabel position="stacked">
+                                Email Id
+                            </IonLabel>
+                            <IonInput placeholder="Enter Email" type="email" 
+                                    onIonChange={setEmail} 
+                                    value={emailIdState}></IonInput>
                         </IonItem>
                     </IonList>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
                             <IonLabel position="stacked">First Name
-                                <IonText color="danger">*</IonText>
                             </IonLabel>
-                            <IonInput placeholder="First Name" required type="text"
+                            <IonInput placeholder="First Name" type="text"
                              onIonChange={setFirstName}
                              value={fNameState}></IonInput>
                         </IonItem>
@@ -168,9 +169,8 @@ const Registration = () =>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
                             <IonLabel position="stacked">Last Name
-                                <IonText color="danger">*</IonText>
                             </IonLabel>
-                            <IonInput placeholder="Last Name" required type="text"
+                            <IonInput placeholder="Last Name" type="text"
                              onIonChange={setLastName}
                              value={lNameState}></IonInput>
                         </IonItem>
@@ -194,7 +194,13 @@ const Registration = () =>
                              onIonChange={setRePassword}
                              value={rePasswordState}></IonInput>
                         </IonItem>
-                    </IonList>                    
+                    </IonList>
+                    <IonList lines="full" className="ion-no-margin ion-no-padding">
+                      <IonItem>
+                          <IonCheckbox slot="start" onClick={toggleAccept} checked={acceptedState} />
+                          <IonText className="subtext" color="primary">{'I accept the terms & conditions'}</IonText>
+                      </IonItem>
+                    </IonList>                   
                     {errorState !== '' &&
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
@@ -207,8 +213,8 @@ const Registration = () =>
                 </div>
                 <div className="p-3 border-top">
                     <IonButton color="secondary" routerDirection="forward" expand="block" onClick={sendRegisterRequest} className="ion-no-margin">Submit</IonButton>
-                    <div className='ion-text-center m-3'>Registered User?</div>
-                    <IonButton color="secondary" routerDirection="forward" expand="block" onClick={()=>history.goBack()} className="ion-no-margin">Login</IonButton>
+                    {/* <div className='ion-text-center m-3'>Registered User?</div>
+                    <IonButton color="secondary" routerDirection="forward" expand="block" onClick={()=>history.goBack()} className="ion-no-margin">Login</IonButton> */}
                 </div>
             </div>
             </IonContent>

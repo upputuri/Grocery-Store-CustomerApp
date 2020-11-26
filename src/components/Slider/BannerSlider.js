@@ -1,15 +1,27 @@
-import { IonRouterLink, IonSlide, IonSlides } from '@ionic/react'
-import React from 'react'
+import { IonSlide, IonSlides } from '@ionic/react'
+import React, { useEffect, useState } from 'react'
+import { coverImageStoreURL } from '../Utilities/ServiceCaller'
 
-const BannerSlider = () => {
+const BannerSlider = (props) => {
+    const slideOpts = {
+        speed: 200,
+        loop: true,
+        autoplay: true
+      };
+
     return (
-        <IonSlides className="homepage-slider" pager="true">
-            <IonSlide>
-                <IonRouterLink routerLink="/categories"><img alt="img" className="single-img" src="assets/slider/slider1.jpg"/></IonRouterLink>
+        <IonSlides className="homepage-slider" pager="true" options={slideOpts}>
+            {/* <IonSlide>
+                <img alt="img" className="single-img" src="assets/slider/slider1.jpg"/>
             </IonSlide>
             <IonSlide>
                 <img alt="img" className="single-img" src="assets/slider/slider2.jpg"/>
-            </IonSlide>
+            </IonSlide> */}
+            {props.images && props.images.map((image) => {
+                return  <IonSlide key={image}>
+                            <img alt="img" className="single-img" src={coverImageStoreURL+"/"+image}/>
+                        </IonSlide>
+            })}
         </IonSlides>
     )
 }

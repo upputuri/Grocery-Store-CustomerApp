@@ -1,11 +1,10 @@
-import { IonAlert, IonButton, IonContent, IonDatetime, IonHeader, IonInput, IonItem, IonLabel, IonList, IonLoading, IonPage, IonSearchbar, IonText } from '@ionic/react';
+import { IonAlert, IonButton, IonContent, IonDatetime, IonHeader, IonInput, IonItem, IonLabel, IonList, IonLoading, IonPage } from '@ionic/react';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { LoginContext } from '../../../App';
 import BaseToolbar from '../../../components/Menu/BaseToolbar';
 import { serviceBaseURL } from '../../../components/Utilities/ServiceCaller';
-import './account.css';
 
 const Profile = () => {
     const [profileState, setProfileState] = useState(null);
@@ -13,6 +12,7 @@ const Profile = () => {
     const [serviceRequestAlertState, setServiceRequestAlertState] = useState({show: false, msg: ''});
     const [infoAlertState, setInfoAlertState] = useState({show: false, msg: ''});
     const [retryState, setRetryState] = useState(false);
+    const [emailState, setEmailState] = useState('');
     const [fNameState, setFNameState] = useState('');
     const [lNameState, setLNameState] = useState('');
     const [dobState, setDobState] = useState('');
@@ -28,6 +28,11 @@ const Profile = () => {
 
     const setFirstName = (event) => {
         setFNameState(event.target.value);
+        setErrorState('');
+    }
+
+    const setEmail = (event) => {
+        setEmailState(event.target.value);
         setErrorState('');
     }
 
@@ -49,7 +54,7 @@ const Profile = () => {
         let path = serviceBaseURL + '/customers/'+loginContext.customer.id;
         const client = new Client(path);
         const resource = client.go();
-        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
+        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
@@ -76,6 +81,7 @@ const Profile = () => {
         const profile = receivedState.data;
         // alert(JSON.stringify(profile));
         setProfileState(profile);
+        setEmailState(profile.email);
         setFNameState(profile.fname);
         setLNameState(profile.lname);
         setMobileState(profile.mobile);
@@ -93,53 +99,31 @@ const Profile = () => {
         if (checkInput() === true)
         {
             // alert(fNameState+lNameState+mobileState+","+dobState)
-            sendEditProfileRequest();
-        }
-    }
-
-    const sendEditProfileRequest = async () => {
-        let path = serviceBaseURL + '/customers/'+loginContext.customer.id;
-        const client = new Client(path);
-        const resource = client.go();
-        const authHeaderBase64Value = btoa(loginContext.customer.email+':'+loginContext.customer.password);
-        const loginHeaders = new Headers();
-        loginHeaders.append("Content-Type", "application/json");
-        loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
-        setLoadingState(true);
-        console.log("Making service call: "+resource.uri);
-        let receivedState;
-        // alert(dobState);
-        try{
-            receivedState = await resource.put({
-                data: {
-                    "mobile": mobileState,
-                    "fname": fNameState,
-                    "lname": lNameState,
-                    "dob": new Date(dobState.substr(0,10)+"T00:00:00"),
-                },
-                headers: loginHeaders
+            setLoadingState(true);
+            // const dob = dobState && dobState.length >= 10 ? new Date(dobState.substr(0,10)+"T00:00:00") : '';
+            let profileObj = {
+                "fname": fNameState,
+                "lname": lNameState,
+            };
+            profileObj = dobState ? {...profileObj, "dob": dobState.substr(0,10)} : profileObj;
+            loginContext.updateProfile(profileObj).then((result) => {
+                if (result === 200) {
+                    setEditableState(false);
+                    setLoadingState(false);
+                    setInfoAlertState({show: true, msg: 'Profile updated!'});
+                }
+                else{
+                    setLoadingState(false);
+                    setErrorState("Failed to update profile. Please try again");
+                }
             });
         }
-        catch(e)
-        {
-            console.log("Service call failed with - "+e);
-            if (e.status && e.status === 401)//Unauthorized
-            {
-                history.push("/login");
-                return;
-            } 
-            setLoadingState(false);
-            setServiceRequestAlertState({show: true, msg: e.toString()});
-            return;
-        }
-        setEditableState(false);
-        setInfoAlertState({show: true, msg: 'Profile updated!'});
-        setLoadingState(false);          
     }
 
     const checkInput = () => {
 
-        if ((fNameState && fNameState.trim().length<1)
+        if ((emailState && emailState.trim().length<1)
+                || (fNameState && fNameState.trim().length<1)
                 || (lNameState && lNameState.trim().length<1)
                 || (mobileState && mobileState.trim().length<1)
                 || (dobState && dobState.trim().length<1) )
@@ -155,18 +139,20 @@ const Profile = () => {
     if (profileState !== null) {
         return (
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Profile"/>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>
                 <IonAlert isOpen={infoAlertState.show}
                             onDidDismiss={()=> setInfoAlertState(false)}
                             header={''}
+                            cssClass='groc-alert'
                             message={infoAlertState.msg}
                             buttons={['OK']}/>
                 <IonAlert
                     isOpen={serviceRequestAlertState.show}
                     header={'Error'}
+                    cssClass='groc-alert'
                     subHeader={serviceRequestAlertState.msg}
                     message={'Failed to load'}
                     buttons={[{text: 'Cancel', 
@@ -179,20 +165,21 @@ const Profile = () => {
                     <div className="border-bottom text-center p-3">We will not share your personal details with anyone</div>
                         <div className="p-3">
                             <form className="card">
-                            <IonList lines="full" className="ion-no-margin ion-no-padding">
+                            {/* <IonList lines="full" className="ion-no-margin ion-no-padding">
                                 <IonItem>
                                     <IonLabel position="stacked">
                                         Email Id 
                                     </IonLabel>
-                                    <IonInput type="email" value={profileState.email} disabled></IonInput>
+                                    <IonInput placeholder="Email Id" type="email" disabled={!editableState}
+                                    onIonChange={setEmail}
+                                    value={emailState}></IonInput>
                                 </IonItem>
-                            </IonList>
+                            </IonList> */}
                             <IonList lines="full" className="ion-no-margin ion-no-padding">
                                 <IonItem>
                                     <IonLabel position="stacked">First Name
-                                        <IonText color="danger">*</IonText>
                                     </IonLabel>
-                                    <IonInput placeholder="First Name" required type="text" disabled={!editableState}
+                                    <IonInput placeholder="First Name" type="text" disabled={!editableState}
                                     onIonChange={setFirstName}
                                     value={fNameState}></IonInput>
                                 </IonItem>
@@ -200,14 +187,13 @@ const Profile = () => {
                             <IonList lines="full" className="ion-no-margin ion-no-padding">
                                 <IonItem>
                                     <IonLabel position="stacked">Last Name
-                                        <IonText color="danger">*</IonText>
                                     </IonLabel>
-                                    <IonInput placeholder="Last Name" required type="text" disabled={!editableState}
+                                    <IonInput placeholder="Last Name" type="text" disabled={!editableState}
                                     onIonChange={setLastName}
                                     value={lNameState}></IonInput>
                                 </IonItem>
                             </IonList>
-                            <IonList lines="full" className="ion-no-margin ion-no-padding">
+                            {/* <IonList lines="full" className="ion-no-margin ion-no-padding">
                                 <IonItem>
                                     <IonLabel position="stacked">Mobile Number
                                         <IonText color="danger">*</IonText>
@@ -216,12 +202,12 @@ const Profile = () => {
                                     onIonChange={setMobile}
                                     value={mobileState}></IonInput>
                                 </IonItem>
-                            </IonList>                            
+                            </IonList>                             */}
                             <IonList lines="full" className="ion-no-margin ion-no-padding">
                                 <IonItem>
                                     <IonLabel position="stacked">Date of Birth
                                     </IonLabel>
-                                    <IonDatetime placeholder="Date of Birth" required type="date" disabled={!editableState}
+                                    <IonDatetime placeholder="Date of Birth" type="date" disabled={!editableState}
                                     onIonChange={setDob}
                                     value={dobState}></IonDatetime>
                                 </IonItem>
@@ -253,7 +239,7 @@ const Profile = () => {
         console.log("show alert "+serviceRequestAlertState.show);
             return (
             <IonPage>
-                <IonHeader className="osahan-nav">
+                <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Profile"/>
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>                
@@ -261,6 +247,7 @@ const Profile = () => {
                     <IonAlert
                         isOpen={serviceRequestAlertState.show}
                         header={'Error'}
+                        cssClass='groc-alert'
                         subHeader={serviceRequestAlertState.msg}
                         message={'Failed to load'}
                         buttons={[{text: 'Cancel', 
