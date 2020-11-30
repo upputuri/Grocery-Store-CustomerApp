@@ -83,7 +83,7 @@ const PromoCodeForm = (props) => {
         <IonGrid>
             <IonRow>
                 <IonCol>
-                    <IonText color="primary">Have a promo code?</IonText>
+                    <IonText color="light">Have a promo code?</IonText>
                 </IonCol>
             </IonRow>
             <IonRow>
@@ -110,7 +110,7 @@ const PromoCodeForm = (props) => {
                 </IonCol> ||
                 <IonCol>
                     <IonText color="success"><IonIcon icon={checkMarkIcon} size="small" color="secondary"/>
-                    Code Applied <IonText className="headtext" color="primary">{appliedCodeState}</IonText>
+                    Code Applied <IonText className="headtext" color="light">{appliedCodeState}</IonText>
                     <IonButton color="secondary" expand="block" onClick={clearPromoCode}>Clear</IonButton></IonText>
                 </IonCol>}
             </IonRow>

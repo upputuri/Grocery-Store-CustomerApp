@@ -33,8 +33,8 @@ const BaseToolbar = (props)=>{
                 <LoginContext.Consumer>
                     {(context) => 
                         (
-                            <IonButton onClick={viewCart.bind(this,context.customer.id)} className="top-cart" color="primary">
-                                <IonBadge color="primary">
+                            <IonButton onClick={viewCart.bind(this,context.customer.id)} className="top-cart" color="light">
+                                <IonBadge color="light">
                                     <CartContext.Consumer>{(context) => context.itemCount}</CartContext.Consumer>
                                 </IonBadge>
                                 <IonIcon slot="start" icon={cartOutlineIcon}></IonIcon>

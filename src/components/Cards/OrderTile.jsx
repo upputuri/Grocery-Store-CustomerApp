@@ -35,15 +35,15 @@ const OrderTile = (props) =>
 
                 <IonRow className="ion-text-center border-bottom border-secondary">
                     <IonCol className="p-3">
-                        <IonText color="primary">{displayOrderId}</IonText>
+                        <IonText color="light">{displayOrderId}</IonText>
                     </IonCol>
                     <IonCol className="p-3">
-                        <IonText color="primary">{'₹'+props.order.finalTotal}</IonText>
+                        <IonText color="light">{'₹'+props.order.finalTotal}</IonText>
                     </IonCol>
                 </IonRow>
                 <IonRow className="ion-text-left">
                     <IonCol>
-                        <IonText className="subtext ml-2">Order time: </IonText><IonText color="primary">{displayTS}</IonText>
+                        <IonText className="subtext ml-2">Order time: </IonText><IonText color="light">{displayTS}</IonText>
                         {/* <IonText className="subtext ml-2">Transaction: </IonText><IonText color="secondary">{props.order.transactionId}</IonText> */}
                     </IonCol>
                 </IonRow>

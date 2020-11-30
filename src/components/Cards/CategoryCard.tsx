@@ -19,10 +19,10 @@ const CategoryCard = (props: CategoryProps) => {
                         <div className="media align-items-center p-2">
                             <div className="mr-3"><img alt="img" className="categories-img" src={props.image?categoryImageStoreURL+"/"+props.image:defaultImageURL}/></div>
                             <div className="media-body">
-                            <IonText color="primary">
+                            <IonText color="light">
                                 <h5 className="mb-2 font-weight-bold">{props.title}</h5>
                             </IonText>
-                            <p className="text-success m-0">{props.uspText}</p>
+                            <p className="m-0">{props.uspText}</p>
                             </div>
                         </div>
                     {/* </div> */}

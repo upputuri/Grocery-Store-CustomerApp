@@ -140,15 +140,15 @@ const OrderDetail = (props) => {
                     <IonGrid className="p-2">
                         <IonRow className="ion-text-center border-bottom border-secondary">
                         <IonCol className="p-3">
-                            <IonText color="primary">{displayOrderId}</IonText>
+                            <IonText color="light">{displayOrderId}</IonText>
                         </IonCol>
                         <IonCol className="p-3">
-                            <IonText color="primary">{'₹'+orderDetailState.finalTotal}</IonText>
+                            <IonText color="light">{'₹'+orderDetailState.finalTotal}</IonText>
                         </IonCol>
                         </IonRow>
                         <IonRow className="ion-text-left">
                             <IonCol>
-                                <IonText className="subtext ml-2">Order time: </IonText><IonText color="primary">{displayTS}</IonText>
+                                <IonText className="subtext ml-2">Order time: </IonText><IonText color="light">{displayTS}</IonText>
                             </IonCol>
                         </IonRow>
                         <IonRow className="ion-text-left">
@@ -168,13 +168,13 @@ const OrderDetail = (props) => {
                         }
                         <IonRow className="p-2 border-bottom border-secondary">
                             <IonCol size="6" className="ion-text-left">
-                                <IonText color="primary">Item</IonText>
+                                <IonText color="light">Item</IonText>
                             </IonCol>
                             <IonCol size="2" className="ion-text-right">   
-                                <IonText color="primary">count</IonText>
+                                <IonText color="light">count</IonText>
                             </IonCol>
                             <IonCol size="4" className="ion-text-right">
-                                <IonText color="primary">Price</IonText>
+                                <IonText color="light">Price</IonText>
                             </IonCol>
                         </IonRow>
                         {orderDetailState.orderItems && orderDetailState.orderItems.map((orderItem, index) => {
@@ -192,7 +192,7 @@ const OrderDetail = (props) => {
                         })}
                         <IonRow className="ion-text-right">
                             <IonCol size="6">
-                                <IonLabel color="primary"><span>Sub Total:</span></IonLabel>
+                                <IonLabel color="light"><span>Sub Total:</span></IonLabel>
                             </IonCol>
                             <IonCol size="6">
                                 <IonLabel><div>{'₹'+orderDetailState.orderTotal}</div></IonLabel>
@@ -200,7 +200,7 @@ const OrderDetail = (props) => {
                         </IonRow>
                         <IonRow className="ion-text-right">
                             <IonCol size="6">
-                                <IonLabel color="primary"><span>Discounted Total:</span></IonLabel>
+                                <IonLabel color="light"><span>Discounted Total:</span></IonLabel>
                             </IonCol>
                             <IonCol size="6">
                                 <IonLabel><div>{'₹'+orderDetailState.discountedTotal}</div></IonLabel>
@@ -208,7 +208,7 @@ const OrderDetail = (props) => {
                         </IonRow>
                         <IonRow className="ion-text-right">
                             <IonCol size="6">
-                                <IonLabel color="primary"><span>Shipping Charge:</span></IonLabel>
+                                <IonLabel color="light"><span>Shipping Charge:</span></IonLabel>
                             </IonCol>
                             <IonCol size="6">
                                 <IonLabel><div>{'₹'+orderDetailState.totalChargesValue}</div></IonLabel>
@@ -216,7 +216,7 @@ const OrderDetail = (props) => {
                         </IonRow>
                         <IonRow className="ion-text-right">
                             <IonCol size="6">
-                                <IonLabel color="primary"><span>{'Taxes ('+orderDetailState.totalTaxRate+'%):'}</span></IonLabel>
+                                <IonLabel color="light"><span>{'Taxes ('+orderDetailState.totalTaxRate+'%):'}</span></IonLabel>
                             </IonCol>
                             <IonCol size="6">
                                 <IonLabel><div>{'₹'+orderDetailState.totalTaxValue}</div></IonLabel>
@@ -224,7 +224,7 @@ const OrderDetail = (props) => {
                         </IonRow>
                         <IonRow className="ion-text-right">
                             <IonCol size="6">
-                                    <IonLabel color="primary"><span>Bill Amount:</span></IonLabel>
+                                    <IonLabel color="light"><span>Bill Amount:</span></IonLabel>
                             </IonCol>
                             <IonCol size="6">
                                     <h6>{'₹'+orderDetailState.finalTotal}</h6>

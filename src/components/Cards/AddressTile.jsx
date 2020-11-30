@@ -14,13 +14,13 @@ const AddressTile = (props) =>
             <IonRow className="ion-text-left">
                 <IonCol size="1"></IonCol>
                 <IonCol className="ion-text-wrap" size="11">
-                    <IonText color="primary"><h6>{props.fName+" "+props.lName}</h6></IonText>
+                    <IonText color="light"><h6>{props.fName+" "+props.lName}</h6></IonText>
                     <div className="ion-text-wrap">{props.line1}</div>
                     <div className="ion-text-wrap">{props.line2}</div>
                     <div className="ion-text-wrap">{props.city}, {props.state}</div>
                     <div className="ion-text-wrap">{props.zipCode}
                     </div>
-                    <h6><IonIcon className="mr-2" icon={phoneIcon} size="small" color="primary"/>{props.phone}</h6>
+                    <h6><IonIcon className="mr-2" icon={phoneIcon} size="small" color="light"/>{props.phone}</h6>
                 </IonCol>
             </IonRow>
              <IonRow>

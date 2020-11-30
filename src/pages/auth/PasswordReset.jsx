@@ -87,7 +87,7 @@ const PasswordReset = () => {
             <IonContent className="ion-padding shop-cart-page" color="dark">
             <div className="card mb-2">
                 <div className="border-bottom text-center p-3">
-                    <IonText color="primary" className="pl-3 pr-3 pt-2 ion-text-center">Please input your registered mobile number. We will reset the password and send an sms</IonText>
+                    <IonText color="light" className="pl-3 pr-3 pt-2 ion-text-center">Please input your registered mobile number. We will reset the password and send an sms</IonText>
                 </div>
                 <div className="p-3">
                     <form className="card">

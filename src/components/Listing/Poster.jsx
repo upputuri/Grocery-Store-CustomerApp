@@ -42,7 +42,7 @@ const Poster = (props) => {
         //         <div className="d-inline-block text-truncate">
         //             {props.mainText}
         //         </div>
-        //         <IonText className="text-truncate" color="primary"><div>{props.subText}</div></IonText>
+        //         <IonText className="text-truncate" color="light"><div>{props.subText}</div></IonText>
         //     </IonCardContent>
         // </IonCard>
         <div onClick={itemClicked} className="card poster">

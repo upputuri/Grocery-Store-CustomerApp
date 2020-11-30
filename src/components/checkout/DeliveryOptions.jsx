@@ -5,13 +5,15 @@ import AddressForm from '../forms/AddressForm';
 
 const DeliveryOptions = (props) => {
     const [editingState, setEditingState] = useState(false);
+    const [billingAddressSameState, setBillingAddressSameState] = useState(false);
+
+    const toggleBilllingAddressSameSelection = (addressId) => {
+        !billingAddressSameState ? props.onBillingAddressSelected(addressId) : props.onBillingAddressSelected(0);
+        setBillingAddressSameState(!billingAddressSameState);
+    }
 
     const selectShippingAddress = (addressId) => {
         props.onDeliveryAddressSelected(addressId);
-    }
-
-    const selectBillingAddress = (addressId) => {
-        props.onBillingAddressSelected(addressId);
     }
 
     const openNewAddressForm = () => {
@@ -67,8 +69,8 @@ const DeliveryOptions = (props) => {
                             {address.id === props.selectedDeliveryAddressId &&                 
                             <IonGrid className="text-center">
                                 <IonItem color="night">
-                                    <IonCheckbox slot="start" onClick={selectBillingAddress.bind(this, address.id)} checked={address.id === props.selectedBillingAddressId} />
-                                    <IonText className="maintext" color="primary">My Billing address is same</IonText>
+                                    <IonCheckbox slot="start" onClick={toggleBilllingAddressSameSelection.bind(this, address.id)} checked={address.id === props.selectedBillingAddressId} />
+                                    <IonText className="maintext" color="light">My Billing address is same</IonText>
                                 </IonItem>
                             </IonGrid>}
                         </div>

@@ -122,7 +122,7 @@ const SingleProduct = (props) => {
                             <div className="mb-2 card p-3 single-page-info">
                                 <div>
                                 <div className="single-page-shop">
-                                    <IonText color="primary">
+                                    <IonText color="light">
                                         <h6 className="mb-1">{productState.name} - {productState.variations[variantIndexState].name}</h6>
                                     </IonText>
                                     <div className="font-weight-normal mb-2 price">

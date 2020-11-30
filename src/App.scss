@@ -23,7 +23,7 @@ ion-menu ion-content {
   }
   
   ion-menu.md ion-list#inbox-list {
-    border-bottom: 1px solid var(--ion-color-primary, #d7d8da);
+    border-bottom: 1px solid var(--ion-color-light, #d7d8da);
   }
   
   ion-menu.md ion-list#inbox-list ion-list-header {
@@ -34,7 +34,7 @@ ion-menu ion-content {
   }
 
   ion-menu.md ion-list.menu-top-section {
-    border-bottom: 2px solid var(--ion-color-primary, #d7d8da);    
+    border-bottom: 2px solid var(--ion-color-light, #d7d8da);    
   }
   
   ion-menu.md ion-list#labels-list ion-list-header {
@@ -54,11 +54,11 @@ ion-menu ion-content {
   }
   
   ion-menu.md ion-item.selected {
-    --background: rgba(var(--ion-color-primary-rgb), 0.14);
+    --background: rgba(var(--ion-color-light-rgb), 0.14);
   }
   
   ion-menu.md ion-item.selected ion-icon {
-    color: var(--ion-color-primary);
+    color: var(--ion-color-light);
   }
   
   ion-menu.md ion-item ion-icon {
@@ -90,7 +90,7 @@ ion-menu ion-content {
   }
   
   ion-menu.ios ion-item.selected ion-icon {
-    color: var(--ion-color-primary);
+    color: var(--ion-color-light);
   }
   
   ion-menu.ios ion-item ion-icon {
@@ -120,7 +120,7 @@ ion-menu ion-content {
   }
   
   ion-item.selected {
-    --color: var(--ion-color-primary);
+    --color: var(--ion-color-light);
   }
   
 span.old-price{
@@ -207,18 +207,18 @@ ion-grid.ordertile {
 }
 
 ion-card.address-card {
-  box-shadow: 1px 1px 10px 1px var(--ion-color-primary);
+  box-shadow: 1px 1px 10px 1px var(--ion-color-light);
 }
 
 .single-product-canvas {
-  box-shadow: 1px 1px 10px 1px var(--ion-color-primary);
+  box-shadow: 1px 1px 10px 1px var(--ion-color-light);
 }
 
 ion-grid, ion-grid.card {
   margin-top: 1em;
   margin-bottom: 1em;
   border-radius: 2%; 
-  box-shadow: 1px 1px 10px 1px var(--ion-color-primary);
+  box-shadow: 1px 1px 10px 1px var(--ion-color-light);
   background-color: var(--ion-color-night);
 }
 
@@ -243,7 +243,7 @@ div.cart-qty-value {
 }
 
 .poster .subtext {
-  color: var(--ion-color-primary);
+  color: var(--ion-color-light);
 }
 
 .home-page-slide {
@@ -306,12 +306,18 @@ div.cart-qty-value {
 .groc-select .select-interface-option[aria-checked=true] .alert-radio-label{
   color: var(--ion-color-light);
 }
+.groc-select .alert-button{
+  color: var(--ion-color-light);
+}
 .groc-picker .picker-wrapper{
   --background: var(--ion-color-night);
   color: var(--ion-color-dark);
 }
 .groc-picker{
   --border-color:var(--ion-color-medium);
+}
+.groc-picker .picker-opt-selected, .groc-picker .picker-button{
+  color: var(--ion-color-light);
 }
 // .item.item-has-focus ion-label {
 //   --background: red;

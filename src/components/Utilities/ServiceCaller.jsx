@@ -5,8 +5,8 @@ import { Client } from 'ketting'
 
 // const serviceBaseURL = "http://grocservicecustomer-env.eba-bpju9vw3.ap-south-1.elasticbeanstalk.com/groc";
 // const serviceBaseURL = "http://vegitcustomerrunnerservice-env.eba-3gjvheqy.ap-south-1.elasticbeanstalk.com/groc";
-// const serviceBaseURL = "http://api.thevegitclub.com";
-const serviceBaseURL = "http://192.168.0.110:8080";
+const serviceBaseURL = "http://api.thevegitclub.com";
+// const serviceBaseURL = "http://192.168.0.110:8080";
 
 // const logoURL = "http://lhhs.in/vegit/themes/nyk/images/logo-1.jpeg";
 const logoURL = "http://thevegitclub.com/themes/nyk/images/logo-1.jpeg";

@@ -10,9 +10,9 @@ const InfoMessageTile = (props) => {
                 <IonCol>
                     <div className="d-flex justify-content-around">
                         {props.headerTextLeft && 
-                        <IonText color={props.headerTextColor ? props.headerTextColor : "primary"} className="headtext">{props.headerTextLeft}</IonText>}
+                        <IonText color={props.headerTextColor ? props.headerTextColor : "light"} className="headtext">{props.headerTextLeft}</IonText>}
                         {props.headerTextRight && 
-                        <IonText color={props.headerTextColor ? props.headerTextColor : "primary"} className="subtext">{props.headerTextRight}</IonText>}
+                        <IonText color={props.headerTextColor ? props.headerTextColor : "light"} className="subtext">{props.headerTextRight}</IonText>}
                     </div>
                 </IonCol>
             </IonRow>}

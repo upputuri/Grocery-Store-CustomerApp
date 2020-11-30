@@ -11,7 +11,7 @@ import PaymentOptions from '../../components/checkout/PaymentOptions';
 import OrderReview from '../../components/checkout/OrderReview'
 import OrderConfirm from '../../components/checkout/OrderConfirm';
 import BillingOptions from '../../components/checkout/BillingOptions';
-import { sendEmailNotification, sendMobileNotification } from '../../components/Utilities/AppCommons';
+import { generateOrderId, sendEmailNotification, sendMobileNotification } from '../../components/Utilities/AppCommons';
 
 var RazorpayCheckout = require('com.razorpay.cordova/www/RazorpayCheckout');
 
@@ -291,9 +291,9 @@ const Checkout = (props) => {
                 console.log("Promise resolved new orderId "+newOrderId);
                 history.push("/orderplaced?id="+newOrderId);
                 if (newOrderId > 0) {
-                    const msg = "Thank you for shopping with us. Your order Id is "+newOrderId+". We will process your order at the earliest";
-                    sendEmailNotification(loginContext.customer.email, msg);
-                    sendMobileNotification(loginContext.customer.mobile, msg);
+                    const msg = "Thank you for shopping with us. Your order has been placed successfully. We will process your order at the earliest";
+                    sendEmailNotification(loginContext, msg);
+                    sendMobileNotification(loginContext, msg);
                 }
                 // setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before placing the order again!'});
             });
@@ -414,7 +414,7 @@ const Checkout = (props) => {
                     <BaseToolbar title="Checking Out"/>
                     <IonRow className="osahan-nav border-white border-top">
                         <IonCol className="ion-padding">
-                            <IonText color="primary" className="maintext">{phases[currentPhaseIndex] && phases[currentPhaseIndex].title}</IonText>
+                            <IonText color="light" className="maintext">{phases[currentPhaseIndex] && phases[currentPhaseIndex].title}</IonText>
                         </IonCol>
                     </IonRow>     
                 </IonHeader>
