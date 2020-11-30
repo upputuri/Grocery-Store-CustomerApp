@@ -73,22 +73,23 @@ const Support = () => {
                     <IonRow className="ion-text-left border-bottom border-secondary">
                         <IonCol>
                             <IonList className="bg-black menu-top-section">
-                                <IonMenuToggle auto-hide="false" >
-                                <IonItem color="night" detail="false">
+                                <IonItem color="night" detail="false" href={'tel:'+variablesState.contact_no}>
                                     <IonIcon color="primary" icon={phoneIcon} slot="start"/>
                                     <IonText color="">{variablesState.contact_no}</IonText>
                                 </IonItem>
-                                </IonMenuToggle>
-                                <IonMenuToggle auto-hide="false" >
-                                <IonItem color="night" detail="false">
+                                <IonItem color="night" detail="false" href={'mailto:'+variablesState.contact_email}>
                                     <IonIcon color="primary" icon={mailIcon} slot="start"/>
                                     <IonText color="">{variablesState.contact_email}</IonText>
                                 </IonItem>
-                                </IonMenuToggle>
                             </IonList>
                         </IonCol>
                     </IonRow>
-                    <IonRow className="ion-text-left p-3">
+                    <IonRow className="ion-text-center">
+                        <IonCol>
+                            <IonText>Stay in Touch</IonText>
+                        </IonCol>
+                    </IonRow>
+                    <IonRow className="ion-text-left p-3 border-bottom border-secondary">
                         <IonCol>
                             <div className="d-flex justify-content-around">
                                 {socialHandlesState && socialHandlesState.youtube && 
@@ -100,11 +101,6 @@ const Support = () => {
                                 {socialHandlesState && socialHandlesState.facebook && 
                                 <a href={socialHandlesState.facebook}><IonIcon  size="large" color="primary" icon={fbIcon}/></a>}
                             </div>
-                        </IonCol>
-                    </IonRow>
-                    <IonRow className="ion-text-center border-bottom border-secondary">
-                        <IonCol>
-                            <IonText>STAY IN TOUCH</IonText>
                         </IonCol>
                     </IonRow>
                     <IonRow>

@@ -35,7 +35,9 @@ const advertUrl1 = "http://thevegitclub.com/themes/nyk/images/e435af26d54ecd5b21
 const advertUrl2 = "http://thevegitclub.com/themes/nyk/images/15-Discount-on-Vegetables-1.png";
 const advertUrl3 = "http://thevegitclub.com/themes/nyk/images/IMG-20200626-WA0009.png";
 
-const razorPayKey = "rzp_test_gtgk7x1URhgpBg";
+const invoiceLinkBaseUrl = "https://thevegitclub.com/?urlq=order/invoice/20";
+const invoiceLinkPassPhrase = "RgUjXn2r5u8x/A?D(G+KbPeShVmYp3s6";
+
 // interface RequestObj{
 //     method: string,
 //     body: string,
@@ -80,7 +82,7 @@ class ServiceRequest {
             const loginHeaders = new Headers();
             loginHeaders.append("Content-Type", "application/json");
             loginHeaders.append("Authorization", "Basic " + authHeaderBase64Value);
-            response = await fetch(serviceBaseURL + '/me', buildBody('GET', {}, loginHeaders));
+            response = await fetch(serviceBaseURL + '/customers/me', buildBody('GET', {}, loginHeaders));
             let result = await response.json();
             if (response.ok) {
                 this.hasResponse = true;
@@ -201,8 +203,7 @@ class ServiceRequest {
 export default ServiceRequest;
 export { defaultImageURL, serviceBaseURL, smallImageStoreURL, mediumImageStoreURL, 
     largeImageStoreURL, logoURL, logoIconURL, thumbNailImageStoreURL, coverImageStoreURL, categoryImageStoreURL,
-    profileImageStoreURL };
+    profileImageStoreURL, invoiceLinkBaseUrl, invoiceLinkPassPhrase };
 
 export {aboutUrl, termsUrl, returnPolicyUrl, privacyPolicyUrl, blogUrl, faqUrl};
 export {advertUrl1, advertUrl2, advertUrl3};
-export {razorPayKey};

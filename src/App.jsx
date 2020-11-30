@@ -73,6 +73,8 @@ const CartContext = React.createContext(
     removeItem: (p,v,q)=>{},
     placeOrder: () =>{},
     setDeliveryAddress: ()=>{},
+    setBillingAddress: () => {},
+    setDeliveryAndBillingAddress: () => {},
     setPromoCodes: ()=>{},
     setPaymentOption: ()=>{},
     setTransactionId: ()=>{},
@@ -122,13 +124,14 @@ class App extends React.Component {
         order: {
           id: '',
           deliveryAddressId: 0,
+          billingAddressId: 0,
           promoCodes: [],
           paymentOptionId: undefined,
           transactionId: undefined,
           instructions: ''
         },
         showToast: false,
-        toastMsg: 'Happy shopping!',
+        toastMsg: '',
         showLoading: false
     }
   }
@@ -220,7 +223,7 @@ class App extends React.Component {
     
   }
 
-  loginHandler = async (user, password) =>
+  loginHandler = async (user, password, silent) =>
   {
     this.setState({showLoading: true});
     let serviceRequest = new ServiceRequest();
@@ -248,10 +251,12 @@ class App extends React.Component {
         authProvider: 'service',
         isAuthenticated: true,
         customer: authenticatedCustomer,
-        cart: cart,
+        cart: cart
+      });
+      {!silent && this.setState({
         toastMsg: 'Login Successful!',
         showToast: true
-      });
+      })}
       this.storeUser(authenticatedCustomer);
       this.storeCart(cart);
       this.setState({showLoading: false});
@@ -271,7 +276,7 @@ class App extends React.Component {
   }
 
   refreshAccount = (mobile, password) => {
-      let loginResult = this.loginHandler(mobile, password);
+      let loginResult = this.loginHandler(mobile, password, true);
       loginResult.then((result) => {
         if (result.hasResponse && !result.isResponseOk) {
           this.logoutHandler();
@@ -465,6 +470,20 @@ class App extends React.Component {
     }})
   }
 
+  setBillingAddress(addressId){
+    this.setState({order: {
+      ...this.state.order, billingAddressId: addressId
+    }})
+  }
+
+  setDeliveryAndBillingAddress(delivery, billing){
+    delivery = delivery ? delivery : 0;
+    billing = billing ? billing : 0;
+    this.setState({order: {
+      ...this.state.order, deliveryAddressId: delivery, billingAddressId: billing
+    }})
+  }
+
   setPromoCodes(promoCodes){
     this.setState({order: {
       ...this.state.order, promoCodes: promoCodes
@@ -567,6 +586,8 @@ class App extends React.Component {
         <CartContext.Provider value={{itemCount: this.state.cart.itemCount, 
                                       order: this.state.order,
                                       setDeliveryAddress: this.setDeliveryAddress.bind(this),
+                                      setBillingAddress: this.setBillingAddress.bind(this),
+                                      setDeliveryAndBillingAddress: this.setDeliveryAndBillingAddress.bind(this),
                                       setPromoCodes: this.setPromoCodes.bind(this),
                                       setPaymentOption: this.setPaymentOption.bind(this),
                                       setTransactionId: this.setTransactionId.bind(this),

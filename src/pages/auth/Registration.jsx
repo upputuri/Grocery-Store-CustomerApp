@@ -198,7 +198,7 @@ const Registration = () =>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                       <IonItem>
                           <IonCheckbox slot="start" onClick={toggleAccept} checked={acceptedState} />
-                          <IonText className="subtext" color="primary">{'I accept the terms & conditions'}</IonText>
+                          <IonText className="subtext" color="tertiary">{'I accept the terms & conditions'}</IonText>
                       </IonItem>
                     </IonList>                   
                     {errorState !== '' &&

@@ -39,7 +39,7 @@ const AddressTile = (props) =>
                 <IonCol>
                     <IonItem color="night">
                         <IonIcon color="success" size="large" icon={checkMarkIcon}/>
-                        <IonText color="success">Selected for delivery</IonText>
+                        <IonText color="success">{props.selectedMessage}</IonText>
                     </IonItem>
                 </IonCol>
             </IonRow>}

@@ -170,7 +170,7 @@ const GrocMenu = (props) => {
 
           {loginContext.isAuthenticated && <IonMenuToggle auto-hide="false" >
             <IonItem onClick={handleLogout} color="night" detail="false">
-              <IonIcon color="danger" icon={logOutIcon} slot="start"/>
+              <IonIcon color="primary" icon={logOutIcon} slot="start"/>
               <IonText>Logout</IonText>
             </IonItem>
           </IonMenuToggle>}

@@ -98,7 +98,7 @@ const Login = (props) =>
                     <form className="card">
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
-                            <IonLabel position="stacked">
+                            <IonLabel color="dark" position="stacked">
                                 Email Id/Mobile No.
                                 <IonText color="danger">*</IonText>
                             </IonLabel>
@@ -130,9 +130,7 @@ const Login = (props) =>
                     <IonButton color="secondary" routerDirection="forward" expand="block" onClick={passwordLoginRequestHandler} className="ion-no-margin">Submit</IonButton>
                     <div className='ion-text-center m-3'></div>
                     <IonButton color="secondary" routerDirection="forward" expand="block" onClick={()=>history.push('/resetpass')} className="ion-no-margin">Forgot Password?</IonButton>
-                    <div className='ion-text-center m-3'></div>
-                    <IonButton color="danger" routerDirection="forward" expand="block" onClick={googleLoginClicked} className="ion-no-margin">Login With Google</IonButton>
-                    <div className='ion-text-center m-3'>New User?</div>
+                   <div className='ion-text-center m-3'>New User?</div>
                     <IonButton color="secondary" routerDirection="forward" expand="block" onClick={()=>history.push('/register')} className="ion-no-margin">Sign Up</IonButton>                    
                 </div>
             </div>

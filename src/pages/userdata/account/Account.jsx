@@ -143,13 +143,7 @@ const Account = (props) => {
                         <IonRouterLink routerLink="/contactus">
                             <IonItem color="night" lines="full" className="border-bottom border-secondary">
                                 <IonIcon slot="start" icon={mailIcon} color="primary" size="small"/>
-                                <IonLabel>Submit a query</IonLabel>
-                            </IonItem>
-                        </IonRouterLink>
-                        <IonRouterLink routerLink="/support">
-                            <IonItem color="night" lines="full">
-                                <IonIcon slot="start" icon={phoneIcon} color="primary" size="small"/>
-                                <IonLabel>Contact Us</IonLabel>
+                                <IonLabel>Tickets</IonLabel>
                             </IonItem>
                         </IonRouterLink>
                     </IonItemGroup>
@@ -157,7 +151,7 @@ const Account = (props) => {
                 <IonGrid className="mt-3 card bg-black profile-box text-center">
                     <IonItem color="night">
                         <IonCheckbox slot="start" onClick={toggleSubscription} checked={subscribedState} />
-                        <IonText className="maintext" color="primary">{!subscribedState ? 'Sign Up ': 'You are signed up '}for our newsletter and to get updates</IonText>
+                        <IonText className="maintext" color="primary">Sign Up for our newsletter and to get updates</IonText>
                     </IonItem>
                 </IonGrid>
             </IonContent>

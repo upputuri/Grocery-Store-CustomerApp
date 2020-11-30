@@ -77,6 +77,17 @@ const OrderConfirm = (props) => {
                             state={props.preOrder.shippingAddress.state}
                             zipCode={props.preOrder.shippingAddress.zipcode}
                             phone={props.preOrder.shippingAddress.phoneNumber} />
+
+                <AddressTile title="Billing address:"
+                            addressId={props.preOrder.billingAddress.id}
+                            fName={props.preOrder.billingAddress.firstName}
+                            lName={props.preOrder.billingAddress.lastName}
+                            line1={props.preOrder.billingAddress.line1}
+                            line2={props.preOrder.billingAddress.line2}
+                            city={props.preOrder.billingAddress.city}
+                            state={props.preOrder.billingAddress.state}
+                            zipCode={props.preOrder.billingAddress.zipcode}
+                            phone={props.preOrder.billingAddress.phoneNumber} />
             </IonContent>
         )
         

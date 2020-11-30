@@ -62,7 +62,8 @@ ion-menu ion-content {
   }
   
   ion-menu.md ion-item ion-icon {
-    color: #616e7e;
+    color: var(--ion-color-dark)
+    // color: #616e7e;
   }
   
   ion-menu.md ion-item ion-label {
@@ -242,7 +243,7 @@ div.cart-qty-value {
 }
 
 .poster .subtext {
-  color: var(--ion-color-secondary);
+  color: var(--ion-color-primary);
 }
 
 .home-page-slide {
@@ -283,7 +284,39 @@ div.cart-qty-value {
   border-radius: 50%;
 }
 
-.groc-alert .alert-wrapper{
-  --background: var(--ion-color-night);
+// Below selectors are not used directly to style elements. Instead they are passed into ionic elements using cssClass option.
+.groc-alert .alert-wrapper .alert-message{
+  color: var(--ion-color-light);
 }
+.groc-alert .alert-wrapper{
+  --background: var(--ion-color-dark);
+}
+.groc-alert .alert-button{
+  color: var(--ion-color-light);
+}
+.groc-alert .alert-title, .groc-alert .alert-sub-title{
+  color: var(--ion-color-light);
+}
+.groc-select .alert-wrapper{
+  --background: var(--ion-color-dark);
+}
+.groc-select .alert-title, .groc-select .alert-sub-title, .groc-select .select-interface-option .alert-radio-label{
+  color: var(--ion-color-light);
+} 
+.groc-select .select-interface-option[aria-checked=true] .alert-radio-label{
+  color: var(--ion-color-light);
+}
+.groc-picker .picker-wrapper{
+  --background: var(--ion-color-night);
+  color: var(--ion-color-dark);
+}
+.groc-picker{
+  --border-color:var(--ion-color-medium);
+}
+// .item.item-has-focus ion-label {
+//   --background: red;
+// }
 
+// #ion-input-3-lbl{
+//   color: red;
+// }

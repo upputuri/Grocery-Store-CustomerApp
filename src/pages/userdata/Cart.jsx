@@ -130,7 +130,7 @@ const Cart = (props) =>{
             </IonContent>
             <IonLoading isOpen={showLoading}/>
             <IonFooter>
-                <IonToolbar color="secondary">
+                <IonToolbar color="night border-white border-top">
                     <IonRow>
                         <IonCol className="ion-padding">
                             <IonText className="headtext"><small>Cart Total: </small>{'₹'+cartItemsState.cartTotal}</IonText>
@@ -141,7 +141,7 @@ const Cart = (props) =>{
                         </IonCol>
                     </IonRow>
                 </IonToolbar>
-                <IonToolbar color="secondary">
+                <IonToolbar color="night">
                         <IonButtons slot="end">
                             <IonButton onClick={()=>cartItemsState.data && cartItemsState.data.length>0 && history.push('/checkout')} size="small" shape="round">
                                 Checkout<IonIcon size="large" icon={nextIcon}></IonIcon>

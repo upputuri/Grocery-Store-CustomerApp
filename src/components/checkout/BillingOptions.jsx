@@ -3,12 +3,8 @@ import React, { useState } from 'react';
 import AddressTile from '../Cards/AddressTile';
 import AddressForm from '../forms/AddressForm';
 
-const DeliveryOptions = (props) => {
+const BillingOptions = (props) => {
     const [editingState, setEditingState] = useState(false);
-
-    const selectShippingAddress = (addressId) => {
-        props.onDeliveryAddressSelected(addressId);
-    }
 
     const selectBillingAddress = (addressId) => {
         props.onBillingAddressSelected(addressId);
@@ -32,13 +28,6 @@ const DeliveryOptions = (props) => {
 
     return (
         <IonContent className="ion-padding" color="dark">
-            {/* <IonGrid>
-                <IonRow>
-                    <IonCol>
-                        <IonText color="light">Please select a shipping address</IonText>
-                    </IonCol>
-                </IonRow>
-            </IonGrid> */}
             {!editingState ? <IonButton color="secondary" expand="block" onClick={openNewAddressForm} className="ion-no-margin">Add New Address</IonButton>
             :
             <AddressForm 
@@ -61,22 +50,13 @@ const DeliveryOptions = (props) => {
                                     stateId={address.stateId}
                                     zipCode={address.zipcode}
                                     phone={address.phoneNumber} 
-                                    selectedId={props.selectedDeliveryAddressId}
-                                    selectedMessage='Selected for Delivery'
-                                    selectClickHandler={selectShippingAddress.bind(this, address.id)} />
-                            {address.id === props.selectedDeliveryAddressId &&                 
-                            <IonGrid className="text-center">
-                                <IonItem color="night">
-                                    <IonCheckbox slot="start" onClick={selectBillingAddress.bind(this, address.id)} checked={address.id === props.selectedBillingAddressId} />
-                                    <IonText className="maintext" color="primary">My Billing address is same</IonText>
-                                </IonItem>
-                            </IonGrid>}
+                                    selectClickHandler={selectBillingAddress.bind(this, address.id)}
+                                    selectedMessage='Selected for Billing'
+                                    selectedId={props.selectedBillingAddressId} />
                         </div>
                 })}
-
-
         </IonContent>
     )
 }
 
-export default DeliveryOptions;
+export default BillingOptions;

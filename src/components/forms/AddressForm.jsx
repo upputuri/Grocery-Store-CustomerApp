@@ -74,10 +74,12 @@ const AddressForm = (props) => {
             stateId: stateIdState,
             zipcode: zipCodeState,
             phone: mobileState
-    });
-
-
+        });
     }
+
+    const customAlertOptions = {
+        cssClass: 'groc-select'
+        };
 
     return (
         <IonContent color="night">
@@ -149,7 +151,7 @@ const AddressForm = (props) => {
                         {/* <IonPicker placeholder="State" type="text" 
                         onIonChange={setStateId}
                         value={stateIdState}></IonPicker> */}
-                        <IonSelect value={`${stateIdState}`} placeholder="Select One" onIonChange={setStateId}>
+                        <IonSelect interfaceOptions={customAlertOptions} value={`${stateIdState}`} placeholder="Select One" onIonChange={setStateId}>
                             {props.states && props.states.map((state)=>{
                                 return <IonSelectOption key={state.stateId} value={state.stateId}>{state.name}</IonSelectOption>
                             })}
