@@ -6,7 +6,7 @@ const BannerSlider = (props) => {
     const slideOpts = {
         speed: 200,
         loop: true,
-        autoplay: true
+        autoplay: true,
       };
 
     return (

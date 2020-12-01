@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonHeader, IonIcon, IonLoading, IonPage, IonSearchbar } from '@ionic/react';
+import { IonButton, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonLoading, IonPage, IonRow, IonSearchbar } from '@ionic/react';
 import Client from 'ketting';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
@@ -112,9 +112,19 @@ const ProductList = () => {
         
                         }
                     )}
-                    <div className="d-flex justify-content-between">
-                        <IonButton disabled={currentPageOffset > 0 ? false: true} onClick={loadPreviousPage} size="small" color="secondary"><IonIcon size="small" slot="start" icon={previous}></IonIcon>Prev</IonButton>
-                        <IonButton disabled={currentPageOffset+pageSize < queryResultCount ? false: true} onClick={loadNextPage} size="small" color="secondary"><IonIcon size="small" slot="end" icon={next}></IonIcon>Next</IonButton>
+                    <div>
+                        <IonRow>
+                            <IonCol size="6">
+                                <div className="d-flex justify-content-start">
+                                    {currentPageOffset > 0 && <IonButton disabled={currentPageOffset > 0 ? false: true} onClick={loadPreviousPage} size="small" color="secondary"><IonIcon size="small" slot="start" icon={previous}></IonIcon>Prev</IonButton>}
+                                </div>
+                            </IonCol>
+                            <IonCol size="6">
+                                <div className="d-flex justify-content-end">
+                                    {currentPageOffset+pageSize < queryResultCount && <IonButton disabled={currentPageOffset+pageSize < queryResultCount ? false: true} onClick={loadNextPage} size="small" color="secondary"><IonIcon size="small" slot="end" icon={next}></IonIcon>Next</IonButton>}
+                                </div>
+                            </IonCol>
+                        </IonRow>
                     </div>
                 </IonContent>
             </IonPage>        

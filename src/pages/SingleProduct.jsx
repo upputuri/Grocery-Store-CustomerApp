@@ -10,6 +10,7 @@ import { defaultImageURL, mediumImageStoreURL, serviceBaseURL } from '../compone
 
 const SingleProduct = (props) => {
     const [productState, setProductState] = useState(null);
+    const [slideImages, setSlideImages] = useState([]);
     const [variantIndexState, setVariantIndexState] = useState(0);
     const [resourceState, setResourceState] = useState(null);
     const [loadingState, setLoadingState] = useState(false);
@@ -77,6 +78,7 @@ const SingleProduct = (props) => {
         const product = receivedState.data;
         // alert(JSON.stringify(products));
         setProductState(product);
+        setSlideImages(product.variations[0].images);
         setResourceState(resource);
         setLoadingState(false);  
     }
@@ -84,19 +86,19 @@ const SingleProduct = (props) => {
     const variantSelected = (index) => 
     {
         setVariantIndexState(index);
+        let images = productState.variations[index].images.length > 0 ? productState.variations[index].images : productState.images;
+        setSlideImages(images);
     }
 
-    // const addToCart = (loginContext, cartContext, productId, variantId, qty) =>
-    // {
-    //     if (!loginContext.isAuthenticated)
-    //     {
-    //         console.log("Customer is not authenticated, hence redirecting to login page");
-    //         history.push("/login");
-    //         return;
-    //     }
-    //     console.log("Invoking add Item on cart context");
-    //     cartContext.addItem(productId, variantId, qty);
-    // }
+    const sliderOptions = {
+        initialSlide: 0,
+        spaceBetween: 10,
+        // pagination: {
+        //     el: 'groc-slides',
+        //     type: 'bullets',
+        // }
+    }
+
     if (productState !== null)
     {
         return (
@@ -107,21 +109,21 @@ const SingleProduct = (props) => {
                     <GrocSearch/>      
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>              
-                <IonContent color="dark">
+                <IonContent color="dark" className="ion-padding">
                     {productState && 
                     <div>
-                        <IonSlides pager="true" className="ion-padding">
-                            {productState.images && productState.images.map((image) => {
-                            return <IonGrid><IonSlide key={image}>
+                        <IonSlides options={sliderOptions} pager="true">
+                            {slideImages && slideImages.map((image, index) => {
+                            return <IonSlide key={index}>
                                         <img alt="img" className="single-img" src={image?mediumImageStoreURL+"/"+image:defaultImageURL}/>
-                                    </IonSlide></IonGrid>
+                                    </IonSlide>
                             })}
                         </IonSlides>
-                        <div className="p-3">
+                        <div>
                             <IonGrid>
-                            <div className="mb-2 card p-3 single-page-info">
+                            <div className="mb-2 p-3">
                                 <div>
-                                <div className="single-page-shop">
+                                <div>
                                     <IonText color="light">
                                         <h6 className="mb-1">{productState.name} - {productState.variations[variantIndexState].name}</h6>
                                     </IonText>
@@ -159,7 +161,7 @@ const SingleProduct = (props) => {
                             </div>
                             </IonGrid>
                             <IonGrid>
-                            <div className="mb-2 card p-3 single-page-info">
+                            <div className="mb-2 p-3">
                                 <div className="short-description">
                                 <small className="float-right"><span className="badge badge-success">{productState.variations[variantIndexState].inStock ? 'In Stock': 'Out of Stock'}</span></small>
                                 <h6 className="font-weight-bold mb-3">

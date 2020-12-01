@@ -291,8 +291,8 @@ const Checkout = (props) => {
                 console.log("Promise resolved new orderId "+newOrderId);
                 history.push("/orderplaced?id="+newOrderId);
                 if (newOrderId > 0) {
-                    const msg = "Thank you for shopping with us. Your order has been placed successfully. We will process your order at the earliest";
-                    sendEmailNotification(loginContext, msg);
+                    const msg = "Thank you for shopping with us! Your order has been placed successfully. We will process your order at the earliest";
+                    sendEmailNotification(loginContext, "We have received your order", msg);
                     sendMobileNotification(loginContext, msg);
                 }
                 // setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before placing the order again!'});

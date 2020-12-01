@@ -37,8 +37,7 @@ const BillingOptions = (props) => {
                     backClickHandler={cancelEdit.bind(this, -1)}/>}
 
             {props.addresses && props.addresses.length > 0 && props.addresses.map((address)=>{
-                return  <div>
-                            <AddressTile 
+                return  <AddressTile 
                                     addressId={address.id}
                                     key={address.id}
                                     fName={address.firstName}
@@ -52,8 +51,8 @@ const BillingOptions = (props) => {
                                     phone={address.phoneNumber} 
                                     selectClickHandler={selectBillingAddress.bind(this, address.id)}
                                     selectedMessage='Selected for Billing'
-                                    selectedId={props.selectedBillingAddressId} />
-                        </div>
+                                    selectedId={props.selectedBillingAddressId}/>
+
                 })}
         </IonContent>
     )

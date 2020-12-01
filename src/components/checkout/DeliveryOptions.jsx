@@ -50,7 +50,7 @@ const DeliveryOptions = (props) => {
                     backClickHandler={cancelEdit.bind(this, -1)}/>}
 
             {props.addresses && props.addresses.length > 0 && props.addresses.map((address)=>{
-                return  <div>
+                return  <div key={address.id}>
                             <AddressTile 
                                     addressId={address.id}
                                     key={address.id}
