@@ -73,9 +73,9 @@ const Cart = (props) =>{
         // alert(JSON.stringify(receivedState));
         // const items = receivedState.getEmbedded().map((itemState) => itemState.data);
         const items = receivedState.data.cartItems;
-        const totalCartCount = items.map((item)=>item.qty).reduce((a, c)=>a+c,0);
+        // const totalCartCount = items.map((item)=>item.qty).reduce((a, c)=>a+c,0);
         // alert(totalCartCount);
-        cartContext.setCartCount(totalCartCount);
+        cartContext.setCartCount(items.length);
         // alert(items.length);
         // const cartTotal = items.reduce((a, item) => a+item.totalPrice, 0.0);
         const cartTotal = receivedState.data.cartTotal;

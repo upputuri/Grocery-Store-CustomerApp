@@ -7,6 +7,7 @@ import { Client } from 'ketting'
 // const serviceBaseURL = "http://vegitcustomerrunnerservice-env.eba-3gjvheqy.ap-south-1.elasticbeanstalk.com/groc";
 // const serviceBaseURL = "http://api.thevegitclub.com";
 const serviceBaseURL = "http://192.168.0.110:8080";
+// const serviceBaseURL = "http://localhost:8080";
 
 // const logoURL = "http://lhhs.in/vegit/themes/nyk/images/logo-1.jpeg";
 const logoURL = "http://thevegitclub.com/themes/nyk/images/logo-1.jpeg";
@@ -18,6 +19,8 @@ const smallImageStoreURL = "http://thevegitclub.com/vegitfiles/item/small";
 const mediumImageStoreURL = "http://thevegitclub.com/vegitfiles/item/medium";
 const largeImageStoreURL = "http://thevegitclub.com/vegitfiles/item/large";
 const thumbNailImageStoreURL = "http://thevegitclub.com/vegitfiles/item/small_thumbnail";
+
+const mediumVariantImageStoreURL = "http://thevegitclub.com/vegitfiles/variations/medium"
 
 const coverImageStoreURL = "http://thevegitclub.com/vegitfiles/cover/small";
 const categoryImageStoreURL = "http://thevegitclub.com/vegitfiles/category/small";
@@ -201,7 +204,7 @@ class ServiceRequest {
 }
 
 export default ServiceRequest;
-export { defaultImageURL, serviceBaseURL, smallImageStoreURL, mediumImageStoreURL, 
+export { defaultImageURL, serviceBaseURL, smallImageStoreURL, mediumImageStoreURL, mediumVariantImageStoreURL,
     largeImageStoreURL, logoURL, logoIconURL, thumbNailImageStoreURL, coverImageStoreURL, categoryImageStoreURL,
     profileImageStoreURL, invoiceLinkBaseUrl, invoiceLinkPassPhrase };
 

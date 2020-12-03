@@ -6,11 +6,11 @@ import { useHistory, withRouter } from "react-router-dom";
 import AddToCartButton from '../components/Menu/AddToCartButton';
 import BaseToolbar from '../components/Menu/BaseToolbar';
 import GrocSearch from '../components/Menu/GrocSearch';
-import { defaultImageURL, mediumImageStoreURL, serviceBaseURL } from '../components/Utilities/ServiceCaller';
+import { defaultImageURL, mediumImageStoreURL, serviceBaseURL, mediumVariantImageStoreURL } from '../components/Utilities/ServiceCaller';
 
 const SingleProduct = (props) => {
     const [productState, setProductState] = useState(null);
-    const [slideImages, setSlideImages] = useState([]);
+    const [slideImageUrls, setSlideImageUrls] = useState([]);
     const [variantIndexState, setVariantIndexState] = useState(0);
     const [resourceState, setResourceState] = useState(null);
     const [loadingState, setLoadingState] = useState(false);
@@ -78,7 +78,7 @@ const SingleProduct = (props) => {
         const product = receivedState.data;
         // alert(JSON.stringify(products));
         setProductState(product);
-        setSlideImages(product.variations[0].images);
+        buildSlideImageUrls(product, 0);
         setResourceState(resource);
         setLoadingState(false);  
     }
@@ -86,8 +86,28 @@ const SingleProduct = (props) => {
     const variantSelected = (index) => 
     {
         setVariantIndexState(index);
-        let images = productState.variations[index].images.length > 0 ? productState.variations[index].images : productState.images;
-        setSlideImages(images);
+        buildSlideImageUrls(productState, index);
+    }
+
+    const buildSlideImageUrls = (product, index) => {
+        let slideImageUrls;
+        //let images = productState.variations[index].images.length > 0 ? productState.variations[index].images : productState.images;
+        if (product.variations[index].images.length > 0) {
+            slideImageUrls = product.variations[index].images.map((image) => {
+                const imageUrl = mediumVariantImageStoreURL+"/"+image;
+                return imageUrl;
+            });
+        }
+        else if (product.images.length > 0) {
+            slideImageUrls = product.images.map((image) => {
+                const imageUrl = mediumImageStoreURL+"/"+image;
+                return imageUrl;
+            })
+        }
+        else {
+            slideImageUrls = [defaultImageURL];
+        }
+        setSlideImageUrls(slideImageUrls);
     }
 
     const sliderOptions = {
@@ -113,9 +133,9 @@ const SingleProduct = (props) => {
                     {productState && 
                     <div>
                         <IonSlides options={sliderOptions} pager="true">
-                            {slideImages && slideImages.map((image, index) => {
+                            {slideImageUrls && slideImageUrls.map((imageUrl, index) => {
                             return <IonSlide key={index}>
-                                        <img alt="img" className="single-img" src={image?mediumImageStoreURL+"/"+image:defaultImageURL}/>
+                                        <img alt="img" className="single-img" src={imageUrl}/>
                                     </IonSlide>
                             })}
                         </IonSlides>

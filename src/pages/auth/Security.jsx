@@ -368,7 +368,7 @@ const Security = () => {
                             </IonList>
                         </form>
                     </div>
-                    <PasswordResetForm onNewPasswordInput={updatePassword}/>
+                    <PasswordResetForm onNewPasswordInput={updatePassword} email={loginContext.customer.email} password={loginContext.customer.password}/>
             </IonContent>
         </IonPage>
     )

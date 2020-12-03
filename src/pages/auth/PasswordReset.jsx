@@ -1,4 +1,4 @@
-import { IonAlert, IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonLoading, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAlert, IonButton, IonButtons, IonContent, IonGrid, IonHeader, IonInput, IonItem, IonLabel, IonList, IonLoading, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import Client from 'ketting';
 import React, { useContext, useState } from 'react';
 import { Redirect, useHistory, useLocation } from 'react-router';
@@ -80,16 +80,16 @@ const PasswordReset = () => {
                 <IonButtons slot="start">
                     <IonMenuButton></IonMenuButton>
                 </IonButtons>
-                <IonTitle>Login with OTP
+                <IonTitle>Reset Password
                 </IonTitle>
             </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding shop-cart-page" color="dark">
-            <div className="card mb-2">
+            <IonGrid>
                 <div className="border-bottom text-center p-3">
-                    <IonText color="light" className="pl-3 pr-3 pt-2 ion-text-center">Please input your registered mobile number. We will reset the password and send an sms</IonText>
+                    <IonText color="light">Please enter your registered mobile number. We will send an OTP for validation</IonText>
                 </div>
-                <div className="p-3">
+                <div className="p-2">
                     <form className="card">
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
@@ -101,19 +101,21 @@ const PasswordReset = () => {
                                     onIonChange={setMobile} 
                                     value={mobileState}></IonInput>
                         </IonItem>
-                        <div className="p-2">
-                            <IonButton onClick={sendPasswordResetRequest} size="small" color="secondary">Reset Password</IonButton>
-                        </div>
-                        {errorState !== '' &&
-                            <IonItem>
-                                <IonLabel className="ion-text-center ion-text-wrap" color="danger">
-                                    <small>{errorState}</small>
-                                </IonLabel>
-                            </IonItem>}
                     </IonList>
+                    {errorState !== '' &&
+                    <IonList>
+                        <IonItem>
+                            <IonLabel className="ion-text-center ion-text-wrap" color="danger">
+                                <small>{errorState}</small>
+                            </IonLabel>
+                        </IonItem>
+                    </IonList>}
                     </form>
                 </div>
-            </div>
+                <div className="p-2">
+                <IonButton color="secondary" routerDirection="forward" expand="block" className="ion-no-margin">Send OTP</IonButton>
+                </div>
+            </IonGrid>
             </IonContent>
         </IonPage>
     )

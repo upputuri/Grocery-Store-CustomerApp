@@ -258,7 +258,7 @@ class App extends React.Component {
         showToast: true
       })}
       this.storeUser(authenticatedCustomer);
-      this.storeCart(cart);
+      // this.storeCart(cart);
       this.setState({showLoading: false});
       return serviceRequest;
     }
@@ -349,9 +349,9 @@ class App extends React.Component {
       image: undefined,
     });
 
-    this.storeCart({
-      itemCount: 0
-    })
+    // this.storeCart({
+    //   itemCount: 0
+    // })
   }
 
   async storeUser(user) {
@@ -362,13 +362,13 @@ class App extends React.Component {
     })
   }
 
-  async storeCart(cart) {
-    console.log("Storing in app: "+JSON.stringify(cart));
-    await Storage.set({
-      key: "cart",
-      value: JSON.stringify(cart)
-    })
-  }
+  // async storeCart(cart) {
+  //   console.log("Storing in app: "+JSON.stringify(cart));
+  //   await Storage.set({
+  //     key: "cart",
+  //     value: JSON.stringify(cart)
+  //   })
+  // }
 
   async retrieveUser() {
     const ret = await Storage.get({key: "user"});
@@ -446,13 +446,20 @@ class App extends React.Component {
         return;
       }
       console.log("Received response from service call: "+resource.uri);
-      const newCartCount = this.state.cart.itemCount + qty;
+      // alert(JSON.stringify(receivedState));
+      const newCartCount = receivedState.data.variables.cartItemCount;
+      // let cartItems = new Map(this.state.cart.items);
+      // const cartMapKey = productId+'#'+variationId;
+      // let cartItemCount = cartItems.get(cartMapKey);
+      // const newQty = (cartItemCount?cartItemCount:0)+qty;
+      // newQty > 0 ? cartItems.set(cartMapKey, newQty) : cartItems.delete(cartMapKey);
       this.setState({
         cart: {
-          itemCount: newCartCount
+          itemCount: newCartCount,
+          // items: cartItems          
         }
       });
-      this.storeCart({itemCount: newCartCount});
+      // this.storeCart({itemCount: newCartCount});
       this.setState({
         showToast: true,
         toastMsg: Math.abs(qty)+(qty>0?' items added to cart':' items removed from cart'),
