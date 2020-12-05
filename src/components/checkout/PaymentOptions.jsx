@@ -29,7 +29,7 @@ const PaymentOptions = (props) => {
             <IonGrid className="p-2">
                 <IonRow className="p-3 ion-text-center border-bottom border-secondary">
                     <IonCol>
-                        <IonText color="primary">Please select a payment option</IonText>
+                        <IonText color="light">Please select a payment option</IonText>
                     </IonCol>
                 </IonRow>
                 <IonRow className="p-2 border-bottom border-secondary">

@@ -40,16 +40,16 @@ const Security = () => {
         let path = serviceBaseURL + '/application/otptokens';
         const client = new Client(path);
         const resource = client.go();
-        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
-        const loginHeaders = new Headers();
-        loginHeaders.append("Content-Type", "application/json");
-        loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
+        // const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
+        // const loginHeaders = new Headers();
+        // loginHeaders.append("Content-Type", "application/json");
+        // loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
         setLoadingState(true);
         console.log("Making service call: "+resource.uri);
         let receivedState;
         try{
             receivedState = await resource.post({
-                headers: loginHeaders,
+                // headers: loginHeaders,
                 data: {otp: otp, 
                     type: 'email',
                     target: emailState,
@@ -70,23 +70,22 @@ const Security = () => {
 
     const sendOTPForMobileUpdate = async (otp) => {
         //TODO: hack, change
-        const emailId = loginContext.customer.email && loginContext.customer.email.length>0 ? loginContext.customer.email : 'thevegitclub@gmail.com';
         let path = serviceBaseURL + '/application/otptokens';
         const client = new Client(path);
         const resource = client.go();
-        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
-        const loginHeaders = new Headers();
-        loginHeaders.append("Content-Type", "application/json");
-        loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
+        // const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
+        // const loginHeaders = new Headers();
+        // loginHeaders.append("Content-Type", "application/json");
+        // loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
         setLoadingState(true);
         console.log("Making service call: "+resource.uri);
         let receivedState;
         try{
             receivedState = await resource.post({
-                headers: loginHeaders,
+                // headers: loginHeaders,
                 data: {otp: otp, 
-                    type: 'email',
-                    target: emailId,
+                    type: 'mobile',
+                    target: mobileState,
                     message: 'Password(OTP) to update your email Id is {}. This OTP is valid for 10 minutes. Do not share OTP with anyone.'}
             });
         }
@@ -154,7 +153,7 @@ const Security = () => {
                 setWaitingForOTPState(true);
                 setOTPClearingTimerState(otpClearingTimer);
                 setResendOTPEnabledState(false);
-                setInfoAlertState({show: true, msg: "An OTP has been sent to your new email Id. Please input the OTP to validate the email Id."});
+                setInfoAlertState({show: true, msg: "An OTP has been sent to your new mobile. Please input the OTP to validate the mobile."});
             }
             else{
                 setGeneratedOtpState('');
@@ -369,7 +368,7 @@ const Security = () => {
                             </IonList>
                         </form>
                     </div>
-                    <PasswordResetForm onNewPasswordInput={updatePassword}/>
+                    <PasswordResetForm onNewPasswordInput={updatePassword} email={loginContext.customer.email} password={loginContext.customer.password}/>
             </IonContent>
         </IonPage>
     )

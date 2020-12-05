@@ -16,6 +16,11 @@ const AppPages =
       icon: 'person'
     },
     {
+      title: 'Track Order',
+      url: '/home',
+      icon: 'location'
+    },
+    {
       title: 'My Orders',
       url: '/orders',
       icon: 'create'

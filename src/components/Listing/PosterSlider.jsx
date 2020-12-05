@@ -7,7 +7,7 @@ import PosterSkeleton from './PosterSkeleton';
 const PosterSlider = (props) => {
 
     const sliderOptions = {
-        initialSlide: 1,
+        initialSlide: 0,
         slidesPerView: props.slidesPerView,
         loop: props.loop,
         centeredSlides: props.centeredSlides,

@@ -13,18 +13,18 @@ const OrderReview = (props) => {
             <IonGrid className="p-2">
                 <IonRow className="p-2 ion-text-center border-bottom border-secondary">
                     <IonCol>
-                        <IonText className="headtext" color="primary">Please review your order</IonText>
+                        <IonText className="headtext" color="light">Please review your order</IonText>
                     </IonCol>
                 </IonRow>
                 <IonRow className="p-2 border-bottom border-secondary">
                     <IonCol size="6" className="ion-text-left">
-                        <IonText color="primary">Item</IonText>         
+                        <IonText color="light">Item</IonText>         
                     </IonCol>
                     <IonCol size="2" className="ion-text-right">   
-                        <IonText color="primary">count</IonText>
+                        <IonText color="light">count</IonText>
                     </IonCol>
                     <IonCol size="4" className="ion-text-right">
-                        <IonText color="primary">Price</IonText>
+                        <IonText color="light">Price</IonText>
                     </IonCol>
                 </IonRow>
                 {props.preOrder.orderItems && props.preOrder.orderItems.map((orderItem, index) => {
@@ -42,7 +42,7 @@ const OrderReview = (props) => {
                 })}
                 <IonRow className="ion-text-right p-0 pr-2">
                     <IonCol size="6" className="p-0">
-                        <IonLabel color="primary"><span>Sub Total:</span></IonLabel>
+                        <IonLabel color="light"><span>Sub Total:</span></IonLabel>
                     </IonCol>
                     <IonCol size="6" className="p-0">
                         <IonLabel><div>{'₹'+props.preOrder.orderTotal}</div></IonLabel>
@@ -82,7 +82,7 @@ const OrderReview = (props) => {
                 </IonRow>
                 <IonRow className="ion-text-right p-0">
                     <IonCol size="6">
-                            <IonLabel color="primary"><span>Bill Amount:</span></IonLabel>
+                            <IonLabel color="light"><span>Bill Amount:</span></IonLabel>
                     </IonCol>
                     <IonCol size="6">
                             <h6>{'₹'+props.preOrder.finalTotal}</h6>

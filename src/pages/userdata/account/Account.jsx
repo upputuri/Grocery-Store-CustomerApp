@@ -108,7 +108,7 @@ const Account = (props) => {
                         <IonRow className="ion-text-center">
                             <IonCol>
                                 <div>
-                                    <IonText color="primary"><h5>{loginContext.customer.fname+" "+loginContext.customer.lname}</h5></IonText>
+                                    <IonText color="light"><h5>{loginContext.customer.fname+" "+loginContext.customer.lname}</h5></IonText>
                                     <IonText><span>{loginContext.customer.email}</span></IonText>                                        
                                 </div>
                             </IonCol>
@@ -124,32 +124,26 @@ const Account = (props) => {
                     <IonItemGroup>
                         <IonRouterLink routerLink="/account/security">
                             <IonItem color="night" lines="full" className="border-bottom border-secondary">
-                                <IonIcon slot="start" icon={keyIcon} color="primary" size="small"/>
+                                <IonIcon slot="start" icon={keyIcon} color="light" size="small"/>
                                 <IonLabel>{'Login & Security'}</IonLabel>
                             </IonItem>
                         </IonRouterLink>
                         <IonRouterLink routerLink="/account/profile">
                             <IonItem color="night" lines="full" className="border-bottom border-secondary">
-                                <IonIcon slot="start" icon={personIcon} color="primary" size="small"/>
+                                <IonIcon slot="start" icon={personIcon} color="light" size="small"/>
                                 <IonLabel>Profile</IonLabel>
                             </IonItem>
                         </IonRouterLink>
                         <IonRouterLink routerLink="/account/addresslist">
                             <IonItem color="night" lines="full" className="border-bottom border-secondary">
-                                <IonIcon slot="start" icon={navigateIcon} color="primary" size="small"/>
+                                <IonIcon slot="start" icon={navigateIcon} color="light" size="small"/>
                                 <IonLabel>Addresses</IonLabel>
                             </IonItem>
                         </IonRouterLink>
                         <IonRouterLink routerLink="/contactus">
                             <IonItem color="night" lines="full" className="border-bottom border-secondary">
-                                <IonIcon slot="start" icon={mailIcon} color="primary" size="small"/>
-                                <IonLabel>Submit a query</IonLabel>
-                            </IonItem>
-                        </IonRouterLink>
-                        <IonRouterLink routerLink="/support">
-                            <IonItem color="night" lines="full">
-                                <IonIcon slot="start" icon={phoneIcon} color="primary" size="small"/>
-                                <IonLabel>Contact Us</IonLabel>
+                                <IonIcon slot="start" icon={mailIcon} color="light" size="small"/>
+                                <IonLabel>Tickets</IonLabel>
                             </IonItem>
                         </IonRouterLink>
                     </IonItemGroup>
@@ -157,7 +151,7 @@ const Account = (props) => {
                 <IonGrid className="mt-3 card bg-black profile-box text-center">
                     <IonItem color="night">
                         <IonCheckbox slot="start" onClick={toggleSubscription} checked={subscribedState} />
-                        <IonText className="maintext" color="primary">{!subscribedState ? 'Sign Up ': 'You are signed up '}for our newsletter and to get updates</IonText>
+                        <IonText className="maintext" color="light">Sign Up for our newsletter and to get updates</IonText>
                     </IonItem>
                 </IonGrid>
             </IonContent>

@@ -136,6 +136,10 @@ const Profile = () => {
         }
     }
 
+    const customPickerOptions = {
+        cssClass: 'groc-date-picker'
+        };
+
     if (profileState !== null) {
         return (
             <IonPage>
@@ -207,7 +211,7 @@ const Profile = () => {
                                 <IonItem>
                                     <IonLabel position="stacked">Date of Birth
                                     </IonLabel>
-                                    <IonDatetime placeholder="Date of Birth" type="date" disabled={!editableState}
+                                    <IonDatetime pickerOptions={customPickerOptions} placeholder="Date of Birth" type="date" disabled={!editableState}
                                     onIonChange={setDob}
                                     value={dobState}></IonDatetime>
                                 </IonItem>

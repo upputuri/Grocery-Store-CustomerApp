@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider } from '@ionic/react';
+import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider, IonGrid } from '@ionic/react';
 import React, { useContext, useState } from 'react';
 import { Redirect, useHistory, useLocation } from 'react-router';
 import { LoginContext } from '../../App';
@@ -89,16 +89,16 @@ const Login = (props) =>
                 </IonTitle>
             </IonToolbar>
             </IonHeader>
-            <IonContent className="ion-padding shop-cart-page" color="dark">
-            <div className="card mb-2">
-                <div className="border-bottom text-center p-3">
+            <IonContent className="ion-padding" color="dark">
+            <IonGrid>
+                <div className="border-bottom text-center p-2">
                   <img alt="img" className="single-img" src={logoURL}/>
                 </div>
-                <div className="p-3">
+                <div className="p-2">
                     <form className="card">
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
-                            <IonLabel position="stacked">
+                            <IonLabel color="dark" position="stacked">
                                 Email Id/Mobile No.
                                 <IonText color="danger">*</IonText>
                             </IonLabel>
@@ -126,16 +126,14 @@ const Login = (props) =>
                     </IonList>}
                     </form>
                 </div>
-                <div className="p-3 border-top">
+                <div className="p-2 border-top">
                     <IonButton color="secondary" routerDirection="forward" expand="block" onClick={passwordLoginRequestHandler} className="ion-no-margin">Submit</IonButton>
-                    <div className='ion-text-center m-3'></div>
+                    <div className='ion-text-center m-2'></div>
                     <IonButton color="secondary" routerDirection="forward" expand="block" onClick={()=>history.push('/resetpass')} className="ion-no-margin">Forgot Password?</IonButton>
-                    <div className='ion-text-center m-3'></div>
-                    <IonButton color="danger" routerDirection="forward" expand="block" onClick={googleLoginClicked} className="ion-no-margin">Login With Google</IonButton>
-                    <div className='ion-text-center m-3'>New User?</div>
+                   <div className='ion-text-center m-2'>New User?</div>
                     <IonButton color="secondary" routerDirection="forward" expand="block" onClick={()=>history.push('/register')} className="ion-no-margin">Sign Up</IonButton>                    
                 </div>
-            </div>
+            </IonGrid>
             </IonContent>
         </IonPage>
     );

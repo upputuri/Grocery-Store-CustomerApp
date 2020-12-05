@@ -15,12 +15,12 @@ const OrderConfirm = (props) => {
                 <IonGrid className="p-2">
                     <IonRow className="p-2 ion-text-center border-bottom border-secondary">
                         <IonCol>
-                            <IonText className="headtext" color="primary">Please confirm your order before proceeding</IonText>
+                            <IonText className="headtext" color="light">Please confirm your order before proceeding</IonText>
                         </IonCol>
                     </IonRow>
                     <IonRow className="ion-text-right p-0 pr-2">
                         <IonCol size="6" className="p-0">
-                            <IonLabel color="primary"><span>Order Total:</span></IonLabel>
+                            <IonLabel color="light"><span>Order Total:</span></IonLabel>
                         </IonCol>
                         <IonCol size="6" className="p-0">
                             <IonLabel><div>{'₹'+props.preOrder.orderTotal}</div></IonLabel>
@@ -60,7 +60,7 @@ const OrderConfirm = (props) => {
                     </IonRow>
                     <IonRow className="ion-text-right p-0">
                         <IonCol size="6">
-                                <IonLabel color="primary"><span>Bill Amount:</span></IonLabel>
+                                <IonLabel color="light"><span>Bill Amount:</span></IonLabel>
                         </IonCol>
                         <IonCol size="6">
                                 <h6>{'₹'+props.preOrder.finalTotal}</h6>
@@ -77,6 +77,17 @@ const OrderConfirm = (props) => {
                             state={props.preOrder.shippingAddress.state}
                             zipCode={props.preOrder.shippingAddress.zipcode}
                             phone={props.preOrder.shippingAddress.phoneNumber} />
+
+                <AddressTile title="Billing address:"
+                            addressId={props.preOrder.billingAddress.id}
+                            fName={props.preOrder.billingAddress.firstName}
+                            lName={props.preOrder.billingAddress.lastName}
+                            line1={props.preOrder.billingAddress.line1}
+                            line2={props.preOrder.billingAddress.line2}
+                            city={props.preOrder.billingAddress.city}
+                            state={props.preOrder.billingAddress.state}
+                            zipCode={props.preOrder.billingAddress.zipcode}
+                            phone={props.preOrder.billingAddress.phoneNumber} />
             </IonContent>
         )
         

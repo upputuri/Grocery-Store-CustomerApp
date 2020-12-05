@@ -68,43 +68,39 @@ const Support = () => {
                 <IonContent className="ion-padding" color="dark">
                 <IonGrid color="night">
                     <IonRow className="ion-text-left border-bottom border-secondary">
-                        <IonCol className="p-3 ion-text-center"><IonText className="headtext" color="primary">Got a question? Call or Email Us</IonText></IonCol>
+                        <IonCol className="p-3 ion-text-center"><IonText className="headtext" color="light">Got a question? Call or Email Us</IonText></IonCol>
                     </IonRow>
                     <IonRow className="ion-text-left border-bottom border-secondary">
                         <IonCol>
                             <IonList className="bg-black menu-top-section">
-                                <IonMenuToggle auto-hide="false" >
-                                <IonItem color="night" detail="false">
-                                    <IonIcon color="primary" icon={phoneIcon} slot="start"/>
+                                <IonItem color="night" detail="false" href={'tel:'+variablesState.contact_no}>
+                                    <IonIcon color="light" icon={phoneIcon} slot="start"/>
                                     <IonText color="">{variablesState.contact_no}</IonText>
                                 </IonItem>
-                                </IonMenuToggle>
-                                <IonMenuToggle auto-hide="false" >
-                                <IonItem color="night" detail="false">
-                                    <IonIcon color="primary" icon={mailIcon} slot="start"/>
+                                <IonItem color="night" detail="false" href={'mailto:'+variablesState.contact_email}>
+                                    <IonIcon color="light" icon={mailIcon} slot="start"/>
                                     <IonText color="">{variablesState.contact_email}</IonText>
                                 </IonItem>
-                                </IonMenuToggle>
                             </IonList>
                         </IonCol>
                     </IonRow>
-                    <IonRow className="ion-text-left p-3">
+                    <IonRow className="ion-text-center">
+                        <IonCol>
+                            <IonText>Stay in Touch</IonText>
+                        </IonCol>
+                    </IonRow>
+                    <IonRow className="ion-text-left p-3 border-bottom border-secondary">
                         <IonCol>
                             <div className="d-flex justify-content-around">
                                 {socialHandlesState && socialHandlesState.youtube && 
-                                <a href={socialHandlesState.youtube}><IonIcon  size="large" color="primary" icon={youtubeIcon}/></a>}
+                                <a href={socialHandlesState.youtube}><IonIcon  size="large" color="light" icon={youtubeIcon}/></a>}
                                 {socialHandlesState && socialHandlesState.twitter && 
-                                <a href={socialHandlesState.twitter}><IonIcon  size="large" color="primary" icon={twitterIcon}/></a>}
+                                <a href={socialHandlesState.twitter}><IonIcon  size="large" color="light" icon={twitterIcon}/></a>}
                                 {socialHandlesState && socialHandlesState.instagram && 
-                                <a href={socialHandlesState.instagram}><IonIcon  size="large" color="primary" icon={instaIcon}/></a>}
+                                <a href={socialHandlesState.instagram}><IonIcon  size="large" color="light" icon={instaIcon}/></a>}
                                 {socialHandlesState && socialHandlesState.facebook && 
-                                <a href={socialHandlesState.facebook}><IonIcon  size="large" color="primary" icon={fbIcon}/></a>}
+                                <a href={socialHandlesState.facebook}><IonIcon  size="large" color="light" icon={fbIcon}/></a>}
                             </div>
-                        </IonCol>
-                    </IonRow>
-                    <IonRow className="ion-text-center border-bottom border-secondary">
-                        <IonCol>
-                            <IonText>STAY IN TOUCH</IonText>
                         </IonCol>
                     </IonRow>
                     <IonRow>
@@ -114,7 +110,7 @@ const Support = () => {
                                     <IonCol size="1"></IonCol>
                                     <IonCol className="ion-text-wrap" size="11">
                                         <IonText className="maintext">Our Head office:</IonText>
-                                        <IonText className="headtext" color="primary"><h5>{variablesState.company_name}</h5></IonText>
+                                        <IonText className="headtext" color="light"><h5>{variablesState.company_name}</h5></IonText>
                                         <IonLabel className="ion-text-wrap">{variablesState.address_line_1}<br/>
                                                     {variablesState.address_line_2}<br/>
                                                     {variablesState.city}<br/>

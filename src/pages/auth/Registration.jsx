@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider, IonCheckbox } from '@ionic/react';
+import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider, IonCheckbox, IonGrid } from '@ionic/react';
 import React, { useContext, useState } from 'react';
 import { Redirect, useHistory } from 'react-router';
 import { LoginContext } from '../../App';
@@ -129,12 +129,12 @@ const Registration = () =>
                 </IonTitle>
             </IonToolbar>
             </IonHeader>
-            <IonContent className="ion-padding shop-cart-page" color="dark">
-            <div className="card mb-2">
-                <div className="border-bottom text-center p-3">
+            <IonContent className="ion-padding" color="dark">
+            <IonGrid>
+                <div className="border-bottom text-center p-2">
                   <img alt="img" className="single-img" src={logoURL}/>
                 </div>
-                <div className="p-3">
+                <div className="p-2">
                     <form className="card">
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
@@ -198,7 +198,7 @@ const Registration = () =>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                       <IonItem>
                           <IonCheckbox slot="start" onClick={toggleAccept} checked={acceptedState} />
-                          <IonText className="subtext" color="primary">{'I accept the terms & conditions'}</IonText>
+                          <IonText className="subtext" color="tertiary">{'I accept the terms & conditions'}</IonText>
                       </IonItem>
                     </IonList>                   
                     {errorState !== '' &&
@@ -211,12 +211,12 @@ const Registration = () =>
                     </IonList>}
                     </form>
                 </div>
-                <div className="p-3 border-top">
+                <div className="p-2 border-top">
                     <IonButton color="secondary" routerDirection="forward" expand="block" onClick={sendRegisterRequest} className="ion-no-margin">Submit</IonButton>
                     {/* <div className='ion-text-center m-3'>Registered User?</div>
                     <IonButton color="secondary" routerDirection="forward" expand="block" onClick={()=>history.goBack()} className="ion-no-margin">Login</IonButton> */}
                 </div>
-            </div>
+            </IonGrid>
             </IonContent>
         </IonPage>
     )

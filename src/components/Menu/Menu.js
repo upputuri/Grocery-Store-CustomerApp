@@ -68,7 +68,7 @@ const GrocMenu = (props) => {
                         <img alt="img" src={context.customer.image ? profileImageStoreURL + "/" + context.customer.image : "assets/user/blank_profile.png"}>
                         </img></IonAvatar>
                       {(context.customer.fname || context.customer.lname) && <IonItem color="night" detail="false">  
-                        <IonText color="primary">{"Hello, "+context.customer.fname+" "+context.customer.lname}</IonText>
+                        <IonText color="light">{"Hello, "+context.customer.fname+" "+context.customer.lname}</IonText>
                       </IonItem>}
                       {/* {context.customer.email && <IonItem color="night" detail="false">
                         <IonNote>{context.customer.email}</IonNote>
@@ -81,8 +81,8 @@ const GrocMenu = (props) => {
                       <IonRouterLink routerLink="/login">
                         <IonMenuToggle auto-hide="false" >
                           <IonItem color="night" detail="false">
-                            <IonIcon color="primary" icon={logInIcon} slot="start"/>
-                            <IonText color="primary"><strong>Login/Register</strong></IonText>
+                            <IonIcon color="light" icon={logInIcon} slot="start"/>
+                            <IonText color="light"><strong>Login/Register</strong></IonText>
                           </IonItem>
                         </IonMenuToggle>
                       </IonRouterLink>
@@ -170,7 +170,7 @@ const GrocMenu = (props) => {
 
           {loginContext.isAuthenticated && <IonMenuToggle auto-hide="false" >
             <IonItem onClick={handleLogout} color="night" detail="false">
-              <IonIcon color="danger" icon={logOutIcon} slot="start"/>
+              <IonIcon color="light" icon={logOutIcon} slot="start"/>
               <IonText>Logout</IonText>
             </IonItem>
           </IonMenuToggle>}

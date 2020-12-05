@@ -11,7 +11,7 @@ const ItemListing1 = () => {
                     <img alt="img" className="not-found-img" src="assets/small/1.jpg"/>
                 </div>
                 <div className="shop-cart-right">
-                    <IonText color="primary">
+                    <IonText color="light">
                     <div className="mb-2">Apples
                     </div>
                     </IonText>
@@ -39,7 +39,7 @@ const ItemListing1 = () => {
                 </div>
 
                 <div className="shop-cart-right">
-                <IonText color="primary">
+                <IonText color="light">
                     <div className="mb-2">Guavas
                 </div>
                 </IonText>
@@ -69,7 +69,7 @@ const ItemListing1 = () => {
                 </div>
 
                 <div className="shop-cart-right">
-                <IonText color="primary">
+                <IonText color="light">
                     <div className="mb-2">Pineapple
                 </div>
                 </IonText>
@@ -97,7 +97,7 @@ const ItemListing1 = () => {
                 </div>
 
                 <div className="shop-cart-right">
-                <IonText color="primary">
+                <IonText color="light">
                     <div className="mb-2">Grapes
                 </div>
                 </IonText>

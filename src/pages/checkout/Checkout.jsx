@@ -1,4 +1,4 @@
-import { IonAlert, IonButton, IonButtons, IonContent, IonFooter, IonHeader, IonIcon, IonLoading, IonPage, IonRow, IonToolbar } from '@ionic/react';
+import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonLoading, IonPage, IonRow, IonText, IonToolbar } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { Switch, useHistory } from 'react-router';
 import { CartContext, LoginContext } from '../../App';
@@ -6,25 +6,28 @@ import BaseToolbar from '../../components/Menu/BaseToolbar';
 import { chevronForwardOutline as nextIcon, chevronBackOutline as previousIcon } from 'ionicons/icons';
 import DeliveryOptions from '../../components/checkout/DeliveryOptions';
 import Client from 'ketting';
-import { logoURL, razorPayKey, serviceBaseURL } from '../../components/Utilities/ServiceCaller';
+import { logoURL, serviceBaseURL } from '../../components/Utilities/ServiceCaller';
 import PaymentOptions from '../../components/checkout/PaymentOptions';
 import OrderReview from '../../components/checkout/OrderReview'
 import OrderConfirm from '../../components/checkout/OrderConfirm';
+import BillingOptions from '../../components/checkout/BillingOptions';
+import { generateOrderId, sendEmailNotification, sendMobileNotification } from '../../components/Utilities/AppCommons';
 
 var RazorpayCheckout = require('com.razorpay.cordova/www/RazorpayCheckout');
 
 const Checkout = (props) => {
-    const [deliveryOptionsPhase, orderReviewPhase, PaymentOptionsPhase, OrderConfirmPhase] = [
-                                                                            {title: 'Choose Delivery'},
+    const [deliveryOptionsPhase, billingOptionsPhase, orderReviewPhase, PaymentOptionsPhase, OrderConfirmPhase] = [
+                                                                            {title: 'Select a delivery address'},
+                                                                            {title: 'Select a billing address'},
                                                                             {title: 'Review Order'},
                                                                             {title: 'Choose Payment'},
                                                                             {title: 'Confirm & Pay'}
                                                                         ];                                                                    
-    const phases = [deliveryOptionsPhase, orderReviewPhase, PaymentOptionsPhase, OrderConfirmPhase];
+    const phases = [deliveryOptionsPhase, billingOptionsPhase, orderReviewPhase, PaymentOptionsPhase, OrderConfirmPhase];
     const [phaseData, setPhaseData] = useState(null);
     const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
     const [shippingAddressIdState, setShippingAddressIdState] = useState(0);
-    
+    const [statesList, setStatesList] = useState(undefined);
     const [finalBillAmountState, setFinalBillAmountState] = useState(0);
     const [loadingState, setLoadingState] = useState(false);
     const [confirmAlertState, setConfirmAlertState] = useState({show: false, msg: ''});
@@ -41,15 +44,18 @@ const Checkout = (props) => {
     useEffect(()=>{
         switch (currentPhaseIndex) {
             case 0:
-                loadAddressList();
-                break;
             case 1:
-                loadPreOrderSummary();
+                loadStatesList().then(()=>{
+                    loadAddressList();
+                });
                 break;
             case 2:
-                loadPaymentOptions();
+                loadPreOrderSummary();
                 break;
             case 3:
+                loadPaymentOptions();
+                break;
+            case 4:
                 loadPreOrderSummary();
             default:
                 break;
@@ -90,6 +96,70 @@ const Checkout = (props) => {
         setPhaseData(addresses);
         console.log("Loaded addresses from server");
         setLoadingState(false);  
+    }
+
+    const loadStatesList = async () => {
+        let path = serviceBaseURL + '/application/states';
+        const client = new Client(path);
+        const resource = client.go();
+        setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
+        let receivedState;
+        try{
+            receivedState = await resource.get();
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e);
+            setLoadingState(false);
+            setServiceRequestAlertState({show: true, msg: e.toString()});
+            return;
+        }
+        // alert(JSON.stringify(receivedState));
+        const states = receivedState.getEmbedded().map((state) => state.data);
+        console.log("Loaded states from server");
+        // alert(JSON.stringify(states));
+        setStatesList(states);
+    }
+
+    const createAddressRequest = async (address) => {
+        console.log("Creating address: "+JSON.stringify(address));
+        let path = serviceBaseURL + '/customers/'+loginContext.customer.id+'/addresses';
+        const client = new Client(path);
+        const resource = client.go();
+        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
+        const loginHeaders = new Headers();
+        loginHeaders.append("Content-Type", "application/json");
+        loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
+        setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
+        let receivedState;
+        try{
+            receivedState = await resource.post({
+                data: address,
+                headers: loginHeaders
+            });
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e);
+            if (e.status && e.status === 401)//Unauthorized
+            {
+                history.push("/login");
+                return;
+            } 
+            setLoadingState(false);
+            setServiceRequestAlertState({show: true, msg: e.toString()});
+            return;
+        }
+        console.log("Updated address on server - address Id "+address.id);
+        setLoadingState(false);         
+    }
+
+    const saveNewAddress = (address) => {
+        //Send service request
+        console.log("Saving edited address with Id "+ address.id);
+        createAddressRequest(address).then(()=>{loadAddressList()})
     }
 
     const loadPreOrderSummary = async () => {
@@ -141,6 +211,7 @@ const Checkout = (props) => {
         setLoadingState(false);
 
     }
+
     const loadPaymentOptionsWithType = async (type) => {
         let path = serviceBaseURL + '/application/paymentoptions?type='+type;
         const client = new Client(path);
@@ -204,9 +275,9 @@ const Checkout = (props) => {
     }
 
     const forwardExit = () => {
-        loadPreOrderSummary().then(()=>{
-            setConfirmAlertState({show: true, msg: "Ready to place order?"});
-        });
+        // loadPreOrderSummary().then(()=>{
+        //     setConfirmAlertState({show: true, msg: "Ready to place order?"});
+        // });
     }
     
     const sendPlaceOrderRequest = () => {
@@ -219,6 +290,11 @@ const Checkout = (props) => {
             cartContext.placeOrder().then((newOrderId)=>{
                 console.log("Promise resolved new orderId "+newOrderId);
                 history.push("/orderplaced?id="+newOrderId);
+                if (newOrderId > 0) {
+                    const msg = "Thank you for shopping with us! Your order has been placed successfully. We will process your order at the earliest";
+                    sendEmailNotification(loginContext, "We have received your order", msg);
+                    sendMobileNotification(loginContext, msg);
+                }
                 // setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before placing the order again!'});
             });
         }
@@ -233,13 +309,19 @@ const Checkout = (props) => {
 
     const checkPhaseDone = () => {
         return (currentPhaseIndex === 0 && cartContext.order.deliveryAddressId > 0) ||
-        (currentPhaseIndex === 1 && true) ||
-        (currentPhaseIndex === 2 && cartContext.order.paymentType !== null)
+        (currentPhaseIndex === 1 && cartContext.order.billingAddressId > 0) ||
+        (currentPhaseIndex === 2 && true) ||
+        (currentPhaseIndex === 3 && cartContext.order.paymentType !== null)
     }
 
     const deliveryAddressSelected = (addressId) => {
         console.log("Address seleted for delivery - Id: "+addressId);
-        cartContext.setDeliveryAddress(addressId);
+        cartContext.setDeliveryAndBillingAddress(addressId, 0);
+    }
+
+    const billingAddressSelected = (addressId) => {
+        console.log("Address seleted for billing - Id: "+addressId);
+        cartContext.setBillingAddress(addressId);
     }
 
     const preOrderConfirmed = () => {
@@ -300,7 +382,12 @@ const Checkout = (props) => {
         cartContext.placeOrder(JSON.stringify(success)).then((newOrderId)=>{
             // console.log("Promise resolved new orderId "+newOrderId);
             history.push("/orderplaced?id="+newOrderId);
-                // setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before placing the order again!'});
+            if (newOrderId > 0) {
+                const msg = "Thank you for shopping with us. Your order Id is "+newOrderId+". We will process your order at the earliest";
+                sendEmailNotification(loginContext.customer.email, msg);
+                sendMobileNotification(loginContext.customer.mobile, msg);
+            }
+            // setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before placing the order again!'});
         });
     }
     
@@ -324,23 +411,37 @@ const Checkout = (props) => {
         return (
             <IonPage>
                 <IonHeader className="osahan-nav border-white border-bottom">
-                    <BaseToolbar title="Checking Out"/>     
+                    <BaseToolbar title="Checking Out"/>
+                    <IonRow className="osahan-nav border-white border-top">
+                        <IonCol className="ion-padding">
+                            <IonText color="light" className="maintext">{phases[currentPhaseIndex] && phases[currentPhaseIndex].title}</IonText>
+                        </IonCol>
+                    </IonRow>     
                 </IonHeader>
                 <IonLoading isOpen={loadingState}/>
 
-                {currentPhaseIndex === 0 && <DeliveryOptions addresses={phaseData} 
-                                                                selectedAddressId={cartContext.order.deliveryAddressId} 
-                                                                addressSelectHandler={deliveryAddressSelected}/>}
-                {currentPhaseIndex === 1 && <OrderReview 
+                {currentPhaseIndex === 0 && <DeliveryOptions addresses={phaseData}
+                                                                states={statesList} 
+                                                                selectedDeliveryAddressId={cartContext.order.deliveryAddressId}
+                                                                selectedBillingAddressId={cartContext.order.billingAddressId}
+                                                                onDeliveryAddressSelected={deliveryAddressSelected}
+                                                                onBillingAddressSelected={billingAddressSelected}
+                                                                addressAddHandler={saveNewAddress}/>}
+                {currentPhaseIndex === 1 && <BillingOptions addresses={phaseData}
+                                                                states={statesList} 
+                                                                selectedBillingAddressId={cartContext.order.billingAddressId}
+                                                                onBillingAddressSelected={billingAddressSelected}
+                                                                addressAddHandler={saveNewAddress}/>}
+                {currentPhaseIndex === 2 && <OrderReview 
                                                     preOrder={phaseData} 
                                                     preOrderConfirmHandler={preOrderConfirmed}
                                                     promoCodeApplied={updatePromoCodeInCart}
                                                     promoCodeCleared={clearPromoCodeInCart}
                                                     appliedPromoCode={cartContext.order.promoCodes[0]}/>}
-                {currentPhaseIndex === 2 && <PaymentOptions paymentOptions={phaseData} 
+                {currentPhaseIndex === 3 && <PaymentOptions paymentOptions={phaseData} 
                                                             selectedOption={cartContext.order.paymentOptionId}
                                                             paymentOptionSelectHandler={paymentOptionConfirmed}/>}           
-                {currentPhaseIndex === 3 && <OrderConfirm preOrder={phaseData}/>}       
+                {currentPhaseIndex === 4 && <OrderConfirm preOrder={phaseData}/>}       
 
                 <IonAlert isOpen={confirmAlertState.show}
                             onDidDismiss={()=> setConfirmAlertState({...confirmAlertState, show: false})}
@@ -355,7 +456,7 @@ const Checkout = (props) => {
                             message={infoAlertState.msg}
                             buttons={['OK']}/>
                 <IonFooter>
-                    <IonToolbar color="secondary">
+                    <IonToolbar color="night border-white border-top">
                             <IonButtons slot="start">
                                 <IonButton onClick={goBack} className="ion-no-margin">
                                     <IonIcon size="large" icon={previousIcon}></IonIcon>Back

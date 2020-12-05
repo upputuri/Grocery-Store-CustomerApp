@@ -22,7 +22,7 @@ const Policies = () => {
                     {[0,1,2,3].map((i) =>{
                         return <IonList key={i} color="night" lines="full" className="ion-no-margin ion-no-padding">
                                     <IonItem className={selectedIndex===i?"":"border-bottom"} color="night" onClick={()=>toggleSelectedIndex(i)} id={i}>
-                                        <IonText color="primary">
+                                        <IonText color="light">
                                         <IonIcon className="mr-2" icon={selectedIndex === i? arrowDownIcon : arrowRightIcon}/>
                                         {'Policy on topic '+' '+i+'?'}</IonText>
                                     </IonItem>

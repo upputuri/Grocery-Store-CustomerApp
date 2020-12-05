@@ -127,7 +127,7 @@ const Home = () => {
     let receivedData;
     try{
         console.log("Making service call: "+resource.uri);
-        receivedData = await resource.get();
+        receivedData = await resource.post();
     }
     catch(e)
     {
@@ -160,7 +160,7 @@ const Home = () => {
     let receivedData;
     try{
         console.log("Making service call: "+resource.uri);
-        receivedData = await resource.get();
+        receivedData = await resource.post();
     }
     catch(e)
     {
@@ -237,7 +237,7 @@ const Home = () => {
             <div className="home-page-slide ion-padding">
               <IonRow className="ion-text-center">
                 <IonCol className="p-1">
-                  <IonIcon className="mr-1" icon={peopleIcon} size="small" color="primary"/>
+                  <IonIcon className="mr-1" icon={peopleIcon} size="small" color="light"/>
                   <IonText color="light" className="headtext">Membership</IonText>
                 </IonCol>
               </IonRow>

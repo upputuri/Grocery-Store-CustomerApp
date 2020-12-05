@@ -110,7 +110,7 @@ const Orders = () => {
                             header={''}
                             cssClass='groc-alert'
                             message={cancelAlertState.msg}
-                            buttons={[{text: 'Yes', handler: processOrderCancel.bind(this, cancelAlertState.orderId)}, 'No']}/>                    
+                            buttons={[{text: 'Yes', handler: processOrderCancel.bind(this, cancelAlertState.orderId)}, {text: 'No'}]}/>                    
                 <IonContent className="ion-padding" color="dark">
                     {ordersState && ordersState.length > 0 ?
                         ordersState.map((order) =>{
@@ -142,7 +142,6 @@ const Orders = () => {
                         isOpen={serviceRequestAlertState.show}
                         header={'Error'}
                         cssClass='groc-alert'
-                        subHeader={serviceRequestAlertState.msg}
                         message={'Failed to load'}
                         buttons={[{text: 'Cancel', 
                                     handler: ()=>{history.push('/home')}

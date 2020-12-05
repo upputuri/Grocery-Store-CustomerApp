@@ -3,17 +3,11 @@ import React, { useState } from 'react';
 import AddressTile from '../Cards/AddressTile';
 import AddressForm from '../forms/AddressForm';
 
-const DeliveryOptions = (props) => {
+const BillingOptions = (props) => {
     const [editingState, setEditingState] = useState(false);
-    const [billingAddressSameState, setBillingAddressSameState] = useState(false);
 
-    const toggleBilllingAddressSameSelection = (addressId) => {
-        !billingAddressSameState ? props.onBillingAddressSelected(addressId) : props.onBillingAddressSelected(0);
-        setBillingAddressSameState(!billingAddressSameState);
-    }
-
-    const selectShippingAddress = (addressId) => {
-        props.onDeliveryAddressSelected(addressId);
+    const selectBillingAddress = (addressId) => {
+        props.onBillingAddressSelected(addressId);
     }
 
     const openNewAddressForm = () => {
@@ -34,13 +28,6 @@ const DeliveryOptions = (props) => {
 
     return (
         <IonContent className="ion-padding" color="dark">
-            {/* <IonGrid>
-                <IonRow>
-                    <IonCol>
-                        <IonText color="light">Please select a shipping address</IonText>
-                    </IonCol>
-                </IonRow>
-            </IonGrid> */}
             {!editingState ? <IonButton color="secondary" expand="block" onClick={openNewAddressForm} className="ion-no-margin">Add New Address</IonButton>
             :
             <AddressForm 
@@ -50,8 +37,7 @@ const DeliveryOptions = (props) => {
                     backClickHandler={cancelEdit.bind(this, -1)}/>}
 
             {props.addresses && props.addresses.length > 0 && props.addresses.map((address)=>{
-                return  <div key={address.id}>
-                            <AddressTile 
+                return  <AddressTile 
                                     addressId={address.id}
                                     key={address.id}
                                     fName={address.firstName}
@@ -63,22 +49,13 @@ const DeliveryOptions = (props) => {
                                     stateId={address.stateId}
                                     zipCode={address.zipcode}
                                     phone={address.phoneNumber} 
-                                    selectedId={props.selectedDeliveryAddressId}
-                                    selectedMessage='Selected for Delivery'
-                                    selectClickHandler={selectShippingAddress.bind(this, address.id)} />
-                            {address.id === props.selectedDeliveryAddressId &&                 
-                            <IonGrid className="text-center">
-                                <IonItem color="night">
-                                    <IonCheckbox slot="start" onClick={toggleBilllingAddressSameSelection.bind(this, address.id)} checked={address.id === props.selectedBillingAddressId} />
-                                    <IonText className="maintext" color="light">My Billing address is same</IonText>
-                                </IonItem>
-                            </IonGrid>}
-                        </div>
+                                    selectClickHandler={selectBillingAddress.bind(this, address.id)}
+                                    selectedMessage='Selected for Billing'
+                                    selectedId={props.selectedBillingAddressId}/>
+
                 })}
-
-
         </IonContent>
     )
 }
 
-export default DeliveryOptions;
+export default BillingOptions;

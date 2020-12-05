@@ -25,7 +25,7 @@ const CartItemTile = (props) =>
             <IonRow>
                 <IonCol size="auto">
                     {/* <IonText className="subtext" color="danger">Remove</IonText> */}
-                    <IonIcon onClick={deleteItemClicked} size="small" icon={trashIcon} color="primary"></IonIcon>
+                    <IonIcon onClick={deleteItemClicked} size="small" icon={trashIcon} color="light"></IonIcon>
                 </IonCol>
                 <IonCol onClick={viewProduct.bind(this, props.productId)} size="auto">
                     <img alt="img" className="not-found-img m-2" width="70px" height="70px" src={props.image?thumbNailImageStoreURL+'/'+props.image:defaultImageURL}/>
@@ -33,7 +33,7 @@ const CartItemTile = (props) =>
                 <IonCol>
                     <IonRow>
                         <IonCol>
-                            <IonText color="primary"><strong>{props.name}</strong></IonText>
+                            <IonText color="light"><strong>{props.name}</strong></IonText>
                         </IonCol>
                         <IonCol>
                             <div className="ion-text-end text-white">{'₹'+props.totalPriceAfterDiscount}</div>
@@ -41,7 +41,7 @@ const CartItemTile = (props) =>
                     </IonRow>
                     <IonRow>
                         <IonCol size="7">
-                            <IonText color="primary">{props.unitLabel}</IonText>
+                            <IonText color="light">{props.unitLabel}</IonText>
                         </IonCol>                         
                         <IonCol size="5">
                             <div className="d-flex justify-content-end">

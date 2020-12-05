@@ -12,7 +12,7 @@ const OrderPlaced = () => {
     return (
         <IonPage>
             <IonHeader className="osahan-nav border-white border-bottom">
-                <BaseToolbar title="Order Status"/>     
+                <BaseToolbar title="Thank you"/>     
             </IonHeader>
             <IonContent className="ion-padding" color="dark">
             {newOrderId === 0 && 

@@ -25,7 +25,7 @@ const ProductCard = (props: ProductCardProps) =>
             </div>
             <div className="shop-cart-right">
                 <div className="font-weight-normal mb-2 price ml-3">
-                    <IonText color="primary"><h6 className="mb-2 ">{props.name}</h6></IonText>
+                    <IonText color="light"><h6 className="mb-2 ">{props.name}</h6></IonText>
                     <span>
                         {/* <IonText><h5 className="mb-2 text-white">{'₹'+props.discountPrice}
                                     <span><IonText color="success">{props.discount > 0 ? props.discount+'% OFF':''}</IonText></span>

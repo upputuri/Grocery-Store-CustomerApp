@@ -73,9 +73,9 @@ const Cart = (props) =>{
         // alert(JSON.stringify(receivedState));
         // const items = receivedState.getEmbedded().map((itemState) => itemState.data);
         const items = receivedState.data.cartItems;
-        const totalCartCount = items.map((item)=>item.qty).reduce((a, c)=>a+c,0);
+        // const totalCartCount = items.map((item)=>item.qty).reduce((a, c)=>a+c,0);
         // alert(totalCartCount);
-        cartContext.setCartCount(totalCartCount);
+        cartContext.setCartCount(items.length);
         // alert(items.length);
         // const cartTotal = items.reduce((a, item) => a+item.totalPrice, 0.0);
         const cartTotal = receivedState.data.cartTotal;
@@ -130,7 +130,7 @@ const Cart = (props) =>{
             </IonContent>
             <IonLoading isOpen={showLoading}/>
             <IonFooter>
-                <IonToolbar color="secondary">
+                <IonToolbar color="night border-white border-top">
                     <IonRow>
                         <IonCol className="ion-padding">
                             <IonText className="headtext"><small>Cart Total: </small>{'₹'+cartItemsState.cartTotal}</IonText>
@@ -141,7 +141,7 @@ const Cart = (props) =>{
                         </IonCol>
                     </IonRow>
                 </IonToolbar>
-                <IonToolbar color="secondary">
+                <IonToolbar color="night">
                         <IonButtons slot="end">
                             <IonButton onClick={()=>cartItemsState.data && cartItemsState.data.length>0 && history.push('/checkout')} size="small" shape="round">
                                 Checkout<IonIcon size="large" icon={nextIcon}></IonIcon>

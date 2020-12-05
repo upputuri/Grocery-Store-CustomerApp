@@ -5,12 +5,14 @@ import { useHistory } from 'react-router';
 import { LoginContext } from '../../../App';
 import AddressTile from '../../../components/Cards/AddressTile';
 import BaseToolbar from '../../../components/Menu/BaseToolbar';
+import { generateOrderId, generateInvoiceLink, sendEmailNotification, sendMobileNotification } from '../../../components/Utilities/AppCommons';
 import ServiceRequest, { serviceBaseURL } from '../../../components/Utilities/ServiceCaller';
 import StatusText from './StatusText';
 
 const OrderDetail = (props) => {
     const [orderDetailState, setOrderDetailState] = useState(null);
     const [displayTS, setDisplayTS] = useState(null);
+    const [displayOrderId, setDisplayOrderId] = useState(undefined);
     const [loadingState, setLoadingState] = useState(false);
     const [serviceRequestAlertState, setServiceRequestAlertState] = useState({show: false, msg: ''});
     const [cancelAlertState, setCancelAlertState] = useState({show: false, msg: 'Are you sure you want to cancel the order?'});
@@ -56,14 +58,22 @@ const OrderDetail = (props) => {
         const orderDetail = receivedState.data;
         setOrderDetailState(orderDetail);
         let receivedOrderTS = orderDetail.createdTS;
+
         let displayTS = receivedOrderTS;
+        console.log(displayTS);
         if (receivedOrderTS){
             const date = new Date(receivedOrderTS);
-            displayTS = date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear()+" "+date.getHours()+":"+date.getMinutes();
+            displayTS = date.getDate().toString().padStart(2,0)+"-"+
+                        (date.getMonth()+1).toString().padStart(2,0)+"-"+
+                        date.getFullYear()+" "+
+                        date.getHours().toString().padStart(2,0)+":"+
+                        date.getMinutes().toString().padStart(2,0);
         }
         else{
             displayTS = "Unavailable";
         }
+        let displayOrderId = generateOrderId(orderDetail.id, receivedOrderTS);
+        setDisplayOrderId(displayOrderId);
         setDisplayTS(displayTS);
         
         console.log("Loaded order detail from server");
@@ -99,6 +109,13 @@ const OrderDetail = (props) => {
         setCancelAlertState({...cancelAlertState, show: true});
     }
 
+    const sendInvoice = () => {
+        const invoiceLink = generateInvoiceLink(loginContext.customer.mobile, orderDetailState.id);
+        console.log("Generated invoice link :"+invoiceLink);
+        const message = "Invoice for your order id "+displayOrderId+" is generated. Please use the following link to download. "+invoiceLink;
+        // sendEmailNotification(loginContext, "Invoice generated", message);
+        // sendMobileNotification(loginContext, message);
+    }
 
     if (orderDetailState !== null){
         return (
@@ -123,15 +140,15 @@ const OrderDetail = (props) => {
                     <IonGrid className="p-2">
                         <IonRow className="ion-text-center border-bottom border-secondary">
                         <IonCol className="p-3">
-                            <IonText color="primary">{'Order# '+orderDetailState.id}</IonText>
+                            <IonText color="light">{displayOrderId}</IonText>
                         </IonCol>
                         <IonCol className="p-3">
-                            <IonText color="primary">{'₹'+orderDetailState.finalTotal}</IonText>
+                            <IonText color="light">{'₹'+orderDetailState.finalTotal}</IonText>
                         </IonCol>
                         </IonRow>
                         <IonRow className="ion-text-left">
                             <IonCol>
-                                <IonText className="subtext ml-2">Order time: </IonText><IonText color="secondary">{displayTS}</IonText>
+                                <IonText className="subtext ml-2">Order time: </IonText><IonText color="light">{displayTS}</IonText>
                             </IonCol>
                         </IonRow>
                         <IonRow className="ion-text-left">
@@ -143,6 +160,7 @@ const OrderDetail = (props) => {
                         <IonRow className="border-bottom border-secondary">
                             <IonCol>
                                 <div className="d-flex justify-content-end">
+                                    <IonButton onClick={sendInvoice} className="ml-2" color="tertiary" size="small">Get Invoice</IonButton>
                                     <IonButton onClick={checkAndProceedToCancel} className="ml-2" color="tertiary" size="small">Cancel Order</IonButton>
                                 </div>
                             </IonCol>
@@ -150,13 +168,13 @@ const OrderDetail = (props) => {
                         }
                         <IonRow className="p-2 border-bottom border-secondary">
                             <IonCol size="6" className="ion-text-left">
-                                <IonText color="primary">Item</IonText>
+                                <IonText color="light">Item</IonText>
                             </IonCol>
                             <IonCol size="2" className="ion-text-right">   
-                                <IonText color="primary">count</IonText>
+                                <IonText color="light">count</IonText>
                             </IonCol>
                             <IonCol size="4" className="ion-text-right">
-                                <IonText color="primary">Price</IonText>
+                                <IonText color="light">Price</IonText>
                             </IonCol>
                         </IonRow>
                         {orderDetailState.orderItems && orderDetailState.orderItems.map((orderItem, index) => {
@@ -174,7 +192,7 @@ const OrderDetail = (props) => {
                         })}
                         <IonRow className="ion-text-right">
                             <IonCol size="6">
-                                <IonLabel color="primary"><span>Sub Total:</span></IonLabel>
+                                <IonLabel color="light"><span>Sub Total:</span></IonLabel>
                             </IonCol>
                             <IonCol size="6">
                                 <IonLabel><div>{'₹'+orderDetailState.orderTotal}</div></IonLabel>
@@ -182,7 +200,7 @@ const OrderDetail = (props) => {
                         </IonRow>
                         <IonRow className="ion-text-right">
                             <IonCol size="6">
-                                <IonLabel color="primary"><span>Discounted Total:</span></IonLabel>
+                                <IonLabel color="light"><span>Discounted Total:</span></IonLabel>
                             </IonCol>
                             <IonCol size="6">
                                 <IonLabel><div>{'₹'+orderDetailState.discountedTotal}</div></IonLabel>
@@ -190,7 +208,7 @@ const OrderDetail = (props) => {
                         </IonRow>
                         <IonRow className="ion-text-right">
                             <IonCol size="6">
-                                <IonLabel color="primary"><span>Shipping Charge:</span></IonLabel>
+                                <IonLabel color="light"><span>Shipping Charge:</span></IonLabel>
                             </IonCol>
                             <IonCol size="6">
                                 <IonLabel><div>{'₹'+orderDetailState.totalChargesValue}</div></IonLabel>
@@ -198,7 +216,7 @@ const OrderDetail = (props) => {
                         </IonRow>
                         <IonRow className="ion-text-right">
                             <IonCol size="6">
-                                <IonLabel color="primary"><span>{'Taxes ('+orderDetailState.totalTaxRate+'%):'}</span></IonLabel>
+                                <IonLabel color="light"><span>{'Taxes ('+orderDetailState.totalTaxRate+'%):'}</span></IonLabel>
                             </IonCol>
                             <IonCol size="6">
                                 <IonLabel><div>{'₹'+orderDetailState.totalTaxValue}</div></IonLabel>
@@ -206,7 +224,7 @@ const OrderDetail = (props) => {
                         </IonRow>
                         <IonRow className="ion-text-right">
                             <IonCol size="6">
-                                    <IonLabel color="primary"><span>Bill Amount:</span></IonLabel>
+                                    <IonLabel color="light"><span>Bill Amount:</span></IonLabel>
                             </IonCol>
                             <IonCol size="6">
                                     <h6>{'₹'+orderDetailState.finalTotal}</h6>
@@ -224,6 +242,17 @@ const OrderDetail = (props) => {
                         state={orderDetailState.shippingAddress.state}
                         zipCode={orderDetailState.shippingAddress.zipcode}
                         phone={orderDetailState.shippingAddress.phoneNumber} />
+
+                    <AddressTile title="Billing address:"
+                        addressId={orderDetailState.billingAddress.id}
+                        fName={orderDetailState.billingAddress.firstName}
+                        lName={orderDetailState.billingAddress.lastName}
+                        line1={orderDetailState.billingAddress.line1}
+                        line2={orderDetailState.billingAddress.line2}
+                        city={orderDetailState.billingAddress.city}
+                        state={orderDetailState.billingAddress.state}
+                        zipCode={orderDetailState.billingAddress.zipcode}
+                        phone={orderDetailState.billingAddress.phoneNumber} />
                 </IonContent>
             </IonPage>
         )
