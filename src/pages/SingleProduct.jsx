@@ -1,4 +1,4 @@
-import { IonAlert, IonBadge, IonContent, IonGrid, IonHeader, IonIcon, IonLoading, IonPage, IonSearchbar, IonSlide, IonSlides, IonText } from '@ionic/react';
+import { IonAlert, IonBadge, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonLoading, IonPage, IonRow, IonSearchbar, IonSlide, IonSlides, IonText } from '@ionic/react';
 import { checkmarkCircle as checkMarkIcon } from 'ionicons/icons';
 import Client from 'ketting';
 import React, { useEffect, useState } from 'react';
@@ -76,7 +76,7 @@ const SingleProduct = (props) => {
             return;
         }
         const product = receivedState.data;
-        // alert(JSON.stringify(products));
+        // alert(JSON.stringify(product.attributes));
         setProductState(product);
         buildSlideImageUrls(product, 0);
         setResourceState(resource);
@@ -141,7 +141,7 @@ const SingleProduct = (props) => {
                         </IonSlides>
                         <div>
                             <IonGrid>
-                            <div className="mb-2 p-3">
+                            <div className="mb-2 p-2">
                                 <div>
                                 <div>
                                     <IonText color="light">
@@ -181,7 +181,7 @@ const SingleProduct = (props) => {
                             </div>
                             </IonGrid>
                             <IonGrid>
-                            <div className="mb-2 p-3">
+                            <div className="mb-2 p-2">
                                 <div className="short-description">
                                 <small className="float-right"><span className="badge badge-success">{productState.variations[variantIndexState].inStock ? 'In Stock': 'Out of Stock'}</span></small>
                                 <h6 className="font-weight-bold mb-3">
@@ -192,6 +192,32 @@ const SingleProduct = (props) => {
                                 <p className="mb-0 text-secondary">{productState.variations[variantIndexState].description}</p>
                                 </div>
                             </div>
+                            </IonGrid>
+
+                            <IonGrid>
+                                <IonRow className="border-bottom">
+                                    <IonCol>
+                                        Product Specification
+                                    </IonCol>
+                                </IonRow>
+                                {Object.keys(productState.attributes).map((group) => {
+                                    return <div className="mb-2">
+                                                <IonRow>
+                                                    <IonCol className="pb-0">
+                                                        {group}
+                                                    </IonCol>
+                                                </IonRow>
+                                                {Object.entries(productState.attributes[`${group}`]).map(([key, value]) => {
+                                                    return <IonRow key={key+": "+value} className="pl-3">
+                                                        <IonCol className="p-0">
+                                                            <IonText className="subtext">{key+": "+value}</IonText>
+                                                        </IonCol>
+                                                    </IonRow>
+                                                }) 
+                                                
+                                                }
+                                            </div>
+                                })}
                             </IonGrid>
                         </div>
                     </div>

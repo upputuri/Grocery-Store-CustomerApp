@@ -4,7 +4,9 @@ var CryptoJS = require("crypto-js");
 
 const passwordFormatError = "Password must contain at least six characters, one lowercase, one uppercase and one numeric and can not be same as email!";
 
-const productListPageSize = 15;
+const clientConfig ={
+    productListPageSize: 15,
+}
 
 const isPasswordValid =(username, password) => {
     let re;
@@ -90,4 +92,4 @@ const generateInvoiceLink = (mobile, oid) => {
     return link;
 }
 
-export { isPasswordValid, sendEmailNotification, sendMobileNotification, generateOrderId, generateInvoiceLink, passwordFormatError, productListPageSize };
+export { isPasswordValid, sendEmailNotification, sendMobileNotification, generateOrderId, generateInvoiceLink, passwordFormatError, clientConfig };

@@ -127,7 +127,7 @@ const Home = () => {
     let receivedData;
     try{
         console.log("Making service call: "+resource.uri);
-        receivedData = await resource.get();
+        receivedData = await resource.post();
     }
     catch(e)
     {
@@ -160,7 +160,7 @@ const Home = () => {
     let receivedData;
     try{
         console.log("Making service call: "+resource.uri);
-        receivedData = await resource.get();
+        receivedData = await resource.post();
     }
     catch(e)
     {

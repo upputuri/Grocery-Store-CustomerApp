@@ -309,22 +309,37 @@ div.cart-qty-value {
 .groc-select .alert-button{
   color: var(--ion-color-light);
 }
-.groc-picker .picker-wrapper{
+.groc-date-picker .picker-wrapper{
   --background: var(--ion-color-night);
   color: var(--ion-color-dark);
 }
-.groc-picker{
+.groc-date-picker{
   --border-color:var(--ion-color-medium);
 }
-.groc-picker .picker-opt-selected, .groc-picker .picker-button{
+.groc-date-picker .picker-opt-selected, .groc-date-picker .picker-button{
   color: var(--ion-color-light);
 }
-// .groc-slides.swiper-pagination-bullet-active{
-//   background-color: yellow;
-// }
-// .item.item-has-focus ion-label {
-//   --background: red;
-// }
+.select-alert .alert-wrapper .alert-message{
+  color: var(--ion-color-light);
+}
+.select-alert .alert-wrapper{
+  --background: var(--ion-color-dark);
+}
+.select-alert .alert-button{
+  color: var(--ion-color-light);
+}
+.select-alert .alert-title, .select-alert .alert-sub-title, .select-alert .alert-checkbox-label{
+  color: var(--ion-color-light);
+}
+.groc-option-picker .picker-wrapper{
+  --background: var(--ion-color-night);
+}
+.groc-option-picker .picker-opt.picker-opt-selected, .groc-option-picker .picker-button{
+  color: var(--ion-color-light);
+}
+.groc-option-picker .picker-opt{
+  color: var(--ion-color-dark);
+}
 
 // #ion-input-3-lbl{
 //   color: red;

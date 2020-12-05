@@ -137,7 +137,7 @@ const Profile = () => {
     }
 
     const customPickerOptions = {
-        cssClass: 'groc-picker'
+        cssClass: 'groc-date-picker'
         };
 
     if (profileState !== null) {

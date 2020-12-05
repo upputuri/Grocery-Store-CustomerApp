@@ -1,4 +1,4 @@
-import { IonButton, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonLoading, IonPage, IonRow, IonSearchbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonicSafeString, IonItem, IonLabel, IonList, IonLoading, IonModal, IonPage, IonPicker, IonPickerColumn, IonRow, IonSearchbar, IonSelect, IonSelectOption, IonTitle, IonToolbar } from '@ionic/react';
 import Client from 'ketting';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
@@ -6,38 +6,84 @@ import ProductCard from '../Cards/ProductCard';
 import BaseToolbar from '../Menu/BaseToolbar';
 import GrocSearch from '../Menu/GrocSearch';
 import { serviceBaseURL } from '../Utilities/ServiceCaller';
-import { chevronBack as previous, chevronForward as next} from 'ionicons/icons';
-import { productListPageSize as pageSize} from '../Utilities/AppCommons';
+import { chevronBack as previous, chevronForward as next, filter as filterIcon, funnel as sortIcon} from 'ionicons/icons';
+import { clientConfig } from '../Utilities/AppCommons';
+import InfoMessageTile from '../Cards/InfoMessageTile';
 
 const ProductList = () => {
     
-    const [data, setData] = useState(null);
+    const [productListState, setProductListState] = useState(undefined);
+    const [filtersState, setFiltersState] = useState({});
     const [query, setQuery] = useState('');
-    const [queryResultCount, setQueryResultCount] = useState(pageSize);
+    const [queryResultCount, setQueryResultCount] = useState(clientConfig.productListPageSize);
     const history = useHistory();
     const search = useLocation().search;
     const [showLoading, setShowLoading] = useState(false);
     const [currentPageOffset, setCurrentPageOffset] = useState(0);
+    const [showFilters, setShowFilters] = useState(false);
+    const [showSortOptions, setShowSortOptions] = useState(false);
+    const [currentSortOption, setCurrentSortOption] = useState(undefined);
 
-    let loadProducts = async (query, offset) => {
+    const setFilters = (event) => {
+        //alert(event.target.name+" "+event.target.value);
+        const newFilters = {...filtersState};
+        newFilters[event.target.name] = (event.target.value && event.target.value.length)>0?event.target.value:undefined;
+        setFiltersState(newFilters);
+        //alert(JSON.stringify(newFilters));
+    }
+
+    const clearFilters = () => {
+        setFiltersState({});
+        setShowFilters(false);
+    }
+
+    const filterProducts = () => {
+        setShowFilters(false);
+        setQueryResultCount(clientConfig.productListPageSize);
+        loadProducts(query);
+    }
+
+    const onPickerCancel = () => {
+        setShowSortOptions(false);
+    }
+    
+    const onPickerDone = (picker) => {
+        // alert(JSON.stringify(picker['sortpicker'].value));
+        setShowSortOptions(false);
+        setCurrentSortOption(picker['sortpicker'].value);
+        loadProducts(query, undefined, picker['sortpicker'].value);
+    }
+
+    const loadProducts = async (query, offset, sortOption) => {
+        // alert(offset+" "+queryResultCount);
+        
+        if ((offset !== undefined && offset >= queryResultCount) || offset < 0) {
+            return;
+        }
+
         if (!offset) {
             offset = 0;
         }
-        // alert(offset);
-        if (offset >= queryResultCount || offset < 0) {
-            return;
-        }
         if (query.length > 0) {
-            query = query + '&offset='+offset+'&size='+pageSize;
+            query = query + (sortOption? '&sortkey='+sortOption.split('-')[0]+
+                                '&sortorder='+sortOption.split('-')[1] : '')+
+                                '&offset='+offset+'&size='+clientConfig.productListPageSize;
         }
         let path = serviceBaseURL+'/products'+query;     
         setShowLoading(true);
         console.log("Making service call: "+path);
         const client = new Client(path);
         const resource = client.go();
-        let productListState;
+        const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        let receivedState;
+        // alert(JSON.stringify(filtersState));
         try{
-            productListState = await resource.get();
+            receivedState = await resource.post({
+                    data: JSON.stringify(filtersState),
+                    headers: headers
+                }
+            );
         }
         catch(e)
         {
@@ -45,12 +91,11 @@ const ProductList = () => {
             setShowLoading(false);
             return;
         }
-        const products = productListState.data.products;
         setCurrentPageOffset(offset);
-        setQueryResultCount(productListState.data.totalCount);
+        setQueryResultCount(receivedState.data.totalCount);
         console.log("Loaded products from server");
-        // alert(JSON.stringify(products));
-        setData(products);
+        // alert(JSON.stringify(receivedState.data));
+        setProductListState(receivedState.data);
         setShowLoading(false);
     }
     
@@ -68,11 +113,11 @@ const ProductList = () => {
     });
 
     const loadNextPage = () => {
-        loadProducts(query, currentPageOffset+pageSize);
+        loadProducts(query, currentPageOffset+clientConfig.productListPageSize);
     }
     
     const loadPreviousPage = () => {
-        loadProducts(query, currentPageOffset-pageSize);
+        loadProducts(query, currentPageOffset-clientConfig.productListPageSize);
     }
 
     const viewProductDetail = (id) =>
@@ -81,19 +126,85 @@ const ProductList = () => {
     }
 
     console.log("Rendering product list");
-    return (
+    const DayColumn = {
+        name: "sortpicker",
+        options: [
+          { text: "Price a-z", value: "itemprice-asc" },
+          { text: "Price z-a", value: "itemprice-desc" },
+          { text: "Name a-z", value: "itemname-asc" },
+          { text: "Name z-a", value: "itemname-desc" },
+        ]
+      }
+
+    if (productListState) {
+        return (
             <IonPage>
                 <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Products"/>
-                    <GrocSearch/>      
+                    <div className="d-flex align-middle">
+                        <GrocSearch/>
+                        <IonButton onClick={setShowSortOptions.bind(this,true)} color="night" className="ion-no-padding ml-0 mr-2"><IonIcon size="small" icon={sortIcon}></IonIcon></IonButton>
+                        <IonButton onClick={setShowFilters.bind(this,true)} color="night" className="ion-no-padding ml-0 mr-2"><IonIcon size="small" icon={filterIcon}></IonIcon></IonButton>
+                    </div>
                 </IonHeader>            
                 <IonLoading isOpen={showLoading}/>
                 <IonContent color="dark" className="ion-padding">
-                    {/* <div className="d-flex justify-content-between">
-                        <IonButton onClick={loadPreviousPage} size="small" color="secondary"><IonIcon size="small" slot="start" icon={previous}></IonIcon>Prev</IonButton>
-                        <IonButton onClick={loadNextPage} size="small" color="secondary"><IonIcon size="small" slot="end" icon={next}></IonIcon>Next</IonButton>
-                    </div> */}
-                    {data && data.map(
+                    <IonPicker cssClass="groc-option-picker" isOpen={showSortOptions} columns={[DayColumn]} se={currentSortOption} buttons={[
+                        {
+                            text: "Cancel",
+                            role: "cancel",
+                            handler: onPickerCancel
+                        },
+                        {
+                            text: "Done",
+                            handler: onPickerDone
+                        }
+                    ]}>
+
+                    </IonPicker>
+                    <IonModal isOpen={showFilters}>
+                        <IonHeader>
+                            <IonToolbar color="night">
+                                {/* <IonTitle>Select Filters</IonTitle> */}
+                                <IonButtons slot="end">
+                                    <IonButton size="small" onClick={clearFilters}>Clear</IonButton>
+                                    <IonButton size="small" onClick={filterProducts}>Done</IonButton>
+                                </IonButtons>
+                            </IonToolbar>
+                        </IonHeader>
+                        <IonContent color="dark" fullscreen>
+                        <IonList className="ion-no-padding">
+                            {/* {clientConfig.filters.split(',').filter((filterName)=>productListState && productListState.filterOptions[filterName]? true: false).map((filterName) => { */}
+                            {Object.keys(productListState.filterOptions).map((filterName) => {
+                                return <IonItem key={filterName}>
+                                    <IonLabel>{filterName}</IonLabel>
+                                    <IonSelect cssClass='groc-select' name={filterName} multiple={true} value={filtersState[filterName]} placeholder="All" onIonChange={setFilters}>
+                                        {productListState && 
+                                            productListState.filterOptions[filterName] && 
+                                            productListState.filterOptions[filterName].map((filterOption) => {
+                                            return <IonSelectOption key={filterOption} value={filterOption}>{filterOption}</IonSelectOption>
+                                        })}
+                                    </IonSelect>
+                                </IonItem>
+                            })}
+                        {/* <IonItem>
+                            <IonLabel>Weight</IonLabel>
+                            <IonSelect placeholder="Select One">
+                                <IonSelectOption value="female">Female</IonSelectOption>
+                                <IonSelectOption value="male">Male</IonSelectOption>
+                            </IonSelect>
+                        </IonItem>
+                        <IonItem>
+                            <IonLabel>Volume</IonLabel>
+                            <IonSelect placeholder="Select One">
+                                <IonSelectOption value="female">Female</IonSelectOption>
+                                <IonSelectOption value="male">Male</IonSelectOption>
+                            </IonSelect>
+                        </IonItem> */}
+                        </IonList>
+                        </IonContent>
+                    </IonModal>
+                    {productListState && productListState.products && productListState.products.map(
                         (product) =>{
                             return product.variations.length>0 ? <ProductCard 
                                                                     productId={product.id}
@@ -109,7 +220,6 @@ const ProductList = () => {
                                                                     productClickHandler={viewProductDetail} />
                                                                 :
                                                                     '';
-        
                         }
                     )}
                     <div>
@@ -121,7 +231,7 @@ const ProductList = () => {
                             </IonCol>
                             <IonCol size="6">
                                 <div className="d-flex justify-content-end">
-                                    {currentPageOffset+pageSize < queryResultCount && <IonButton disabled={currentPageOffset+pageSize < queryResultCount ? false: true} onClick={loadNextPage} size="small" color="secondary"><IonIcon size="small" slot="end" icon={next}></IonIcon>Next</IonButton>}
+                                    {currentPageOffset+clientConfig.productListPageSize < queryResultCount && <IonButton disabled={currentPageOffset+clientConfig.productListPageSize < queryResultCount ? false: true} onClick={loadNextPage} size="small" color="secondary"><IonIcon size="small" slot="end" icon={next}></IonIcon>Next</IonButton>}
                                 </div>
                             </IonCol>
                         </IonRow>
@@ -129,7 +239,23 @@ const ProductList = () => {
                 </IonContent>
             </IonPage>        
         )
-
+    }
+    else{
+        return <IonPage>
+            <IonHeader className="osahan-nav border-white border-bottom">
+                <BaseToolbar title="Products"/>
+                <div className="d-flex align-middle">
+                    <GrocSearch/>
+                    <IonButton onClick={setShowFilters.bind(this,true)} color="night" className="ion-no-padding ml-0 mr-2"><IonIcon size="small" icon={filterIcon}></IonIcon></IonButton>
+                </div>
+            </IonHeader>            
+            <IonLoading isOpen={showLoading}/>
+            <IonContent color="dark" className="ion-padding">
+                <InfoMessageTile detail="No products to display"/>
+            </IonContent>
+        </IonPage>
+    }
+        
 }
 
 export default ProductList;
