@@ -22,7 +22,7 @@ const ProductList = () => {
     const [currentPageOffset, setCurrentPageOffset] = useState(0);
     const [showFilters, setShowFilters] = useState(false);
     const [showSortOptions, setShowSortOptions] = useState(false);
-    const [currentSortOption, setCurrentSortOption] = useState(undefined);
+    const [currentSortOption, setCurrentSortOption] = useState('itemname-asc');
 
     const setFilters = (event) => {
         //alert(event.target.name+" "+event.target.value);
@@ -108,7 +108,7 @@ const ProductList = () => {
         let queryString = search;
         if (query.localeCompare(queryString) !== 0){
             setQuery(queryString);
-            loadProducts(queryString);
+            loadProducts(queryString, undefined, currentSortOption);
         }
     });
 
@@ -129,10 +129,10 @@ const ProductList = () => {
     const DayColumn = {
         name: "sortpicker",
         options: [
-          { text: "Price a-z", value: "itemprice-asc" },
-          { text: "Price z-a", value: "itemprice-desc" },
-          { text: "Name a-z", value: "itemname-asc" },
-          { text: "Name z-a", value: "itemname-desc" },
+            { text: "Name: Ascending", value: "itemname-asc" },
+            { text: "Name: Descending", value: "itemname-desc" },
+            { text: "Price: Low to High", value: "itemprice-asc" },
+            { text: "Price: High to Low", value: "itemprice-desc" },
         ]
       }
 
