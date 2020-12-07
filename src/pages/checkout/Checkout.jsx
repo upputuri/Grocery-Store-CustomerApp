@@ -11,7 +11,7 @@ import PaymentOptions from '../../components/checkout/PaymentOptions';
 import OrderReview from '../../components/checkout/OrderReview'
 import OrderConfirm from '../../components/checkout/OrderConfirm';
 import BillingOptions from '../../components/checkout/BillingOptions';
-import { generateOrderId, sendEmailNotification, sendMobileNotification } from '../../components/Utilities/AppCommons';
+import { clientConfig, generateOrderId, sendEmailNotification, sendMobileNotification } from '../../components/Utilities/AppCommons';
 
 var RazorpayCheckout = require('com.razorpay.cordova/www/RazorpayCheckout');
 
@@ -27,7 +27,8 @@ const Checkout = (props) => {
     const [phaseData, setPhaseData] = useState(null);
     const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
     const [shippingAddressIdState, setShippingAddressIdState] = useState(0);
-    const [statesList, setStatesList] = useState(undefined);
+    // const [statesList, setStatesList] = useState(undefined);
+    const [citiesList, setCitiesList] = useState(undefined);
     const [finalBillAmountState, setFinalBillAmountState] = useState(0);
     const [loadingState, setLoadingState] = useState(false);
     const [confirmAlertState, setConfirmAlertState] = useState({show: false, msg: ''});
@@ -45,7 +46,7 @@ const Checkout = (props) => {
         switch (currentPhaseIndex) {
             case 0:
             case 1:
-                loadStatesList().then(()=>{
+                loadCities().then(()=>{
                     loadAddressList();
                 });
                 break;
@@ -98,28 +99,49 @@ const Checkout = (props) => {
         setLoadingState(false);  
     }
 
-    const loadStatesList = async () => {
-        let path = serviceBaseURL + '/application/states';
-        const client = new Client(path);
+    // const loadStatesList = async () => {
+    //     let path = serviceBaseURL + '/application/states';
+    //     const client = new Client(path);
+    //     const resource = client.go();
+    //     setLoadingState(true);
+    //     console.log("Making service call: "+resource.uri);
+    //     let receivedState;
+    //     try{
+    //         receivedState = await resource.get();
+    //     }
+    //     catch(e)
+    //     {
+    //         console.log("Service call failed with - "+e);
+    //         setLoadingState(false);
+    //         setServiceRequestAlertState({show: true, msg: e.toString()});
+    //         return;
+    //     }
+    //     // alert(JSON.stringify(receivedState));
+    //     const states = receivedState.getEmbedded().map((state) => state.data);
+    //     console.log("Loaded states from server");
+    //     // alert(JSON.stringify(states));
+    //     setStatesList(states);
+    // }
+
+    const loadCities = async () => {
+        const client = new Client(serviceBaseURL+'/stores/covers/cities');
         const resource = client.go();
-        setLoadingState(true);
         console.log("Making service call: "+resource.uri);
-        let receivedState;
+        let receivedData;
         try{
-            receivedState = await resource.get();
+            receivedData = await resource.get();
         }
         catch(e)
         {
             console.log("Service call failed with - "+e);
-            setLoadingState(false);
-            setServiceRequestAlertState({show: true, msg: e.toString()});
             return;
         }
-        // alert(JSON.stringify(receivedState));
-        const states = receivedState.getEmbedded().map((state) => state.data);
-        console.log("Loaded states from server");
-        // alert(JSON.stringify(states));
-        setStatesList(states);
+        // alert(JSON.stringify(receivedData));
+        console.log("Received response from service call: "+resource.uri);
+        const cities = receivedData.getEmbedded().map((cityState) => cityState.data);
+        // alert(JSON.stringify(cities));
+        // console.log(images);
+        setCitiesList(cities);
     }
 
     const createAddressRequest = async (address) => {
@@ -163,7 +185,7 @@ const Checkout = (props) => {
     }
 
     const loadPreOrderSummary = async () => {
-        let path = serviceBaseURL + '/orders/preorders';
+        let path = serviceBaseURL + '/orders/preorders?coverid='+cartContext.order.cover.coverId;
         const client = new Client(path);
         const resource = client.go();
         const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
@@ -314,8 +336,13 @@ const Checkout = (props) => {
         (currentPhaseIndex === 3 && cartContext.order.paymentType !== null)
     }
 
-    const deliveryAddressSelected = (addressId) => {
+    const deliveryAddressSelected = (addressId, city) => {
         console.log("Address seleted for delivery - Id: "+addressId);
+        // alert(city+" "+cartContext.order.cover.coverCity);
+        if (city.toLowerCase() !== cartContext.order.cover.coverCity.toLowerCase()){
+            setInfoAlertState({show: true, msg: clientConfig.wrongCityAddressSelectedErrorMsg})
+            return;
+        }
         cartContext.setDeliveryAndBillingAddress(addressId, 0);
     }
 
@@ -421,14 +448,16 @@ const Checkout = (props) => {
                 <IonLoading isOpen={loadingState}/>
 
                 {currentPhaseIndex === 0 && <DeliveryOptions addresses={phaseData}
-                                                                states={statesList} 
+                                                                // states={statesList} 
+                                                                citiesList={citiesList} 
                                                                 selectedDeliveryAddressId={cartContext.order.deliveryAddressId}
                                                                 selectedBillingAddressId={cartContext.order.billingAddressId}
                                                                 onDeliveryAddressSelected={deliveryAddressSelected}
                                                                 onBillingAddressSelected={billingAddressSelected}
                                                                 addressAddHandler={saveNewAddress}/>}
                 {currentPhaseIndex === 1 && <BillingOptions addresses={phaseData}
-                                                                states={statesList} 
+                                                                // states={statesList} 
+                                                                citiesList = {citiesList}
                                                                 selectedBillingAddressId={cartContext.order.billingAddressId}
                                                                 onBillingAddressSelected={billingAddressSelected}
                                                                 addressAddHandler={saveNewAddress}/>}

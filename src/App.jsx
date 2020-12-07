@@ -79,7 +79,10 @@ const CartContext = React.createContext(
     setPaymentOption: ()=>{},
     setTransactionId: ()=>{},
     setCartCount: () => {},
+    setDeliveryCover: () => {},
+    resetOrderContext: () => {},
     order: {
+      cover: undefined,
       id: '',
       deliveryAddressId: 0,
       promoCodes: [],
@@ -100,6 +103,12 @@ class App extends React.Component {
     this.retrieveUser().then((user)=>{
       // alert(JSON.stringify(user));
       user && user.mobile && user.password && this.refreshAccount(user.mobile, user.password);
+    });
+    this.retrieveCover().then((cover)=>{
+      console.log("Loading cover from store: "+cover.coverCity);
+      this.setState({order: {
+        ...this.state.order, cover: cover
+      }})
     });
 
     // this.retrieveCart();
@@ -122,6 +131,7 @@ class App extends React.Component {
           itemCount: 0,
         },
         order: {
+          cover: undefined,
           id: '',
           deliveryAddressId: 0,
           billingAddressId: 0,
@@ -328,6 +338,7 @@ class App extends React.Component {
         itemCount: 0,
       },
       order: {
+        cover: undefined,
         id: '',
         deliveryAddressId: 0,
         promoCodes: [],
@@ -359,6 +370,13 @@ class App extends React.Component {
     await Storage.set({
       key: "user",
       value: JSON.stringify(user)
+    })
+  }
+
+  async storeCover(cover) {
+    await Storage.set({
+      key: "cover",
+      value: JSON.stringify(cover)
     })
   }
 
@@ -399,6 +417,12 @@ class App extends React.Component {
     //               (user && user.mobile && user.mobile.length>0)});
     // alert(JSON.stringify(ret));
     // JSON.parse(ret);
+  }
+
+  async retrieveCover() {
+    const ret = await Storage.get({key: "cover"});
+    const cover = JSON.parse(ret.value);
+    return Promise.resolve(cover);
   }
 
   async retrieveCart() {
@@ -471,6 +495,12 @@ class App extends React.Component {
     this.setState({cart: {itemCount: count}});
   }
 
+  setDeliveryCover(cover){
+    this.storeCover(cover);
+    this.setState({order: {
+      ...this.state.order, cover: cover
+    }})
+  }
   setDeliveryAddress(addressId){
     this.setState({order: {
       ...this.state.order, deliveryAddressId: addressId
@@ -526,13 +556,27 @@ class App extends React.Component {
       cart: {
         itemCount: 0
       },
-      order: {
-        id : 0,
-        promoCodes : []
-      }
+      // order: {
+      //   ...this.state.order,
+      //   id : 0,
+      //   promoCodes : []
+      // }
     })
   }
 
+  resetOrderContext(){
+    this.setState({order: {
+      cover: this.state.order.cover,
+      id: '',
+      deliveryAddressId: 0,
+      promoCodes: [],
+      paymentOptionId: undefined,
+      transactionId: undefined,
+      instructions: ''
+    }
+  });
+  // console.log("Reset order context");
+  }
   // clearOrderId(){
   //   this.setState({
   //     order: {
@@ -542,8 +586,9 @@ class App extends React.Component {
   // }
 
   async placeOrder(paymentTransactionResponse){
+    // alert(this.state.order.cover.coverId);
     this.setState({showLoading: true});
-    let path = serviceBaseURL + '/orders';
+    let path = serviceBaseURL + '/orders?coverid='+this.state.order.cover.coverId;
     const client = new Client(path);
     const resource = client.go();
     //Clear previous order Id;
@@ -573,6 +618,7 @@ class App extends React.Component {
       // alert(JSON.stringify(receivedState));
       // this.setOrderId(receivedState.data.id);
       this.resetCart();
+      this.resetOrderContext();
       this.setState({showLoading: false});
       return receivedState.data.id;
     }
@@ -602,7 +648,9 @@ class App extends React.Component {
                                       placeOrder: this.placeOrder.bind(this),
                                       // resetOrderState: this.clearOrderId.bind(this),
                                       addItem: (pId, vId, qty)=>this.addItemToCart(pId, vId, qty),
-                                      setCartCount: this.setCartCount.bind(this)
+                                      setCartCount: this.setCartCount.bind(this),
+                                      setDeliveryCover: this.setDeliveryCover.bind(this),
+                                      resetOrderContext: this.resetOrderContext.bind(this)
                                       }}>
           <IonApp>
             <IonSplitPane contentId="main-content">

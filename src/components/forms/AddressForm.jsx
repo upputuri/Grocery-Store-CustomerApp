@@ -9,7 +9,7 @@ const AddressForm = (props) => {
     const [line1State, setLine1State] = useState(props.line1);
     const [line2State, setLine2State] = useState(props.line2);
     const [cityState, setCityState] = useState(props.city);
-    const [stateIdState, setStateIdState] = useState(props.stateId);
+    // const [stateIdState, setStateIdState] = useState(props.stateId);
     const [zipCodeState, setZipCodeState] = useState(props.zipCode);
     const [errorState, setErrorState] = useState('');
 
@@ -37,9 +37,9 @@ const AddressForm = (props) => {
         setLine2State(event.detail.value);
     }
 
-    const setStateId = (event) => {
-        setStateIdState(event.detail.value);
-    }
+    // const setStateId = (event) => {
+    //     setStateIdState(event.detail.value);
+    // }
 
     const setZipCode = (event) => {
         setZipCodeState(event.detail.value);
@@ -48,20 +48,21 @@ const AddressForm = (props) => {
     const isInputValid = () => {
         var zipCodeRegEx = /^\d{6}?$/;
         var phoneRegEx = /^\d{10}?$/;
-        var cityRegEx = /^[A-Z]+$/i;
-        return (fNameState && fNameState.trim().length > 1) &&
-        (lNameState && lNameState.trim().length > 0) &&
-        (line1State && line1State.trim().length > 0) &&
-        (cityState && cityState.trim().length > 0) &&
-        (stateIdState && stateIdState > 0) &&
-        (zipCodeState && zipCodeRegEx.test(zipCodeState.trim())) &&
-        (mobileState && phoneRegEx.test(mobileState.trim())) &&
-        (cityState && cityRegEx.test(cityState.trim()));
+        // var cityRegEx = /^[A-Z]+$/i;
+        return ((fNameState && fNameState.trim().length > 1) || setErrorState("Please enter First Name")) &&
+        ((lNameState && lNameState.trim().length > 0) || setErrorState("Please enter Last Name")) &&
+        ((mobileState && mobileState.trim().length > 0) || setErrorState("Please enter Mobile No.")) &&
+        ((line1State && line1State.trim().length > 0) || setErrorState("Please enter Line 1")) &&
+        ((cityState && cityState.trim().length > 0) || setErrorState("Please select a City")) &&
+        ((zipCodeState && zipCodeState.trim().length > 0) || setErrorState("Please select a Pin code")) &&
+        // (stateIdState && stateIdState > 0) &&
+        ((zipCodeState && zipCodeRegEx.test(zipCodeState.trim())) || setErrorState("Invalid Pin code")) &&
+        ((mobileState && phoneRegEx.test(mobileState.trim())) || setErrorState("Invalid Mobile No."));
     }
 
     const submitAddress = () => {
         if (!isInputValid()){
-            setErrorState("Invalid Input! Please check.");
+            // setErrorState("Invalid Input! Please check.");
             return;
         }
         props.submitClickHandler({
@@ -71,7 +72,7 @@ const AddressForm = (props) => {
             line1: line1State,
             line2: line2State,
             city: cityState,
-            stateId: stateIdState,
+            stateId: props.citiesList.find((city) => city.name.toLowerCase() === cityState.toLowerCase()).stateId,
             zipcode: zipCodeState,
             phone: mobileState
         });
@@ -136,27 +137,25 @@ const AddressForm = (props) => {
                 <IonList lines="full" className="ion-no-margin ion-no-padding">
                     <IonItem>
                         <IonLabel position="stacked">City
-                            <IonText color="danger">*</IonText>
-                        </IonLabel>
-                        <IonInput placeholder="City" type="text" minlength="1" maxlength="30" 
-                        onIonChange={setCity}
-                        value={cityState}></IonInput>
-                    </IonItem>
-                </IonList> 
-                <IonList lines="full" className="ion-no-margin ion-no-padding">
-                    <IonItem>
-                        <IonLabel position="stacked">State
                         <IonText color="danger">*</IonText>
                         </IonLabel>
                         {/* <IonPicker placeholder="State" type="text" 
                         onIonChange={setStateId}
                         value={stateIdState}></IonPicker> */}
-                        <IonSelect interfaceOptions={customAlertOptions} value={`${stateIdState}`} placeholder="Select One" onIonChange={setStateId}>
-                            {props.states && props.states.map((state)=>{
-                                return <IonSelectOption key={state.stateId} value={state.stateId}>{state.name}</IonSelectOption>
+                        <IonSelect interfaceOptions={customAlertOptions} value={cityState} placeholder="Select One" onIonChange={setCity}>
+                            {props.citiesList && props.citiesList.map((city)=>{
+                                return <IonSelectOption key={city.name} value={city.name}>{city.name}</IonSelectOption>
                             })}
-
                         </IonSelect>
+                    </IonItem>
+                </IonList>
+                <IonList lines="full" className="ion-no-margin ion-no-padding">
+                    <IonItem>
+                        <IonLabel position="stacked">State
+                        </IonLabel>
+                        <IonInput disabled={true} placeholder="State" type="text" 
+                        value={cityState ? props.citiesList.find((city) => city.name.toLowerCase() === cityState.toLowerCase()).state : undefined}>
+                        </IonInput>
                     </IonItem>
                 </IonList>
                 <IonList lines="full" className="ion-no-margin ion-no-padding">
@@ -164,7 +163,7 @@ const AddressForm = (props) => {
                         <IonLabel position="stacked">Pin Code
                         <IonText color="danger">*</IonText>
                         </IonLabel>
-                        <IonInput placeholder="Pin Code" type="text" 
+                        <IonInput placeholder="Pin Code" type="text"  minlength="6" maxlength="6"
                         onIonChange={setZipCode}
                         value={zipCodeState}></IonInput>
                     </IonItem>

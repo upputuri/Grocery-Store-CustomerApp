@@ -1,4 +1,4 @@
-import { IonButton, IonCheckbox, IonCol, IonContent, IonGrid, IonItem, IonRow, IonText, IonToolbar } from '@ionic/react';
+import { IonButton, IonCheckbox, IonContent, IonGrid, IonItem, IonText } from '@ionic/react';
 import React, { useState } from 'react';
 import AddressTile from '../Cards/AddressTile';
 import AddressForm from '../forms/AddressForm';
@@ -12,8 +12,8 @@ const DeliveryOptions = (props) => {
         setBillingAddressSameState(!billingAddressSameState);
     }
 
-    const selectShippingAddress = (addressId) => {
-        props.onDeliveryAddressSelected(addressId);
+    const selectShippingAddress = (addressId, city) => {
+        props.onDeliveryAddressSelected(addressId, city);
     }
 
     const openNewAddressForm = () => {
@@ -45,7 +45,8 @@ const DeliveryOptions = (props) => {
             :
             <AddressForm 
                     addressId={-1}
-                    states={props.states}   
+                    // states={props.states} 
+                    citiesList = {props.citiesList}  
                     submitClickHandler={addAddress}
                     backClickHandler={cancelEdit.bind(this, -1)}/>}
 
@@ -65,7 +66,7 @@ const DeliveryOptions = (props) => {
                                     phone={address.phoneNumber} 
                                     selectedId={props.selectedDeliveryAddressId}
                                     selectedMessage='Selected for Delivery'
-                                    selectClickHandler={selectShippingAddress.bind(this, address.id)} />
+                                    selectClickHandler={selectShippingAddress.bind(this, address.id, address.city)} />
                             {address.id === props.selectedDeliveryAddressId &&                 
                             <IonGrid className="text-center">
                                 <IonItem color="night">

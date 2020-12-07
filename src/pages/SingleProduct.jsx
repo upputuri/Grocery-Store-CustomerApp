@@ -1,8 +1,9 @@
 import { IonAlert, IonBadge, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonLoading, IonPage, IonRow, IonSearchbar, IonSlide, IonSlides, IonText } from '@ionic/react';
 import { checkmarkCircle as checkMarkIcon } from 'ionicons/icons';
 import Client from 'ketting';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, withRouter } from "react-router-dom";
+import { CartContext } from '../App';
 import AddToCartButton from '../components/Menu/AddToCartButton';
 import BaseToolbar from '../components/Menu/BaseToolbar';
 import GrocSearch from '../components/Menu/GrocSearch';
@@ -16,6 +17,7 @@ const SingleProduct = (props) => {
     const [loadingState, setLoadingState] = useState(false);
     const [alertState, setAlertState] = useState({show: false, msg: ''});
     const [retryState, setRetryState] = useState(false);
+    const cartContext = useContext(CartContext);
     const history = useHistory();
 
 
@@ -56,7 +58,7 @@ const SingleProduct = (props) => {
 
     const loadSingleProduct = async (id) =>
     {
-        let path = serviceBaseURL + '/products/'+id;
+        let path = serviceBaseURL + '/products/'+id+'?coverid='+cartContext.order.cover.coverId;
         if (resourceState !== null && path.localeCompare(resourceState.uri) === 0)
             return;
 
@@ -163,7 +165,7 @@ const SingleProduct = (props) => {
                                         <div><IonIcon color="success" icon={checkMarkIcon}></IonIcon>Available in - </div>
                                         <div>
                                             {productState.variations.map((v, index) => {
-                                                return <IonBadge color={
+                                                return <IonBadge key={v.name} color={
                                                     index === variantIndexState? 'red':'tertiary'
                                                 }className='ml-1' key={v.id} onClick={variantSelected.bind(this, index)}>{v.name}</IonBadge>
                                             })}
