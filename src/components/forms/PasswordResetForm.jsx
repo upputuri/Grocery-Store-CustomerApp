@@ -1,4 +1,4 @@
-import { IonButton, IonInput, IonItem, IonLabel, IonList, IonText } from '@ionic/react';
+import { IonButton, IonGrid, IonInput, IonItem, IonLabel, IonList, IonText } from '@ionic/react';
 import React, { useContext, useState } from 'react';
 import { LoginContext } from '../../App';
 import { isPasswordValid, passwordFormatError } from '../Utilities/AppCommons';
@@ -57,7 +57,7 @@ const PasswordResetForm = (props) => {
     }
 
     return (
-    <div className="card mb-2 p-3">
+    <IonGrid className="card mb-2 p-3">
         <form className="card">
             {!editingState &&
             <IonList lines="full" className="ion-no-margin ion-no-padding">
@@ -120,7 +120,7 @@ const PasswordResetForm = (props) => {
                 </IonItem>
             </IonList>}
         </form>
-    </div>
+    </IonGrid>
     )
 }
 

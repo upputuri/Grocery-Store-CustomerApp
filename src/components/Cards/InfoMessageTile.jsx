@@ -6,14 +6,10 @@ const InfoMessageTile = (props) => {
     return (
         <IonGrid>
             {(props.headerTextLeft || props.headerTextRight) && 
-            <IonRow className="border-bottom">
+            <IonRow className="border-bottom ion-text-center">
                 <IonCol>
-                    <div className="d-flex justify-content-around">
                         {props.headerTextLeft && 
                         <IonText color={props.headerTextColor ? props.headerTextColor : "light"} className="headtext">{props.headerTextLeft}</IonText>}
-                        {props.headerTextRight && 
-                        <IonText color={props.headerTextColor ? props.headerTextColor : "light"} className="subtext">{props.headerTextRight}</IonText>}
-                    </div>
                 </IonCol>
             </IonRow>}
             {props.subject && <IonRow className="p-2 ion-text-center">

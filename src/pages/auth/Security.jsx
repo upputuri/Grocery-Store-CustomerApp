@@ -263,7 +263,7 @@ const Security = () => {
                         buttons={['OK']}/>                   
             <IonContent className="ion-padding" color="dark">
 
-                    <div className="card mb-2 p-3">
+                    <IonGrid className="card mb-2 p-3">
                         <form className="card">
                             <IonList lines="full" className="ion-no-margin ion-no-padding">
                                 <IonItem>
@@ -315,8 +315,8 @@ const Security = () => {
                                 </div>}
                             </IonList>
                         </form>
-                    </div>
-                    <div className="card mb-2 p-3">
+                    </IonGrid>
+                    <IonGrid className="card mb-2 p-3">
                         <form className="card">
                             <IonList lines="full" className="ion-no-margin ion-no-padding">
                                 <IonItem>
@@ -367,7 +367,7 @@ const Security = () => {
                                 </div>}                                        
                             </IonList>
                         </form>
-                    </div>
+                    </IonGrid>
                     <PasswordResetForm onNewPasswordInput={updatePassword} email={loginContext.customer.email} password={loginContext.customer.password}/>
             </IonContent>
         </IonPage>

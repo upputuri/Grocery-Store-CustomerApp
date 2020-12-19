@@ -309,10 +309,11 @@ const Checkout = (props) => {
             razorPayPOClicked(phaseData.transaction);
         }
         else {
-            cartContext.placeOrder().then((newOrderId)=>{
-                console.log("Promise resolved new orderId "+newOrderId);
-                history.push("/orderplaced?id="+newOrderId);
-                if (newOrderId > 0) {
+            cartContext.placeOrder().then((newOrder)=>{
+                console.log("Promise resolved new order "+JSON.stringify(newOrder));
+                // alert(encodeURIComponent(newOrder.createdTS));
+                history.push("/orderplaced?id="+newOrder.id+"&canceltimeout="+newOrder.cancelTimeout+"&createdts="+encodeURIComponent(newOrder.createdTS));
+                if (newOrder.id > 0) {
                     const msg = "Thank you for shopping with us! Your order has been placed successfully. We will process your order at the earliest";
                     sendEmailNotification(loginContext, "We have received your order", msg);
                     sendMobileNotification(loginContext, msg);
@@ -333,7 +334,7 @@ const Checkout = (props) => {
         return (currentPhaseIndex === 0 && cartContext.order.deliveryAddressId > 0) ||
         (currentPhaseIndex === 1 && cartContext.order.billingAddressId > 0) ||
         (currentPhaseIndex === 2 && true) ||
-        (currentPhaseIndex === 3 && cartContext.order.paymentType !== null)
+        (currentPhaseIndex === 3 && cartContext.order.paymentOptionId)
     }
 
     const deliveryAddressSelected = (addressId, city) => {

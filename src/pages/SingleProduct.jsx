@@ -203,7 +203,7 @@ const SingleProduct = (props) => {
                                     </IonCol>
                                 </IonRow>
                                 {Object.keys(productState.attributes).map((group) => {
-                                    return <div className="mb-2">
+                                    return <div key={group} className="mb-2">
                                                 <IonRow>
                                                     <IonCol className="pb-0">
                                                         {group}

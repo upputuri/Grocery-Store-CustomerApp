@@ -228,8 +228,8 @@ ion-input,ion-textarea{
   }
 }
 
-.side-crop { max-height: 100px; overflow: hidden; }
-.side-crop img { max-width: initial; /* Maybe optional. See note below */ }
+// .side-crop { max-height: 100px; overflow: hidden; }
+// .side-crop img { max-width: initial; /* Maybe optional. See note below */ }
 
 .pgi-button img{
   height: 75%;
@@ -244,6 +244,16 @@ div.cart-qty-value {
 
 .poster .subtext {
   color: var(--ion-color-light);
+}
+
+.card.poster {
+  box-shadow: 1px 1px 4px 1px var(--ion-color-light);
+}
+
+.poster-img {
+  width: 35vw;
+  height: 35vw;
+  overflow: hidden;
 }
 
 .home-page-slide {

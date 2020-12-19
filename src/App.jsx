@@ -44,6 +44,7 @@ import OTPLogin from './pages/auth/OTPLogin';
 import PasswordReset from './pages/auth/PasswordReset';
 import "@codetrix-studio/capacitor-google-auth";
 import OrderPlaced from './pages/general/OrderPlaced';
+import OrderRateNReview from './pages/userdata/orders/OrderRateNReview';
 
 const { Storage } = Plugins;
 const LoginContext = React.createContext(
@@ -611,7 +612,7 @@ class App extends React.Component {
       {
         console.log("Service call failed with - "+e);
         this.setState({showLoading: false});
-        return 0;
+        return {id: 0};
       }
       console.log("Received response from service call: "+resource.uri);
       console.log("Order successfully created on server - Order Id: "+receivedState.data.id);
@@ -620,7 +621,7 @@ class App extends React.Component {
       this.resetCart();
       this.resetOrderContext();
       this.setState({showLoading: false});
-      return receivedState.data.id;
+      return {id: receivedState.data.id, createdTS: receivedState.data.createdTS, cancelTimeout: receivedState.data.cancelTimeoutMins};
     }
     
   render(){
@@ -677,6 +678,7 @@ class App extends React.Component {
                     <Route path="/orders" component={Orders} exact={true} />
                     <Route path="/orders/:id" component={OrderDetail} exact={true} />
                     <Route path="/orderplaced" component={OrderPlaced} exact={true} />
+                    <Route path="/rateandreview/:id" component={OrderRateNReview} exact={true} />
                   </Switch>
                   :
                   <Redirect to={"/login"}/>

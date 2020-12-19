@@ -133,7 +133,7 @@ const Cart = (props) =>{
                 <IonToolbar color="night border-white border-top">
                     <IonRow>
                         <IonCol className="ion-padding">
-                            <IonText className="headtext"><small>Cart Total: </small>{'₹'+cartItemsState.cartTotal}</IonText>
+                            <IonText className="headtext"><small>Cart Subtotal: </small>{'₹'+cartItemsState.cartTotal}</IonText>
                         </IonCol>
                         <IonCol>
                             <IonButtons >

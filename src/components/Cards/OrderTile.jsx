@@ -22,7 +22,9 @@ const OrderTile = (props) =>
         displayTS = "Unavailable";
     }
     let displayOrderId = generateOrderId(props.order.orderId, receivedOrderTS);
-
+    // alert((new Date().getTime() - (new Date(receivedOrderTS).getTime()+(30*60*1000))) > 0);
+    let isCancelWindowExipred = (new Date().getTime() - (new Date(receivedOrderTS).getTime()+(30*60*1000))) > 0;
+    // alert(!isCancelWindowExipred);
     const viewDetail = () =>{
         history.push("/orders/"+props.order.orderId);
     }
@@ -53,11 +55,11 @@ const OrderTile = (props) =>
                     </IonCol>
                 </IonRow>
                 <IonRow>
+                        {isCancelWindowExipred === false &&
                     <IonCol>
-                        {(props.order.orderStatus.trim() === 'Initial' || props.order.orderStatus.trim() === 'Running') &&
                         <IonButton onclick={cancelClicked} className="ml-2" color="tertiary" size="small">Cancel Order</IonButton>
-                        }
                     </IonCol>
+                        }
                     <IonCol>
                         <div className="d-flex justify-content-end">
                             <IonButton onClick={viewDetail} className="ml-2" color="secondary" size="small">View Details</IonButton>

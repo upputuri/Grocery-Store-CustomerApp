@@ -21,7 +21,7 @@ const OrderReview = (props) => {
                         <IonText color="light">Item</IonText>         
                     </IonCol>
                     <IonCol size="2" className="ion-text-right">   
-                        <IonText color="light">count</IonText>
+                        <IonText color="light">Qty</IonText>
                     </IonCol>
                     <IonCol size="4" className="ion-text-right">
                         <IonText color="light">Price</IonText>

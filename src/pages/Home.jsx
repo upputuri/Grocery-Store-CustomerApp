@@ -8,7 +8,7 @@ import PosterSlider from '../components/Listing/PosterSlider';
 import CartButton from '../components/Menu/CartButton';
 import GrocSearch from '../components/Menu/GrocSearch';
 import BannerSlider from '../components/Slider/BannerSlider';
-import { categoryImageStoreURL, defaultImageURL, logoURL, serviceBaseURL, thumbNailImageStoreURL } from '../components/Utilities/ServiceCaller';
+import { categoryImageStoreURL, defaultImageURL, logoURL, serviceBaseURL, smallImageStoreURL } from '../components/Utilities/ServiceCaller';
 import { Plugins } from '@capacitor/core';
 import { CartContext } from '../App';
 import AdvertSlider from '../components/Slider/AdvertSlider';
@@ -194,7 +194,7 @@ const Home = () => {
               title: product.discount ? product.discount+"% off": '',
               mainText: product.name,
               subText: '₹'+product.variations[0].priceAfterDiscount,
-              image: product.images.length>0?(thumbNailImageStoreURL+"/"+product.images[0]) : defaultImageURL,
+              image: product.images.length>0?(smallImageStoreURL+"/"+product.images[0]) : defaultImageURL,
               leadType: 'product',
               leadQuery: product.id
             }
@@ -227,7 +227,7 @@ const Home = () => {
         title: product.discount ? product.discount+"% off": '',
         mainText: product.name,
         subText: '₹'+product.variations[0].priceAfterDiscount,
-        image: product.images.length>0?(thumbNailImageStoreURL+"/"+product.images[0]) : defaultImageURL,
+        image: product.images.length>0?(smallImageStoreURL+"/"+product.images[0]) : defaultImageURL,
         leadType: 'product',
         leadQuery: product.id
       }
@@ -257,17 +257,17 @@ const Home = () => {
           </IonButtons>
           <IonImg alt="img" className="single-img" src={logoURL}/>
           <CartButton/>
-          <div className="d-flex justify-content-center p-0">
-            <IonText className="maintext">Delivery Location:</IonText>
+        </IonToolbar>
+        <GrocSearch/>
+        <div className="d-flex justify-content-center pb-1">
+            <IonText className="maintext" color="light">Delivery Location:</IonText>
             <div className="d-flex" onClick={loadCoverPicker}>
               <IonText className="maintext ml-2" color="secondary">
                 {cartContext.order.cover ? cartContext.order.cover.coverCity : 'Select'}
               </IonText>
               <IonIcon color="secondary" size="small" icon={pullDownIcon}></IonIcon>
             </div>
-          </div>
-        </IonToolbar>
-        <GrocSearch/>      
+        </div>      
       </IonHeader>
       <IonContent color="dark">
         <IonAlert isOpen={checkoutResetAlertState.show}
