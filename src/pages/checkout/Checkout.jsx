@@ -337,11 +337,13 @@ const Checkout = (props) => {
         (currentPhaseIndex === 3 && cartContext.order.paymentOptionId)
     }
 
-    const deliveryAddressSelected = (addressId, city) => {
+    const deliveryAddressSelected = (addressId, city, showWarning) => {
         console.log("Address seleted for delivery - Id: "+addressId);
         // alert(city+" "+cartContext.order.cover.coverCity);
         if (city.toLowerCase() !== cartContext.order.cover.coverCity.toLowerCase()){
-            setInfoAlertState({show: true, msg: clientConfig.wrongCityAddressSelectedErrorMsg})
+            if (showWarning === true){
+                setInfoAlertState({show: true, msg: clientConfig.wrongCityAddressSelectedErrorMsg})
+            }
             return;
         }
         cartContext.setDeliveryAndBillingAddress(addressId, 0);

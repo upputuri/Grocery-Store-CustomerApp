@@ -350,7 +350,9 @@ div.cart-qty-value {
 .groc-option-picker .picker-opt{
   color: var(--ion-color-dark);
 }
-
+.groc-popover .popover-wrapper{
+  --background: var(--ion-color-dark);
+}
 // #ion-input-3-lbl{
 //   color: red;
 // }

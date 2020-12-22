@@ -45,6 +45,7 @@ import PasswordReset from './pages/auth/PasswordReset';
 import "@codetrix-studio/capacitor-google-auth";
 import OrderPlaced from './pages/general/OrderPlaced';
 import OrderRateNReview from './pages/userdata/orders/OrderRateNReview';
+import ErrorBoundary from './components/Utilities/ErrorBoundary';
 
 const { Storage } = Plugins;
 const LoginContext = React.createContext(
@@ -656,6 +657,7 @@ class App extends React.Component {
           <IonApp>
             <IonSplitPane contentId="main-content">
               <GrocMenu entries={appPages}/>
+              <ErrorBoundary>
               <IonRouterOutlet id="main-content">
                 <Switch>
                   <Route path="/home" component={Home} exact={true} />
@@ -685,6 +687,7 @@ class App extends React.Component {
                   }
                 </Switch>
               </IonRouterOutlet>
+              </ErrorBoundary>
               <IonToast color="tertiary"
                   isOpen={this.state.showToast}
                   position="middle"

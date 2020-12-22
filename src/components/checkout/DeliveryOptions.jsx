@@ -1,11 +1,28 @@
 import { IonButton, IonCheckbox, IonContent, IonGrid, IonItem, IonText } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { CartContext } from '../../App';
 import AddressTile from '../Cards/AddressTile';
 import AddressForm from '../forms/AddressForm';
 
 const DeliveryOptions = (props) => {
     const [editingState, setEditingState] = useState(false);
     const [billingAddressSameState, setBillingAddressSameState] = useState(false);
+    // const [chosenDeliveryAddressId, setChosenDeliveryAddressId] = useState(props.selectedDeliveryAddressId);
+
+    useEffect(()=>{
+        // if (props.selectedDeliveryAddressId) {
+        //     chosenDeliveryAddressId = props.selectedBillingAddressId;
+        // }
+        // else{
+            // alert(props.selectedDeliveryAddressId);
+            if (!props.selectedDeliveryAddressId && props.addresses){
+                const defaultAddress = props.addresses.find((e)=>e.default === true);
+                if (defaultAddress && defaultAddress) {
+                    props.onDeliveryAddressSelected(defaultAddress.id, defaultAddress.city, false);
+                }
+            }
+        // }
+    },[props.selectedDeliveryAddressId])
 
     const toggleBilllingAddressSameSelection = (addressId) => {
         !billingAddressSameState ? props.onBillingAddressSelected(addressId) : props.onBillingAddressSelected(0);
@@ -13,7 +30,7 @@ const DeliveryOptions = (props) => {
     }
 
     const selectShippingAddress = (addressId, city) => {
-        props.onDeliveryAddressSelected(addressId, city);
+        props.onDeliveryAddressSelected(addressId, city, true);
     }
 
     const openNewAddressForm = () => {
@@ -31,6 +48,8 @@ const DeliveryOptions = (props) => {
         console.log("Cancelling edit operation for address +"+addressId);
         setEditingState(false); 
     }
+
+
 
     return (
         <IonContent className="ion-padding" color="dark">

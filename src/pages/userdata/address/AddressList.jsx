@@ -12,6 +12,7 @@ const AddressList = () => {
     const [addressListState, setAddressListState] = useState(null);
     // const [statesList, setStatesList] = useState(null);
     const [citiesList, setCitiesList] = useState([]);
+    const [addressTypesState, setAddressTypesState] = useState({});
     const [pinCodesList, setPinCodesList] = useState([]);
     const [editableAddressId, setEditableAddressId] = useState(0);
     const [loadingState, setLoadingState] = useState(false);
@@ -25,6 +26,7 @@ const AddressList = () => {
     useEffect(() => {
         loadAddressList();
         loadCities();
+        loadLabels();
         // loadStatesList();
 
     }, [retryState]);
@@ -74,6 +76,27 @@ const AddressList = () => {
         setCitiesList(cities);
     }
 
+    const loadLabels = async () => {
+        const client = new Client(serviceBaseURL+'/application/addresstypes');
+        const resource = client.go();
+        console.log("Making service call: "+resource.uri);
+        let receivedData;
+        try{
+            receivedData = await resource.get();
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e);
+            return;
+        }
+        // alert(JSON.stringify(receivedData));
+        console.log("Received response from service call: "+resource.uri);
+        const addressTypes = receivedData.data.types;
+        // alert(JSON.stringify(cities));
+        // console.log(images);
+        setAddressTypesState(addressTypes);
+        // alert(JSON.stringify(addressTypes));
+    }
     // const loadPinCodes = async (city) => {
     //     const client = new Client(serviceBaseURL+'/stores/covers/'+city+'/pincodes');
     //     const resource = client.go();
@@ -140,7 +163,6 @@ const AddressList = () => {
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
-        setLoadingState(true);
         console.log("Making service call: "+resource.uri);
         let receivedState;
         try{
@@ -162,7 +184,6 @@ const AddressList = () => {
             return;
         }
         console.log("Updated address on server - address Id "+address.id);
-        setLoadingState(false);          
     }
 
     const updateAddressRequest = async (address) => {
@@ -174,7 +195,6 @@ const AddressList = () => {
         const loginHeaders = new Headers();
         loginHeaders.append("Content-Type", "application/json");
         loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
-        setLoadingState(true);
         console.log("Making service call: "+resource.uri);
         let receivedState;
         try{
@@ -193,10 +213,9 @@ const AddressList = () => {
             } 
             setLoadingState(false);
             setServiceRequestAlertState({show: true, msg: e.toString()});
-            return;
+            return; 
         }
         console.log("Updated address on server - address Id "+address.id);
-        setLoadingState(false);          
     }
 
     const deleteAddressRequest = async (addressId) => {
@@ -259,13 +278,20 @@ const AddressList = () => {
         setEditableAddressId(0);
     }
 
-    const saveEditedAddress = (address) => {
+    const saveEditedAddress = async (address) => {
+        setLoadingState(true);
         //Send service request
         console.log("Saving edited address with Id "+ address.id);
-        address.id === -1 ?
-        createAddressRequest(address).then(()=>{loadAddressList(); setEditableAddressId(0)})
-        :
-        updateAddressRequest(address).then(()=>{loadAddressList(); setEditableAddressId(0)});
+        if (address.id === -1){
+            await createAddressRequest(address);
+            loadAddressList();
+        }
+        else{
+            await updateAddressRequest(address);
+            loadAddressList(); 
+        }
+        setEditableAddressId(0);
+        setLoadingState(false);
     }
 
     if (addressListState !== null) {
@@ -315,6 +341,10 @@ const AddressList = () => {
                         return editableAddressId !== address.id ? <AddressTile 
                                 addressId={address.id}
                                 key={address.id}
+                                default={address.default}
+                                label={address.type}
+                                labelId={address.typeId}
+                                addressTypes={addressTypesState}
                                 fName={address.firstName}
                                 lName={address.lastName}
                                 line1={address.line1}
@@ -326,6 +356,7 @@ const AddressList = () => {
                                 phone={address.phoneNumber} 
                                 editClickHandler={editAddress.bind(this, address.id)}
                                 deleteClickHandler={checkAndProceedToDeletion.bind(this, address.id)}
+                                updateAddressHandler={saveEditedAddress}
                                 />
                             :
                                 <AddressForm 
