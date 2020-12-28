@@ -436,29 +436,29 @@ const Checkout = (props) => {
         // });
     }
 
-    // const processStripePayment = async (transaction) => {
-    //     const providerData = JSON.parse(transaction.providerData);
-    //     const session = JSON.parse(providerData.session);
-    //     alert(transaction.providerData);
-    //     const stripePromise = loadStripe(providerData.key);
-    //     const stripe = await stripePromise;
+    const processStripePayment = async (transaction) => {
+        // const providerData = JSON.parse(transaction.providerData);
+        // const session = JSON.parse(providerData.session);
+        // alert(transaction.providerData);
+        // const stripePromise = loadStripe(providerData.key);
+        // const stripe = await stripePromise;
 
-    //     // When the customer clicks on the button, redirect them to Checkout.
-    //     const result = await stripe.redirectToCheckout({
-    //         sessionId: session.id,
-    //     });
+        // // When the customer clicks on the button, redirect them to Checkout.
+        // const result = await stripe.redirectToCheckout({
+        //     sessionId: session.id,
+        // });
 
-    //     alert("Stripe call result is : "+JSON.stringify(result));
-    //     if (result.error) {
-    //         // If `redirectToCheckout` fails due to a browser or network
-    //         // error, display the localized error message to your customer
-    //         // using `result.error.message`.
-    //     }
-    //     else{
-    //         // Poll server for result.
-    //         alert("payment on stripe processed. Poll server to get orderId");
-    //     }
-    // }
+        // alert("Stripe call result is : "+JSON.stringify(result));
+        // if (result.error) {
+        //     // If `redirectToCheckout` fails due to a browser or network
+        //     // error, display the localized error message to your customer
+        //     // using `result.error.message`.
+        // }
+        // else{
+        //     // Poll server for result.
+        //     alert("payment on stripe processed. Poll server to get orderId");
+        // }
+    }
 
 
     if (phaseData !== null) {
