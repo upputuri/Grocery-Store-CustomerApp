@@ -78,7 +78,7 @@ const Home = () => {
   }
 
   const onPickerDone = (picker) => {
-      // alert(JSON.stringify(picker['sortpicker'].value));
+      // alert(JSON.stringify(picker['coverpicker'].value));
       setShowCoverOptions(false);
       checkAndProceedToCityChange(picker['coverpicker'].value);
     }

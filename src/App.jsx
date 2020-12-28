@@ -42,7 +42,7 @@ import Policies from './pages/general/Policies';
 import Support from './pages/general/Support';
 import OTPLogin from './pages/auth/OTPLogin';
 import PasswordReset from './pages/auth/PasswordReset';
-import "@codetrix-studio/capacitor-google-auth";
+// import "@codetrix-studio/capacitor-google-auth";
 import OrderPlaced from './pages/general/OrderPlaced';
 import OrderRateNReview from './pages/userdata/orders/OrderRateNReview';
 import ErrorBoundary from './components/Utilities/ErrorBoundary';
@@ -107,7 +107,7 @@ class App extends React.Component {
       user && user.mobile && user.password && this.refreshAccount(user.mobile, user.password);
     });
     this.retrieveCover().then((cover)=>{
-      console.log("Loading cover from store: "+cover.coverCity);
+      // console.log("Loading cover from store: "+ (cover === undefined || cover === null) ? 'undefined': cover.coverCity);
       this.setState({order: {
         ...this.state.order, cover: cover
       }})

@@ -12,6 +12,7 @@ import OrderReview from '../../components/checkout/OrderReview'
 import OrderConfirm from '../../components/checkout/OrderConfirm';
 import BillingOptions from '../../components/checkout/BillingOptions';
 import { clientConfig, generateOrderId, sendEmailNotification, sendMobileNotification } from '../../components/Utilities/AppCommons';
+import { loadStripe } from '@stripe/stripe-js';
 
 var RazorpayCheckout = require('com.razorpay.cordova/www/RazorpayCheckout');
 
@@ -302,27 +303,34 @@ const Checkout = (props) => {
         // });
     }
     
-    const sendPlaceOrderRequest = () => {
+    const processPlaceOrder = () => {
         //Create order and show success page
         // alert(JSON.stringify(preOrder));
         if (phaseData.transaction && phaseData.transaction.providerId === 'razorpay') {
-            razorPayPOClicked(phaseData.transaction);
+            processRazorPayPayment(phaseData.transaction);
+        }
+        else if (phaseData.transaction && phaseData.transaction.providerId === 'stripe') {
+            processStripePayment(phaseData.transaction);
         }
         else {
-            cartContext.placeOrder().then((newOrder)=>{
-                console.log("Promise resolved new order "+JSON.stringify(newOrder));
-                // alert(encodeURIComponent(newOrder.createdTS));
-                history.push("/orderplaced?id="+newOrder.id+"&canceltimeout="+newOrder.cancelTimeout+"&createdts="+encodeURIComponent(newOrder.createdTS));
-                if (newOrder.id > 0) {
-                    const msg = "Thank you for shopping with us! Your order has been placed successfully. We will process your order at the earliest";
-                    sendEmailNotification(loginContext, "We have received your order", msg);
-                    sendMobileNotification(loginContext, msg);
-                }
-                // setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before placing the order again!'});
-            });
+            sendPlaceOrderRequest();
         }
         //history.push('/orderplaced');
         setCurrentPhaseIndex(-1);
+    }
+
+    const sendPlaceOrderRequest = (response) => {
+        cartContext.placeOrder(response).then((newOrder)=>{
+            console.log("Promise resolved new order "+JSON.stringify(newOrder));
+            // alert(encodeURIComponent(newOrder.createdTS));
+            history.push("/orderplaced?id="+newOrder.id+"&canceltimeout="+newOrder.cancelTimeout+"&createdts="+encodeURIComponent(newOrder.createdTS));
+            if (newOrder.id > 0) {
+                const msg = "Thank you for shopping with us! Your order has been placed successfully. We will process your order at the earliest";
+                sendEmailNotification(loginContext, "We have received your order", msg);
+                sendMobileNotification(loginContext, msg);
+            }
+            // setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before placing the order again!'});
+        });
     }
 
     const backwardExit = () => {
@@ -376,8 +384,9 @@ const Checkout = (props) => {
         setPromoCodeState('');
     }
 
-    const razorPayPOClicked = async (transaction) => {
+    const processRazorPayPayment = async (transaction) => {
         // alert(transaction.providerData);
+        // alert("RazorPay not supported");
         const providerData = JSON.parse(transaction.providerData);
         const orderId = providerData.order.id;
         const razorPayKey = providerData.key;
@@ -409,16 +418,7 @@ const Checkout = (props) => {
         // alert(JSON.stringify(success));
         // Now send request to place order and pass the transaction data along with the request
         //cartContext.setTransactionResponse(JSON.stringify(success));
-        cartContext.placeOrder(JSON.stringify(success)).then((newOrderId)=>{
-            // console.log("Promise resolved new orderId "+newOrderId);
-            history.push("/orderplaced?id="+newOrderId);
-            if (newOrderId > 0) {
-                const msg = "Thank you for shopping with us. Your order Id is "+newOrderId+". We will process your order at the earliest";
-                sendEmailNotification(loginContext.customer.email, msg);
-                sendMobileNotification(loginContext.customer.mobile, msg);
-            }
-            // setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before placing the order again!'});
-        });
+        sendPlaceOrderRequest(JSON.stringify(success));
     }
     
     const razorPayFailCallback = (error) => {
@@ -435,6 +435,31 @@ const Checkout = (props) => {
         //         // setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before placing the order again!'});
         // });
     }
+
+    const processStripePayment = async (transaction) => {
+        const providerData = JSON.parse(transaction.providerData);
+        const session = JSON.parse(providerData.session);
+        alert(transaction.providerData);
+        const stripePromise = loadStripe(providerData.key);
+        const stripe = await stripePromise;
+
+        // When the customer clicks on the button, redirect them to Checkout.
+        const result = await stripe.redirectToCheckout({
+            sessionId: session.id,
+        });
+
+        alert("Stripe call result is : "+JSON.stringify(result));
+        if (result.error) {
+            // If `redirectToCheckout` fails due to a browser or network
+            // error, display the localized error message to your customer
+            // using `result.error.message`.
+        }
+        else{
+            // Poll server for result.
+            alert("payment on stripe processed. Poll server to get orderId");
+        }
+    }
+
 
     if (phaseData !== null) {
         console.log("Rendering checkout page");
@@ -480,7 +505,7 @@ const Checkout = (props) => {
                             header={''}
                             cssClass='groc-alert'
                             message={confirmAlertState.msg}
-                            buttons={[{text: 'Yes', handler: sendPlaceOrderRequest}, 'No']}/> 
+                            buttons={[{text: 'Yes', handler: processPlaceOrder}, 'No']}/> 
                 <IonAlert isOpen={infoAlertState.show}
                             onDidDismiss={()=> setInfoAlertState(false)}
                             header={''}
@@ -496,7 +521,7 @@ const Checkout = (props) => {
                             </IonButtons>
                             <IonButtons slot="end">
                                 {currentPhaseIndex+1 === phases.length ? 
-                                <IonButton onClick={sendPlaceOrderRequest} className="ion-no-margin">
+                                <IonButton onClick={processPlaceOrder} className="ion-no-margin">
                                     {phaseData.transaction.providerId === 'cod' ? 'Place Order' : 'Pay'}
                                     <IonIcon size="large" icon={nextIcon}></IonIcon>
                                 </IonButton>

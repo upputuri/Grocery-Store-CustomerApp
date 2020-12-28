@@ -81,10 +81,12 @@ const Orders = () => {
             //     setInfoAlertState({show: true, msg: })
             // }
             // alert(JSON.stringify(serviceRequest.responseObject));
+            console.log("Cancel order failed on server: "+serviceRequest.responseObject.reason);
             setLoadingState(false);
             setInfoAlertState({show: true, msg: serviceRequest.responseObject.message});
             return;
         }
+        setLoadingState(false);
     }
 
     const processOrderCancel = (orderId) => {
