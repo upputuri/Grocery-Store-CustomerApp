@@ -47,7 +47,7 @@ import OrderPlaced from './pages/general/OrderPlaced';
 import OrderRateNReview from './pages/userdata/orders/OrderRateNReview';
 import ErrorBoundary from './components/Utilities/ErrorBoundary';
 
-const { Storage } = Plugins;
+const { Storage, Device } = Plugins;
 const LoginContext = React.createContext(
   {
     authObject: undefined,
@@ -95,6 +95,12 @@ const CartContext = React.createContext(
   }
 )
 
+const DeviceContext = React.createContext(
+  {
+    platform: undefined
+  }
+)
+
 const appPages = AppPages;
 
 class App extends React.Component {
@@ -112,6 +118,9 @@ class App extends React.Component {
         ...this.state.order, cover: cover
       }})
     });
+    this.loadDeviceInfo().then((deviceInfo)=>{
+      this.setState({device:{platform: deviceInfo.platform}})
+    })
 
     // this.retrieveCart();
 
@@ -141,6 +150,9 @@ class App extends React.Component {
           paymentOptionId: undefined,
           transactionId: undefined,
           instructions: ''
+        },
+        device: {
+          platform: undefined
         },
         showToast: false,
         toastMsg: '',
@@ -367,6 +379,7 @@ class App extends React.Component {
     // })
   }
 
+
   async storeUser(user) {
     console.log("Storing in app: "+JSON.stringify(user));
     await Storage.set({
@@ -389,6 +402,11 @@ class App extends React.Component {
   //     value: JSON.stringify(cart)
   //   })
   // }
+
+  async loadDeviceInfo() {
+    const info = await Device.getInfo();
+    return Promise.resolve(info);
+  }
 
   async retrieveUser() {
     const ret = await Storage.get({key: "user"});
@@ -629,82 +647,84 @@ class App extends React.Component {
     console.log("Rendering App");
     return (
     <IonReactRouter>
-      <LoginContext.Provider value={{authProvider: this.state.authProvider,
-                                    isAuthenticated: this.state.isAuthenticated, 
-                                    customer: this.state.customer, 
-                                    login: (u, p)=>this.loginHandler(u, p),
-                                    logout: this.logoutHandler, 
-                                    register: this.registerNewUser.bind(this),
-                                    updateProfile: this.saveEditedProfile.bind(this),
-                                    loginWithGoogle: this.loginWithGoogle.bind(this)
-                                    }}>
-        <CartContext.Provider value={{itemCount: this.state.cart.itemCount, 
-                                      order: this.state.order,
-                                      setDeliveryAddress: this.setDeliveryAddress.bind(this),
-                                      setBillingAddress: this.setBillingAddress.bind(this),
-                                      setDeliveryAndBillingAddress: this.setDeliveryAndBillingAddress.bind(this),
-                                      setPromoCodes: this.setPromoCodes.bind(this),
-                                      setPaymentOption: this.setPaymentOption.bind(this),
-                                      setTransactionId: this.setTransactionId.bind(this),
-                                      // setTransactionResponse: this.setTransactionResponse.bind(this),
-                                      placeOrder: this.placeOrder.bind(this),
-                                      // resetOrderState: this.clearOrderId.bind(this),
-                                      addItem: (pId, vId, qty)=>this.addItemToCart(pId, vId, qty),
-                                      setCartCount: this.setCartCount.bind(this),
-                                      setDeliveryCover: this.setDeliveryCover.bind(this),
-                                      resetOrderContext: this.resetOrderContext.bind(this)
+      <DeviceContext.Provider value={{platform: this.state.device.platform}}>
+        <LoginContext.Provider value={{authProvider: this.state.authProvider,
+                                      isAuthenticated: this.state.isAuthenticated, 
+                                      customer: this.state.customer, 
+                                      login: (u, p)=>this.loginHandler(u, p),
+                                      logout: this.logoutHandler, 
+                                      register: this.registerNewUser.bind(this),
+                                      updateProfile: this.saveEditedProfile.bind(this),
+                                      loginWithGoogle: this.loginWithGoogle.bind(this)
                                       }}>
-          <IonApp>
-            <IonSplitPane contentId="main-content">
-              <GrocMenu entries={appPages}/>
-              <ErrorBoundary>
-              <IonRouterOutlet id="main-content">
-                <Switch>
-                  <Route path="/home" component={Home} exact={true} />
-                  <Route path="/products" component={ProductsBrowser} />
-                  <Route path="/register" component={Registration} />
-                  <Route path="/login" component={Login} exact={true} />
-                  <Route path="/resetpass" component={PasswordReset} exact={true} />
-                  <Route path="/contactus" component={ContactForm} exact={true} />
-                  <Route path="/faq" component={FAQ} exact={true} />
-                  <Route path="/policies" component={Policies} exact={true} />
-                  <Route path="/support" component={Support} exact={true} />
-                  <Route exact path="/" render={() => <Redirect to="/home" />} />
-                  {this.state.isAuthenticated?
+          <CartContext.Provider value={{itemCount: this.state.cart.itemCount, 
+                                        order: this.state.order,
+                                        setDeliveryAddress: this.setDeliveryAddress.bind(this),
+                                        setBillingAddress: this.setBillingAddress.bind(this),
+                                        setDeliveryAndBillingAddress: this.setDeliveryAndBillingAddress.bind(this),
+                                        setPromoCodes: this.setPromoCodes.bind(this),
+                                        setPaymentOption: this.setPaymentOption.bind(this),
+                                        setTransactionId: this.setTransactionId.bind(this),
+                                        // setTransactionResponse: this.setTransactionResponse.bind(this),
+                                        placeOrder: this.placeOrder.bind(this),
+                                        // resetOrderState: this.clearOrderId.bind(this),
+                                        addItem: (pId, vId, qty)=>this.addItemToCart(pId, vId, qty),
+                                        setCartCount: this.setCartCount.bind(this),
+                                        setDeliveryCover: this.setDeliveryCover.bind(this),
+                                        resetOrderContext: this.resetOrderContext.bind(this)
+                                        }}>
+            <IonApp>
+              <IonSplitPane contentId="main-content">
+                <GrocMenu entries={appPages}/>
+                <ErrorBoundary>
+                <IonRouterOutlet id="main-content">
                   <Switch>
-                    <Route path="/account" component={Account} exact={true} />
-                    <Route path="/account/profile" component={Profile} exact={true} />
-                    <Route path="/account/addresslist" component={AddressList} exact={true} />
-                    <Route path="/account/security" component={Security} exact={true} />
-                    <Route path="/checkout" component={Checkout} exact={true} />
-                    <Route path="/orders" component={Orders} exact={true} />
-                    <Route path="/orders/:id" component={OrderDetail} exact={true} />
-                    <Route path="/orderplaced" component={OrderPlaced} exact={true} />
-                    <Route path="/rateandreview/:id" component={OrderRateNReview} exact={true} />
+                    <Route path="/home" component={Home} exact={true} />
+                    <Route path="/products" component={ProductsBrowser} />
+                    <Route path="/register" component={Registration} />
+                    <Route path="/login" component={Login} exact={true} />
+                    <Route path="/resetpass" component={PasswordReset} exact={true} />
+                    <Route path="/contactus" component={ContactForm} exact={true} />
+                    <Route path="/faq" component={FAQ} exact={true} />
+                    <Route path="/policies" component={Policies} exact={true} />
+                    <Route path="/support" component={Support} exact={true} />
+                    <Route exact path="/" render={() => <Redirect to="/home" />} />
+                    {this.state.isAuthenticated?
+                    <Switch>
+                      <Route path="/account" component={Account} exact={true} />
+                      <Route path="/account/profile" component={Profile} exact={true} />
+                      <Route path="/account/addresslist" component={AddressList} exact={true} />
+                      <Route path="/account/security" component={Security} exact={true} />
+                      <Route path="/checkout" component={Checkout} exact={true} />
+                      <Route path="/orders" component={Orders} exact={true} />
+                      <Route path="/orders/:id" component={OrderDetail} exact={true} />
+                      <Route path="/orderplaced" component={OrderPlaced} exact={true} />
+                      <Route path="/rateandreview/:id" component={OrderRateNReview} exact={true} />
+                    </Switch>
+                    :
+                    <Redirect to={"/login"}/>
+                    }
                   </Switch>
-                  :
-                  <Redirect to={"/login"}/>
-                  }
-                </Switch>
-              </IonRouterOutlet>
-              </ErrorBoundary>
-              <IonToast color="tertiary"
-                  isOpen={this.state.showToast}
-                  position="middle"
-                  onDidDismiss={() => this.setState({showToast: false})}
-                  message={this.state.toastMsg}
-                  duration={500}
-                />
-              <IonLoading isOpen={this.state.showLoading}/>
-            </IonSplitPane>
-          </IonApp>
-        </CartContext.Provider>
-      </LoginContext.Provider>
+                </IonRouterOutlet>
+                </ErrorBoundary>
+                <IonToast color="tertiary"
+                    isOpen={this.state.showToast}
+                    position="middle"
+                    onDidDismiss={() => this.setState({showToast: false})}
+                    message={this.state.toastMsg}
+                    duration={500}
+                  />
+                <IonLoading isOpen={this.state.showLoading}/>
+              </IonSplitPane>
+            </IonApp>
+          </CartContext.Provider>
+        </LoginContext.Provider>
+      </DeviceContext.Provider>
     </IonReactRouter>
     );
   }
 }
 
 export default App;
-export { LoginContext, CartContext };
+export { LoginContext, CartContext, DeviceContext };
 
