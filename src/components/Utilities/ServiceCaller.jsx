@@ -5,14 +5,14 @@ import { Client } from 'ketting'
 
 // const serviceBaseURL = "http://grocservicecustomer-env.eba-bpju9vw3.ap-south-1.elasticbeanstalk.com/groc";
 // const serviceBaseURL = "http://vegitcustomerrunnerservice-env.eba-3gjvheqy.ap-south-1.elasticbeanstalk.com/groc";
-const serviceBaseURL = "http://api.thevegitclub.com";
-// const serviceBaseURL = "http://192.168.0.110:8080";
+// const serviceBaseURL = "https://api.thevegitclub.com";
+// const serviceBaseURL = "http://192.168.31.1:8080";
+const serviceBaseURL = "http://192.168.31.24:8080";
 // const serviceBaseURL = "http://localhost:8080";
 
 // const logoURL = "http://lhhs.in/vegit/themes/nyk/images/logo-1.jpeg";
 const logoURL = "http://thevegitclub.com/themes/nyk/images/logo-1.jpeg";
 const logoIconURL = "";
-
 const profileImageStoreURL = "http://thevegitclub.com/vegitfiles/customer/small"
 
 const smallImageStoreURL = "http://thevegitclub.com/vegitfiles/item/small";
@@ -30,7 +30,7 @@ const defaultImageURL = "http://thevegitclub.com/vegitfiles/default.png";
 const aboutUrl = "http://thevegitclub.com/?urlq=page/static/about-us";
 const blogUrl = "http://thevegitclub.com/?urlq=blog";
 const termsUrl = "http://thevegitclub.com/?urlq=page/static/Terms%20and%20Conditions";
-const returnPolicyUrl = "http://thevegitclub.com/?urlq=page/static/Refund%20Policy";
+const returnPolicyUrl = "https://thevegitclub.com/?urlq=page/static/Refund%20Policy";
 const privacyPolicyUrl = "http://thevegitclub.com/?urlq=page/static/Privacy%20Policy";
 const faqUrl = "http://thevegitclub.com/?urlq=page/static/FAQ";
 
@@ -38,7 +38,7 @@ const advertUrl1 = "http://thevegitclub.com/themes/nyk/images/e435af26d54ecd5b21
 const advertUrl2 = "http://thevegitclub.com/themes/nyk/images/15-Discount-on-Vegetables-1.png";
 const advertUrl3 = "http://thevegitclub.com/themes/nyk/images/IMG-20200626-WA0009.png";
 
-const invoiceLinkBaseUrl = "https://thevegitclub.com/?urlq=order/invoice/20";
+const invoiceLinkBaseUrl = "http://thevegitclub.com/?urlq=order/invoice/20";
 const invoiceLinkPassPhrase = "RgUjXn2r5u8x/A?D(G+KbPeShVmYp3s6";
 
 // interface RequestObj{
@@ -164,16 +164,17 @@ class ServiceRequest {
         try {
                 let response = await fetch(url, {method: 'DELETE',
                                     headers: loginHeaders});
+                let result = await response.json();                                    
                 if (response.ok) {
                     this.hasResponse = true;
                     this.isResponseOk = true;
-                    this.responseObject = {};
+                    this.responseObject = result;
                     return 1;
                 }
                 else {
                     this.hasResponse = true;
                     this.isResponseOk = false;
-                    this.responseObject = {};
+                    this.responseObject = result;
                     return 1;
                 }
             }

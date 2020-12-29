@@ -5,17 +5,10 @@ import { useHistory } from 'react-router';
 import { LoginContext } from '../../App';
 import { serviceBaseURL } from '../Utilities/ServiceCaller';
 
-var RazorpayCheckout = require('com.razorpay.cordova/www/RazorpayCheckout');
 
 
 const PaymentOptions = (props) => {
     const [selectedOption, setSelectionOption] = useState(props.selectedOption);
-    const [razorPayOrderIdState, setRazorPayOrderIdState] = useState(undefined);
-    const loginContext = useContext(LoginContext);
-    const [loadingState, setLoadingState] = useState(false);
-    const [serviceRequestAlertState, setServiceRequestAlertState] = useState({show: false, msg: ''});
-    const history = useHistory();
-
 
     const updateSelection = (event) => {
         setSelectionOption(event.detail.value);

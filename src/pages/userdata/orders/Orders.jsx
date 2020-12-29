@@ -73,14 +73,20 @@ const Orders = () => {
             setLoadingState(false);  
         }
         else if (serviceRequest.hasResponse){
-            if (serviceRequest.responseObject.status && serviceRequest.responseObject === 401){
+            if (serviceRequest.responseObject.status && serviceRequest.responseObject.status === 401){
                 history.push("/login");
                 return;
             } 
+            // else if (serviceRequest.responseObject.status && serviceRequest.responseObject === 400){
+            //     setInfoAlertState({show: true, msg: })
+            // }
+            // alert(JSON.stringify(serviceRequest.responseObject));
+            console.log("Cancel order failed on server: "+serviceRequest.responseObject.reason);
             setLoadingState(false);
-            setServiceRequestAlertState({show: true, msg: serviceRequest.responseObject.message});
+            setInfoAlertState({show: true, msg: serviceRequest.responseObject.message});
             return;
         }
+        setLoadingState(false);
     }
 
     const processOrderCancel = (orderId) => {
@@ -144,7 +150,7 @@ const Orders = () => {
                         cssClass='groc-alert'
                         message={'Failed to load'}
                         buttons={[{text: 'Cancel', 
-                                    handler: ()=>{history.push('/home')}
+                                    handler: ()=>{history.push('/support')}
                                 }, {text: 'Retry', 
                                     handler: ()=>{setServiceRequestAlertState({show: false, msg: ''}); setRetryState(!retryState)}}]}
                     />

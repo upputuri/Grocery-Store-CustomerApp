@@ -17,7 +17,7 @@ const PosterSlider = (props) => {
     return (
             <IonSlides options={sliderOptions}>
                 {props.posters && props.posters.map((poster)=>{
-                    return  <IonSlide key={poster.id}>
+                    return  <IonSlide className="m-1" key={poster.id}>
                                 {!props.showSkeleton ? 
                                 <Poster
                                     title={poster.title}

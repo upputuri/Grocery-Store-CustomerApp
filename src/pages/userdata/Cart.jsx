@@ -44,7 +44,7 @@ const Cart = (props) =>{
             history.push("/login");
             return;
         }
-        let path = serviceBaseURL + '/customers/'+customerId+'/cart';
+        let path = serviceBaseURL + '/customers/'+customerId+'/cart?coverid='+cartContext.order.cover.coverId;
         setShowLoading(true);
         const client = new Client(path);
         const resource = client.go();
@@ -133,7 +133,7 @@ const Cart = (props) =>{
                 <IonToolbar color="night border-white border-top">
                     <IonRow>
                         <IonCol className="ion-padding">
-                            <IonText className="headtext"><small>Cart Total: </small>{'₹'+cartItemsState.cartTotal}</IonText>
+                            <IonText className="headtext"><small>Cart Subtotal: </small>{'₹'+cartItemsState.cartTotal}</IonText>
                         </IonCol>
                         <IonCol>
                             <IonButtons >

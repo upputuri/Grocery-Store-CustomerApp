@@ -1,4 +1,4 @@
-import { IonBadge, IonCard, IonCardContent, IonCol, IonGrid, IonNote, IonRow, IonSlide, IonText } from '@ionic/react';
+import { IonBadge, IonCard, IonCardContent, IonCol, IonGrid, IonImg, IonNote, IonRow, IonSlide, IonText } from '@ionic/react';
 import React from 'react';
 import { useHistory } from 'react-router';
 import { defaultImageURL } from '../Utilities/ServiceCaller';
@@ -46,14 +46,14 @@ const Poster = (props) => {
         //     </IonCardContent>
         // </IonCard>
         <div onClick={itemClicked} className="card poster">
-            <div className="side-crop">
-                <img className="card-img-top" src={props.image?props.image:defaultImageURL} alt="Card image cap"/>
-            </div>
-            <div className="card-body">
-                <div className="maintext text-truncate">{props.mainText}</div>
-                <div className="subtext text-truncate">{props.subText}</div>
-                {/* <a href="#" className="btn btn-primary">Go somewhere</a> */}
-            </div>
+                <div className="poster-img">
+                    <IonImg  src={props.image?props.image:defaultImageURL} alt="Card image cap"/>
+                </div>
+                <div className="card-body">
+                    <div className="maintext text-truncate">{props.mainText}</div>
+                    <div className="subtext text-truncate">{props.subText}</div>
+                    {/* <a href="#" className="btn btn-primary">Go somewhere</a> */}
+                </div>
         </div>
     )
 }

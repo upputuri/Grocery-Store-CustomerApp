@@ -1,6 +1,6 @@
 import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonicSafeString, IonItem, IonLabel, IonList, IonLoading, IonModal, IonPage, IonPicker, IonPickerColumn, IonRow, IonSearchbar, IonSelect, IonSelectOption, IonTitle, IonToolbar } from '@ionic/react';
 import Client from 'ketting';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import ProductCard from '../Cards/ProductCard';
 import BaseToolbar from '../Menu/BaseToolbar';
@@ -9,6 +9,7 @@ import { serviceBaseURL } from '../Utilities/ServiceCaller';
 import { chevronBack as previous, chevronForward as next, filter as filterIcon, funnel as sortIcon} from 'ionicons/icons';
 import { clientConfig } from '../Utilities/AppCommons';
 import InfoMessageTile from '../Cards/InfoMessageTile';
+import { CartContext } from '../../App';
 
 const ProductList = () => {
     
@@ -22,6 +23,7 @@ const ProductList = () => {
     const [currentPageOffset, setCurrentPageOffset] = useState(0);
     const [showFilters, setShowFilters] = useState(false);
     const [showSortOptions, setShowSortOptions] = useState(false);
+    const cartContext = useContext(CartContext);
     const [currentSortOption, setCurrentSortOption] = useState('itemname-asc');
 
     const setFilters = (event) => {
@@ -67,6 +69,7 @@ const ProductList = () => {
         if (query.length > 0) {
             query = query + (sortOption? '&sortkey='+sortOption.split('-')[0]+
                                 '&sortorder='+sortOption.split('-')[1] : '')+
+                                '&coverid='+cartContext.order.cover.coverId+
                                 '&offset='+offset+'&size='+clientConfig.productListPageSize;
         }
         let path = serviceBaseURL+'/products'+query;     
@@ -126,7 +129,7 @@ const ProductList = () => {
     }
 
     console.log("Rendering product list");
-    const DayColumn = {
+    const SortColumn = {
         name: "sortpicker",
         options: [
             { text: "Name: Ascending", value: "itemname-asc" },
@@ -149,7 +152,7 @@ const ProductList = () => {
                 </IonHeader>            
                 <IonLoading isOpen={showLoading}/>
                 <IonContent color="dark" className="ion-padding">
-                    <IonPicker cssClass="groc-option-picker" isOpen={showSortOptions} columns={[DayColumn]} se={currentSortOption} buttons={[
+                    <IonPicker cssClass="groc-option-picker" isOpen={showSortOptions} columns={[SortColumn]} buttons={[
                         {
                             text: "Cancel",
                             role: "cancel",
@@ -222,6 +225,9 @@ const ProductList = () => {
                                                                     '';
                         }
                     )}
+                    {productListState && (!productListState.products || productListState.products.length === 0) &&
+                    <InfoMessageTile detail="No products to display"/>}
+
                     <div>
                         <IonRow>
                             <IonCol size="6">
@@ -251,7 +257,7 @@ const ProductList = () => {
             </IonHeader>            
             <IonLoading isOpen={showLoading}/>
             <IonContent color="dark" className="ion-padding">
-                <InfoMessageTile detail="No products to display"/>
+
             </IonContent>
         </IonPage>
     }

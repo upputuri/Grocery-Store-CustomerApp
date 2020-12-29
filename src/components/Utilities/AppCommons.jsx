@@ -6,6 +6,9 @@ const passwordFormatError = "Password must contain at least six characters, one 
 
 const clientConfig ={
     productListPageSize: 15,
+    wrongCityAddressSelectedErrorMsg: 'Selected shipping address is outside the selected delivery city. Please select a local shipping address or change your delivery city on home screen',
+    cityChangeCheckoutResetAlertMsg: 'You have items in your cart. If you change the city, item prices and availability may change. Are you sure you want to proceed?',
+    submitReviewSuccessAlertMsg: 'Your review has been received successfully. We will publish it once verified',
 }
 
 const isPasswordValid =(username, password) => {

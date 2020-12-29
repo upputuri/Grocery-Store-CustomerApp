@@ -113,11 +113,19 @@ const OrderDetail = (props) => {
         const invoiceLink = generateInvoiceLink(loginContext.customer.mobile, orderDetailState.id);
         console.log("Generated invoice link :"+invoiceLink);
         const message = "Invoice for your order id "+displayOrderId+" is generated. Please use the following link to download. "+invoiceLink;
-        // sendEmailNotification(loginContext, "Invoice generated", message);
-        // sendMobileNotification(loginContext, message);
+        sendEmailNotification(loginContext, "Invoice generated", message);
+        sendMobileNotification(loginContext, message);
+        setInfoAlertState({show: true, msg: "Invoice download link sent to your email/mobile"});
     }
 
+    const viewOrderItems = () => {
+        history.push("/rateandreview/"+orderDetailState.id);
+    }
+    
     if (orderDetailState !== null){
+        // alert((new Date().getTime() - (new Date(receivedOrderTS).getTime()+(30*60*1000))) > 0);
+        let isCancelWindowExipred = (new Date().getTime() - (new Date(orderDetailState.createdTS).getTime()+(30*60*1000))) > 0;
+        // alert(!isCancelWindowExipred);
         return (
             <IonPage>
                 <IonHeader className="osahan-nav border-white border-bottom">
@@ -156,22 +164,24 @@ const OrderDetail = (props) => {
                                 <IonText className="subtext ml-2">Status: </IonText><StatusText status={orderDetailState.status.trim()}/>
                             </IonCol>
                         </IonRow>
-                        {(orderDetailState.status.trim() === 'Initial' || orderDetailState.status.trim() === 'Running') &&
                         <IonRow className="border-bottom border-secondary">
                             <IonCol>
                                 <div className="d-flex justify-content-end">
+                                    
                                     <IonButton onClick={sendInvoice} className="ml-2" color="tertiary" size="small">Get Invoice</IonButton>
+                                    {isCancelWindowExipred === false ?
                                     <IonButton onClick={checkAndProceedToCancel} className="ml-2" color="tertiary" size="small">Cancel Order</IonButton>
+                                    :
+                                    <IonButton onClick={viewOrderItems} className="ml-2" color="tertiary" size="small">{'Rate & Review'}</IonButton>}
                                 </div>
                             </IonCol>
                         </IonRow>
-                        }
                         <IonRow className="p-2 border-bottom border-secondary">
                             <IonCol size="6" className="ion-text-left">
                                 <IonText color="light">Item</IonText>
                             </IonCol>
                             <IonCol size="2" className="ion-text-right">   
-                                <IonText color="light">count</IonText>
+                                <IonText color="light">Qty</IonText>
                             </IonCol>
                             <IonCol size="4" className="ion-text-right">
                                 <IonText color="light">Price</IonText>

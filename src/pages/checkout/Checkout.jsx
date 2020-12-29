@@ -11,7 +11,8 @@ import PaymentOptions from '../../components/checkout/PaymentOptions';
 import OrderReview from '../../components/checkout/OrderReview'
 import OrderConfirm from '../../components/checkout/OrderConfirm';
 import BillingOptions from '../../components/checkout/BillingOptions';
-import { generateOrderId, sendEmailNotification, sendMobileNotification } from '../../components/Utilities/AppCommons';
+import { clientConfig, generateOrderId, sendEmailNotification, sendMobileNotification } from '../../components/Utilities/AppCommons';
+// import { loadStripe } from '@stripe/stripe-js';
 
 var RazorpayCheckout = require('com.razorpay.cordova/www/RazorpayCheckout');
 
@@ -27,7 +28,8 @@ const Checkout = (props) => {
     const [phaseData, setPhaseData] = useState(null);
     const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
     const [shippingAddressIdState, setShippingAddressIdState] = useState(0);
-    const [statesList, setStatesList] = useState(undefined);
+    // const [statesList, setStatesList] = useState(undefined);
+    const [citiesList, setCitiesList] = useState(undefined);
     const [finalBillAmountState, setFinalBillAmountState] = useState(0);
     const [loadingState, setLoadingState] = useState(false);
     const [confirmAlertState, setConfirmAlertState] = useState({show: false, msg: ''});
@@ -45,7 +47,7 @@ const Checkout = (props) => {
         switch (currentPhaseIndex) {
             case 0:
             case 1:
-                loadStatesList().then(()=>{
+                loadCities().then(()=>{
                     loadAddressList();
                 });
                 break;
@@ -98,28 +100,49 @@ const Checkout = (props) => {
         setLoadingState(false);  
     }
 
-    const loadStatesList = async () => {
-        let path = serviceBaseURL + '/application/states';
-        const client = new Client(path);
+    // const loadStatesList = async () => {
+    //     let path = serviceBaseURL + '/application/states';
+    //     const client = new Client(path);
+    //     const resource = client.go();
+    //     setLoadingState(true);
+    //     console.log("Making service call: "+resource.uri);
+    //     let receivedState;
+    //     try{
+    //         receivedState = await resource.get();
+    //     }
+    //     catch(e)
+    //     {
+    //         console.log("Service call failed with - "+e);
+    //         setLoadingState(false);
+    //         setServiceRequestAlertState({show: true, msg: e.toString()});
+    //         return;
+    //     }
+    //     // alert(JSON.stringify(receivedState));
+    //     const states = receivedState.getEmbedded().map((state) => state.data);
+    //     console.log("Loaded states from server");
+    //     // alert(JSON.stringify(states));
+    //     setStatesList(states);
+    // }
+
+    const loadCities = async () => {
+        const client = new Client(serviceBaseURL+'/stores/covers/cities');
         const resource = client.go();
-        setLoadingState(true);
         console.log("Making service call: "+resource.uri);
-        let receivedState;
+        let receivedData;
         try{
-            receivedState = await resource.get();
+            receivedData = await resource.get();
         }
         catch(e)
         {
             console.log("Service call failed with - "+e);
-            setLoadingState(false);
-            setServiceRequestAlertState({show: true, msg: e.toString()});
             return;
         }
-        // alert(JSON.stringify(receivedState));
-        const states = receivedState.getEmbedded().map((state) => state.data);
-        console.log("Loaded states from server");
-        // alert(JSON.stringify(states));
-        setStatesList(states);
+        // alert(JSON.stringify(receivedData));
+        console.log("Received response from service call: "+resource.uri);
+        const cities = receivedData.getEmbedded().map((cityState) => cityState.data);
+        // alert(JSON.stringify(cities));
+        // console.log(images);
+        setCitiesList(cities);
     }
 
     const createAddressRequest = async (address) => {
@@ -163,7 +186,7 @@ const Checkout = (props) => {
     }
 
     const loadPreOrderSummary = async () => {
-        let path = serviceBaseURL + '/orders/preorders';
+        let path = serviceBaseURL + '/orders/preorders?coverid='+cartContext.order.cover.coverId;
         const client = new Client(path);
         const resource = client.go();
         const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
@@ -280,26 +303,34 @@ const Checkout = (props) => {
         // });
     }
     
-    const sendPlaceOrderRequest = () => {
+    const processPlaceOrder = () => {
         //Create order and show success page
         // alert(JSON.stringify(preOrder));
         if (phaseData.transaction && phaseData.transaction.providerId === 'razorpay') {
-            razorPayPOClicked(phaseData.transaction);
+            processRazorPayPayment(phaseData.transaction);
+        }
+        else if (phaseData.transaction && phaseData.transaction.providerId === 'stripe') {
+            processStripePayment(phaseData.transaction);
         }
         else {
-            cartContext.placeOrder().then((newOrderId)=>{
-                console.log("Promise resolved new orderId "+newOrderId);
-                history.push("/orderplaced?id="+newOrderId);
-                if (newOrderId > 0) {
-                    const msg = "Thank you for shopping with us! Your order has been placed successfully. We will process your order at the earliest";
-                    sendEmailNotification(loginContext, "We have received your order", msg);
-                    sendMobileNotification(loginContext, msg);
-                }
-                // setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before placing the order again!'});
-            });
+            sendPlaceOrderRequest();
         }
         //history.push('/orderplaced');
         setCurrentPhaseIndex(-1);
+    }
+
+    const sendPlaceOrderRequest = (response) => {
+        cartContext.placeOrder(response).then((newOrder)=>{
+            console.log("Promise resolved new order "+JSON.stringify(newOrder));
+            // alert(encodeURIComponent(newOrder.createdTS));
+            history.push("/orderplaced?id="+newOrder.id+"&canceltimeout="+newOrder.cancelTimeout+"&createdts="+encodeURIComponent(newOrder.createdTS));
+            if (newOrder.id > 0) {
+                const msg = "Thank you for shopping with us! Your order has been placed successfully. We will process your order at the earliest";
+                sendEmailNotification(loginContext, "We have received your order", msg);
+                sendMobileNotification(loginContext, msg);
+            }
+            // setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before placing the order again!'});
+        });
     }
 
     const backwardExit = () => {
@@ -311,11 +342,18 @@ const Checkout = (props) => {
         return (currentPhaseIndex === 0 && cartContext.order.deliveryAddressId > 0) ||
         (currentPhaseIndex === 1 && cartContext.order.billingAddressId > 0) ||
         (currentPhaseIndex === 2 && true) ||
-        (currentPhaseIndex === 3 && cartContext.order.paymentType !== null)
+        (currentPhaseIndex === 3 && cartContext.order.paymentOptionId)
     }
 
-    const deliveryAddressSelected = (addressId) => {
+    const deliveryAddressSelected = (addressId, city, showWarning) => {
         console.log("Address seleted for delivery - Id: "+addressId);
+        // alert(city+" "+cartContext.order.cover.coverCity);
+        if (city.toLowerCase() !== cartContext.order.cover.coverCity.toLowerCase()){
+            if (showWarning === true){
+                setInfoAlertState({show: true, msg: clientConfig.wrongCityAddressSelectedErrorMsg})
+            }
+            return;
+        }
         cartContext.setDeliveryAndBillingAddress(addressId, 0);
     }
 
@@ -346,8 +384,9 @@ const Checkout = (props) => {
         setPromoCodeState('');
     }
 
-    const razorPayPOClicked = async (transaction) => {
+    const processRazorPayPayment = async (transaction) => {
         // alert(transaction.providerData);
+        // alert("RazorPay not supported");
         const providerData = JSON.parse(transaction.providerData);
         const orderId = providerData.order.id;
         const razorPayKey = providerData.key;
@@ -379,16 +418,7 @@ const Checkout = (props) => {
         // alert(JSON.stringify(success));
         // Now send request to place order and pass the transaction data along with the request
         //cartContext.setTransactionResponse(JSON.stringify(success));
-        cartContext.placeOrder(JSON.stringify(success)).then((newOrderId)=>{
-            // console.log("Promise resolved new orderId "+newOrderId);
-            history.push("/orderplaced?id="+newOrderId);
-            if (newOrderId > 0) {
-                const msg = "Thank you for shopping with us. Your order Id is "+newOrderId+". We will process your order at the earliest";
-                sendEmailNotification(loginContext.customer.email, msg);
-                sendMobileNotification(loginContext.customer.mobile, msg);
-            }
-            // setInfoAlertState({show: true, msg: 'Failed to get a response from server. Check your orders page before placing the order again!'});
-        });
+        sendPlaceOrderRequest(JSON.stringify(success));
     }
     
     const razorPayFailCallback = (error) => {
@@ -406,6 +436,31 @@ const Checkout = (props) => {
         // });
     }
 
+    const processStripePayment = async (transaction) => {
+        // const providerData = JSON.parse(transaction.providerData);
+        // const session = JSON.parse(providerData.session);
+        // alert(transaction.providerData);
+        // const stripePromise = loadStripe(providerData.key);
+        // const stripe = await stripePromise;
+
+        // // When the customer clicks on the button, redirect them to Checkout.
+        // const result = await stripe.redirectToCheckout({
+        //     sessionId: session.id,
+        // });
+
+        // alert("Stripe call result is : "+JSON.stringify(result));
+        // if (result.error) {
+        //     // If `redirectToCheckout` fails due to a browser or network
+        //     // error, display the localized error message to your customer
+        //     // using `result.error.message`.
+        // }
+        // else{
+        //     // Poll server for result.
+        //     alert("payment on stripe processed. Poll server to get orderId");
+        // }
+    }
+
+
     if (phaseData !== null) {
         console.log("Rendering checkout page");
         return (
@@ -421,14 +476,16 @@ const Checkout = (props) => {
                 <IonLoading isOpen={loadingState}/>
 
                 {currentPhaseIndex === 0 && <DeliveryOptions addresses={phaseData}
-                                                                states={statesList} 
+                                                                // states={statesList} 
+                                                                citiesList={citiesList} 
                                                                 selectedDeliveryAddressId={cartContext.order.deliveryAddressId}
                                                                 selectedBillingAddressId={cartContext.order.billingAddressId}
                                                                 onDeliveryAddressSelected={deliveryAddressSelected}
                                                                 onBillingAddressSelected={billingAddressSelected}
                                                                 addressAddHandler={saveNewAddress}/>}
                 {currentPhaseIndex === 1 && <BillingOptions addresses={phaseData}
-                                                                states={statesList} 
+                                                                // states={statesList} 
+                                                                citiesList = {citiesList}
                                                                 selectedBillingAddressId={cartContext.order.billingAddressId}
                                                                 onBillingAddressSelected={billingAddressSelected}
                                                                 addressAddHandler={saveNewAddress}/>}
@@ -448,7 +505,7 @@ const Checkout = (props) => {
                             header={''}
                             cssClass='groc-alert'
                             message={confirmAlertState.msg}
-                            buttons={[{text: 'Yes', handler: sendPlaceOrderRequest}, 'No']}/> 
+                            buttons={[{text: 'Yes', handler: processPlaceOrder}, 'No']}/> 
                 <IonAlert isOpen={infoAlertState.show}
                             onDidDismiss={()=> setInfoAlertState(false)}
                             header={''}
@@ -464,7 +521,7 @@ const Checkout = (props) => {
                             </IonButtons>
                             <IonButtons slot="end">
                                 {currentPhaseIndex+1 === phases.length ? 
-                                <IonButton onClick={sendPlaceOrderRequest} className="ion-no-margin">
+                                <IonButton onClick={processPlaceOrder} className="ion-no-margin">
                                     {phaseData.transaction.providerId === 'cod' ? 'Place Order' : 'Pay'}
                                     <IonIcon size="large" icon={nextIcon}></IonIcon>
                                 </IonButton>

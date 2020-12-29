@@ -27,7 +27,7 @@ const GrocSearch = () => {
 
     return (
         <IonSearchbar 
-            className="pt-1" 
+            className="py-1" 
             placeholder="Search for products"
             autocomplete="on"
             value={searchTextState} 

@@ -1,4 +1,4 @@
-import { IonAlert, IonButton, IonContent, IonDatetime, IonHeader, IonInput, IonItem, IonLabel, IonList, IonLoading, IonPage } from '@ionic/react';
+import { IonAlert, IonButton, IonContent, IonDatetime, IonGrid, IonHeader, IonInput, IonItem, IonLabel, IonList, IonLoading, IonPage } from '@ionic/react';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
@@ -165,67 +165,67 @@ const Profile = () => {
                                 handler: ()=>{setServiceRequestAlertState({show: false, msg: ''}); setRetryState(!retryState)}}]}
                 />
                 <IonContent className="ion-padding" color="dark">
-                    <div className="card mb-2">
-                    <div className="border-bottom text-center p-3">We will not share your personal details with anyone</div>
-                        <div className="p-3">
-                            <form className="card">
-                            {/* <IonList lines="full" className="ion-no-margin ion-no-padding">
-                                <IonItem>
-                                    <IonLabel position="stacked">
-                                        Email Id 
-                                    </IonLabel>
-                                    <IonInput placeholder="Email Id" type="email" disabled={!editableState}
-                                    onIonChange={setEmail}
-                                    value={emailState}></IonInput>
-                                </IonItem>
-                            </IonList> */}
-                            <IonList lines="full" className="ion-no-margin ion-no-padding">
-                                <IonItem>
-                                    <IonLabel position="stacked">First Name
-                                    </IonLabel>
-                                    <IonInput placeholder="First Name" type="text" disabled={!editableState}
-                                    onIonChange={setFirstName}
-                                    value={fNameState}></IonInput>
-                                </IonItem>
-                            </IonList>
-                            <IonList lines="full" className="ion-no-margin ion-no-padding">
-                                <IonItem>
-                                    <IonLabel position="stacked">Last Name
-                                    </IonLabel>
-                                    <IonInput placeholder="Last Name" type="text" disabled={!editableState}
-                                    onIonChange={setLastName}
-                                    value={lNameState}></IonInput>
-                                </IonItem>
-                            </IonList>
-                            {/* <IonList lines="full" className="ion-no-margin ion-no-padding">
-                                <IonItem>
-                                    <IonLabel position="stacked">Mobile Number
-                                        <IonText color="danger">*</IonText>
-                                    </IonLabel>
-                                    <IonInput placeholder="Mobile Num" required type="text" disabled={!editableState}
-                                    onIonChange={setMobile}
-                                    value={mobileState}></IonInput>
-                                </IonItem>
-                            </IonList>                             */}
-                            <IonList lines="full" className="ion-no-margin ion-no-padding">
-                                <IonItem>
-                                    <IonLabel position="stacked">Date of Birth
-                                    </IonLabel>
-                                    <IonDatetime pickerOptions={customPickerOptions} placeholder="Date of Birth" type="date" disabled={!editableState}
-                                    onIonChange={setDob}
-                                    value={dobState}></IonDatetime>
-                                </IonItem>
-                            </IonList>
-                  
-                            {errorState !== '' &&
-                            <IonList lines="full" className="ion-no-margin ion-no-padding">
-                                <IonItem>
-                                    <IonLabel className="ion-text-center ion-text-wrap" color="danger">
-                                        <small>{errorState}</small>
-                                    </IonLabel>
-                                </IonItem>
-                            </IonList>}
-                            </form>
+                    <IonGrid className="card mb-2">
+                        <div className="border-bottom text-center p-3">We will not share your personal details with anyone</div>
+                        <div className="p-2">
+                        <form className="card">
+                        {/* <IonList lines="full" className="ion-no-margin ion-no-padding">
+                            <IonItem>
+                                <IonLabel position="stacked">
+                                    Email Id 
+                                </IonLabel>
+                                <IonInput placeholder="Email Id" type="email" disabled={!editableState}
+                                onIonChange={setEmail}
+                                value={emailState}></IonInput>
+                            </IonItem>
+                        </IonList> */}
+                        <IonList lines="full" className="ion-no-margin ion-no-padding">
+                            <IonItem>
+                                <IonLabel position="stacked">First Name
+                                </IonLabel>
+                                <IonInput placeholder="First Name" type="text" disabled={!editableState}
+                                onIonChange={setFirstName}
+                                value={fNameState}></IonInput>
+                            </IonItem>
+                        </IonList>
+                        <IonList lines="full" className="ion-no-margin ion-no-padding">
+                            <IonItem>
+                                <IonLabel position="stacked">Last Name
+                                </IonLabel>
+                                <IonInput placeholder="Last Name" type="text" disabled={!editableState}
+                                onIonChange={setLastName}
+                                value={lNameState}></IonInput>
+                            </IonItem>
+                        </IonList>
+                        {/* <IonList lines="full" className="ion-no-margin ion-no-padding">
+                            <IonItem>
+                                <IonLabel position="stacked">Mobile Number
+                                    <IonText color="danger">*</IonText>
+                                </IonLabel>
+                                <IonInput placeholder="Mobile Num" required type="text" disabled={!editableState}
+                                onIonChange={setMobile}
+                                value={mobileState}></IonInput>
+                            </IonItem>
+                        </IonList>                             */}
+                        <IonList lines="full" className="ion-no-margin ion-no-padding">
+                            <IonItem>
+                                <IonLabel position="stacked">Date of Birth
+                                </IonLabel>
+                                <IonDatetime pickerOptions={customPickerOptions} placeholder="Date of Birth" type="date" disabled={!editableState}
+                                onIonChange={setDob}
+                                value={dobState}></IonDatetime>
+                            </IonItem>
+                        </IonList>
+                
+                        {errorState !== '' &&
+                        <IonList lines="full" className="ion-no-margin ion-no-padding">
+                            <IonItem>
+                                <IonLabel className="ion-text-center ion-text-wrap" color="danger">
+                                    <small>{errorState}</small>
+                                </IonLabel>
+                            </IonItem>
+                        </IonList>}
+                        </form>
                         </div>
                         <div className="p-3 border-top">
                             {editableState ? 
@@ -234,7 +234,7 @@ const Profile = () => {
                                 <IonButton color="secondary" routerDirection="forward" expand="block" onClick={makeProfileEditable} className="ion-no-margin">Edit</IonButton>
                             }   
                         </div>
-                    </div>
+                    </IonGrid>
                 </IonContent>
             </IonPage>            
         )

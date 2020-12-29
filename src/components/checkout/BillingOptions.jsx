@@ -32,7 +32,8 @@ const BillingOptions = (props) => {
             :
             <AddressForm 
                     addressId={-1}
-                    states={props.states}   
+                    // states={props.states}  
+                    citiesList={props.citiesList} 
                     submitClickHandler={addAddress}
                     backClickHandler={cancelEdit.bind(this, -1)}/>}
 

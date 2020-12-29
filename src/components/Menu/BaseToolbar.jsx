@@ -2,13 +2,13 @@ import { IonBadge, IonButton, IonButtons, IonIcon, IonMenuButton, IonTitle, IonT
 import React, { useContext } from 'react';
 import { useHistory, withRouter } from 'react-router';
 import { LoginContext, CartContext } from '../../App';
-import { cartOutline as cartOutlineIcon } from 'ionicons/icons';
+import { chevronBackOutline as backIcon } from 'ionicons/icons';
 import CartButton from './CartButton';
+import { DeviceContext } from '../../App';
 
 const BaseToolbar = (props)=>{
     let history = useHistory();
-    let loginContext = useContext(LoginContext);
-    
+    let deviceContext = useContext(DeviceContext);
     // const viewCart = (customerId) =>
     // {
     //     console.log(loginContext.isAuthenticated+","+customerId);
@@ -24,6 +24,8 @@ const BaseToolbar = (props)=>{
     return (
         <IonToolbar>
             <IonButtons slot="start">
+                {deviceContext.platform === 'ios' && 
+                <IonIcon size="large" icon={backIcon} onClick={()=>history.goBack()} className="ion-no-padding"></IonIcon>}
                 <IonMenuButton/>
             </IonButtons>
             <IonTitle>
