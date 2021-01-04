@@ -46,8 +46,9 @@ import PasswordReset from './pages/auth/PasswordReset';
 import OrderPlaced from './pages/general/OrderPlaced';
 import OrderRateNReview from './pages/userdata/orders/OrderRateNReview';
 import ErrorBoundary from './components/Utilities/ErrorBoundary';
+import AppUrlListener from './components/Utilities/DeepLinkListener';
 
-const { Storage, Device } = Plugins;
+const { Storage, Device, App } = Plugins;
 const LoginContext = React.createContext(
   {
     authObject: undefined,
@@ -103,7 +104,7 @@ const DeviceContext = React.createContext(
 
 const appPages = AppPages;
 
-class App extends React.Component {
+class GrocApp extends React.Component {
 
   constructor(props){
     super(props);
@@ -120,6 +121,9 @@ class App extends React.Component {
     });
     this.loadDeviceInfo().then((deviceInfo)=>{
       this.setState({device:{platform: deviceInfo.platform}})
+    })
+    this.loadAppInfo().then((appInfo)=>{
+      // alert(JSON.stringify(appInfo));
     })
 
     // this.retrieveCart();
@@ -408,6 +412,11 @@ class App extends React.Component {
     return Promise.resolve(info);
   }
 
+  async loadAppInfo() {
+    const info = await App.getLaunchUrl();
+    return Promise.resolve(info);
+  }
+
   async retrieveUser() {
     const ret = await Storage.get({key: "user"});
     // console.log("Retrieved user from storage: "+ret.value);
@@ -647,6 +656,7 @@ class App extends React.Component {
     console.log("Rendering App");
     return (
     <IonReactRouter>
+      <AppUrlListener></AppUrlListener>
       <DeviceContext.Provider value={{platform: this.state.device.platform}}>
         <LoginContext.Provider value={{authProvider: this.state.authProvider,
                                       isAuthenticated: this.state.isAuthenticated, 
@@ -725,6 +735,6 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default GrocApp;
 export { LoginContext, CartContext, DeviceContext };
 

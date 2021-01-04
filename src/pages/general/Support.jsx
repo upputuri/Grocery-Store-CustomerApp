@@ -8,7 +8,6 @@ const Support = () => {
     const [loadingState, setLoadingState] = useState(false);
     const [variablesState, setVariablesState] = useState(null);
     const [socialHandlesState, setSocialHandlesState] = useState(null);
-
     useEffect(() => {
         loadVariables();
         loadSocialHandles();

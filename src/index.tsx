@@ -2,13 +2,13 @@
 import { Plugins } from '@capacitor/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { useIonRouter } from '@ionic/react';
+import GrocApp from './App';
 const { MobileApp } = Plugins
 
 const { SplashScreen } = Plugins;
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<GrocApp />, document.getElementById('root'));
 SplashScreen.hide();
 
 
