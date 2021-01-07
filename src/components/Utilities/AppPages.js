@@ -27,7 +27,7 @@ const AppPages =
     },
     {
       title: 'Memberships',
-      url: '/home',
+      url: '/memberships',
       icon: 'people'
     },
 

@@ -1,3 +1,4 @@
+import { Plugins } from '@capacitor/core';
 import { IonApp, IonLoading, IonRouterOutlet, IonSplitPane, IonToast } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 /* Core CSS required for Ionic components to work properly */
@@ -14,39 +15,39 @@ import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/typography.css';
 import Client from 'ketting';
-import { getMaxListeners } from 'process';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.scss';
 import { GrocMenu } from "./components/Menu/Menu";
 import AppPages from './components/Utilities/AppPages';
+import AppUrlListener from './components/Utilities/DeepLinkListener';
+import ErrorBoundary from './components/Utilities/ErrorBoundary';
 import ServiceRequest, { serviceBaseURL } from './components/Utilities/ServiceCaller';
 import './global.scss';
 import Login from './pages/auth/Login';
+import PasswordReset from './pages/auth/PasswordReset';
 import Registration from './pages/auth/Registration';
 import Security from './pages/auth/Security';
 import Checkout from './pages/checkout/Checkout';
 import ContactForm from './pages/general/ContactForm';
 import FAQ from './pages/general/FAQ';
+// import "@codetrix-studio/capacitor-google-auth";
+import OrderPlaced from './pages/general/OrderPlaced';
+import Policies from './pages/general/Policies';
+import Support from './pages/general/Support';
 import Home from './pages/Home';
+import Membership from './pages/membership/Membership';
+import MPlanMemberForm from './pages/membership/MPlanMemberForm';
+import PlanDetail from './pages/membership/PlanDetail';
 import ProductsBrowser from './pages/ProductsBrowser';
 import Account from './pages/userdata/account/Account';
 import Profile from './pages/userdata/account/Profile';
 import AddressList from './pages/userdata/address/AddressList';
 import OrderDetail from './pages/userdata/orders/OrderDetail';
+import OrderRateNReview from './pages/userdata/orders/OrderRateNReview';
 import Orders from './pages/userdata/orders/Orders';
-import { Plugins } from '@capacitor/core';
 /* Theme variables */
 import './theme/variables.scss';
-import Policies from './pages/general/Policies';
-import Support from './pages/general/Support';
-import OTPLogin from './pages/auth/OTPLogin';
-import PasswordReset from './pages/auth/PasswordReset';
-// import "@codetrix-studio/capacitor-google-auth";
-import OrderPlaced from './pages/general/OrderPlaced';
-import OrderRateNReview from './pages/userdata/orders/OrderRateNReview';
-import ErrorBoundary from './components/Utilities/ErrorBoundary';
-import AppUrlListener from './components/Utilities/DeepLinkListener';
 
 const { Storage, Device, App } = Plugins;
 const LoginContext = React.createContext(
@@ -698,6 +699,9 @@ class GrocApp extends React.Component {
                     <Route path="/faq" component={FAQ} exact={true} />
                     <Route path="/policies" component={Policies} exact={true} />
                     <Route path="/support" component={Support} exact={true} />
+                    <Route path="/memberships" component={MPlanMemberForm} exact={true} />
+                    <Route path="/mplandetail" component={PlanDetail} exact={true} />
+                    <Route path="/mplanmemberform" component={MPlanMemberForm} exact={true} />
                     <Route exact path="/" render={() => <Redirect to="/home" />} />
                     {this.state.isAuthenticated?
                     <Switch>
