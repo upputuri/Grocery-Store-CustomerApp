@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { LoginContext } from '../../../App';
 import BaseToolbar from '../../../components/Menu/BaseToolbar';
+import { clientConfig } from '../../../components/Utilities/AppCommons';
 import { profileImageStoreURL, serviceBaseURL } from '../../../components/Utilities/ServiceCaller';
 
 
@@ -68,7 +69,7 @@ const Account = (props) => {
         catch(e)
         {
             console.log("Service call failed with - "+e);
-            setInfoAlertState({show: true, msg: 'Please check your connectivity'});
+            setInfoAlertState({show: true, msg: clientConfig.connectivityErrorAlertMsg});
         }
         if (response.ok) {
           console.log("Service call completed successfully");

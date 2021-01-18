@@ -26,8 +26,8 @@ const AppPages =
       icon: 'create'
     },
     {
-      title: 'Memberships',
-      url: '/memberships',
+      title: 'Membership',
+      url: '/membership',
       icon: 'people'
     },
 

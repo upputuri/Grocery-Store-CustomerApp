@@ -9,6 +9,27 @@ const clientConfig ={
     wrongCityAddressSelectedErrorMsg: 'Selected shipping address is outside the selected delivery city. Please select a local shipping address or change your delivery city on home screen',
     cityChangeCheckoutResetAlertMsg: 'You have items in your cart. If you change the city, item prices and availability may change. Are you sure you want to proceed?',
     submitReviewSuccessAlertMsg: 'Your review has been received successfully. We will publish it once verified',
+    connectivityErrorAlertMsg: 'Unable to reach server. Please check your internet connectivity and try again!',
+    serverErrorAlertMsg: 'Something went wrong! We are working on a resolution. Please try again after some time or contact support',
+
+    fileUploadUrl: 'https://thevegitclub.com/tvcwebapi/index.php/?responsetype=json&service=user/userDocumentSavePicture',
+
+    membershipMemberMinAge: 18,
+    membershipMemberMaxAge: 29,
+    membershipNomineeMinAge: 18,
+    membershipNomineeMaxAge: 29
+}
+
+const calculateAge = (dateString) => {
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) 
+    {
+        age--;
+    }
+    return age;
 }
 
 const isPasswordValid =(username, password) => {
@@ -95,4 +116,4 @@ const generateInvoiceLink = (mobile, oid) => {
     return link;
 }
 
-export { isPasswordValid, sendEmailNotification, sendMobileNotification, generateOrderId, generateInvoiceLink, passwordFormatError, clientConfig };
+export { isPasswordValid, sendEmailNotification, sendMobileNotification, generateOrderId, generateInvoiceLink, calculateAge, passwordFormatError, clientConfig };

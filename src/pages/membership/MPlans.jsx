@@ -1,26 +1,29 @@
 import { IonAlert, IonContent, IonHeader, IonLoading, IonPage } from '@ionic/react';
 import Client from 'ketting';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import BaseToolbar from '../../components/Menu/BaseToolbar';
 import GrocSearch from '../../components/Menu/GrocSearch';
 import { clientConfig } from '../../components/Utilities/AppCommons';
 import { serviceBaseURL } from '../../components/Utilities/ServiceCaller';
-import MPlanCategoryTile from './MPlanCategoryTile';
+import MPlanTile from './MPlanTile';
 
-const MPlanCategories = () => {
+const MPlans = () => {
     const [loadingState, setLoadingState] = useState(false);
-    const [mPlanCategoriesState, setMPlanCategoriesState] = useState(undefined);
+    const [mPlansState, setMPlansState] = useState(undefined);
     const [infoAlertState, setInfoAlertState] = useState({show: false, msg: ''});
+    const search = useLocation().search;
     const history = useHistory();
-
-    useEffect(()=>{
-        loadCategories();
+    const catId = new URLSearchParams(search).get('categoryid');
+    const catName = new URLSearchParams(search).get('categoryname');
+    
+    useEffect(() => {
+        loadPlans();
     },[]);
 
-    const loadCategories = async () => {
-        //Load categories froms server
-        let path = serviceBaseURL + '/membership/plans/categories';
+    const loadPlans = async () => {
+        //Load plans of category from server
+        let path = serviceBaseURL + '/membership/plans?category='+catId;
         const client = new Client(path);
         const resource = client.go();
         // const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
@@ -42,21 +45,22 @@ const MPlanCategories = () => {
             return;
         }
         // console.log(JSON.stringify(receivedState));
-        const categoriesListState = receivedState.getEmbedded();
-        const mplanCategories = categoriesListState.map((categoryState) => categoryState.data)
-        setMPlanCategoriesState(mplanCategories);
+        const plansListState = receivedState.getEmbedded();
+        // console.log(JSON.stringify(plansListState));
+        const mPlans = plansListState.map((planState) => planState.data)
+        setMPlansState(mPlans);
         console.log("Request successful on server");
         setLoadingState(false); 
     }
 
-    const viewPlansInCategory = (categoryId, name) => {
-        history.push('/mplans?categoryid='+categoryId+'&categoryname='+name);
+    const viewPlanDetail = (planId) => {
+        history.push("/mplans/"+planId);
     }
 
     return (
         <IonPage>
             <IonHeader className="osahan-nav border-white border-bottom">
-                <BaseToolbar title="Membership Plans"/>
+                <BaseToolbar title={catName}/>
                 <GrocSearch/>      
             </IonHeader>
             <IonAlert isOpen={infoAlertState.show}
@@ -65,18 +69,14 @@ const MPlanCategories = () => {
                             cssClass='groc-alert'
                             message={infoAlertState.msg}
                             buttons={['OK']}/>
-            <IonLoading isOpen={loadingState}/>              
+            <IonLoading isOpen={loadingState}/>                
             <IonContent color="dark" className="ion-padding">
-                {mPlanCategoriesState && mPlanCategoriesState.map((category) =>{
-                    return <MPlanCategoryTile key={category.categoryId} 
-                                            categoryId={category.categoryId}
-                                            categoryName={category.categoryName} 
-                                            onViewPlansClick={viewPlansInCategory.bind(this, category.categoryId, category.categoryName)}/>
+                {mPlansState && mPlansState.map((plan) =>{
+                    return <MPlanTile key={plan.planId} planName={plan.planName} onViewPlanDetailClick={viewPlanDetail.bind(this, plan.planId)}/>
                 })}
-
             </IonContent>
         </IonPage>
     )
 }
 
-export default MPlanCategories;
+export default MPlans;

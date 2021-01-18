@@ -1,7 +1,7 @@
 import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonLoading, IonPage, IonRow, IonText, IonToolbar } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { Switch, useHistory } from 'react-router';
-import { CartContext, LoginContext } from '../../App';
+import { CartContext, LoginContext, TransactionContext } from '../../App';
 import BaseToolbar from '../../components/Menu/BaseToolbar';
 import { chevronForwardOutline as nextIcon, chevronBackOutline as previousIcon } from 'ionicons/icons';
 import DeliveryOptions from '../../components/checkout/DeliveryOptions';
@@ -38,6 +38,7 @@ const Checkout = (props) => {
     const [retryState, setRetryState] = useState(false);
     const loginContext = useContext(LoginContext);
     const cartContext = useContext(CartContext);
+    const transactionContext = useContext(TransactionContext);
     const [promoCodeState, setPromoCodeState] = useState(cartContext.order.promoCodes[0]);
     const [paymentOptionIdState, setPaymentOptionIdState] = useState(cartContext.order.paymentOptionId);
     const [razorPayOrderIdState, setRazorPayOrderIdState] = useState(undefined);                                                                   
@@ -216,7 +217,7 @@ const Checkout = (props) => {
         }
         // alert(JSON.stringify(receivedState));
         const preOrderSummary = receivedState.data;
-        preOrderSummary.transaction && cartContext.setTransactionId(preOrderSummary.transaction.id);
+        preOrderSummary.transaction && transactionContext.setTransactionId(preOrderSummary.transaction.id);
         // alert(JSON.stringify(addresses));
         setPhaseData(preOrderSummary);
         console.log("Loaded preorder summary from server");

@@ -6,6 +6,7 @@ import { LoginContext } from '../../../App';
 import AddressTile from '../../../components/Cards/AddressTile';
 import AddressForm from '../../../components/forms/AddressForm';
 import BaseToolbar from '../../../components/Menu/BaseToolbar';
+import { clientConfig } from '../../../components/Utilities/AppCommons';
 import { serviceBaseURL } from '../../../components/Utilities/ServiceCaller';
 
 const AddressList = () => {
@@ -235,7 +236,7 @@ const AddressList = () => {
         {
             console.log("Service call failed with - "+e); 
             setLoadingState(false);
-            setInfoAlertState({show: true, msg: "Unable to reach server. Please check your connectivity and try again!"});
+            setInfoAlertState({show: true, msg: clientConfig.connectivityErrorAlertMsg});
             return;
         }
         if (response.ok){

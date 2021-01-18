@@ -53,7 +53,8 @@ const Registration = () =>
 
     const sendRegisterRequest = async () =>
     {
-        if (checkInput() && passwordState === rePasswordState){
+      if (checkInput() && passwordState === rePasswordState){
+          alert(passwordState);
 
           let result = loginContext.register(mobileState, emailIdState, fNameState, lNameState, passwordState).then(
               (result) => {

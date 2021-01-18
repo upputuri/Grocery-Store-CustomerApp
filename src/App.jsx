@@ -38,7 +38,7 @@ import Support from './pages/general/Support';
 import Home from './pages/Home';
 import Membership from './pages/membership/Membership';
 import MPlanMemberForm from './pages/membership/MPlanMemberForm';
-import PlanDetail from './pages/membership/PlanDetail';
+import MPlanDetail from './pages/membership/MPlanDetail';
 import ProductsBrowser from './pages/ProductsBrowser';
 import Account from './pages/userdata/account/Account';
 import Profile from './pages/userdata/account/Profile';
@@ -48,6 +48,11 @@ import OrderRateNReview from './pages/userdata/orders/OrderRateNReview';
 import Orders from './pages/userdata/orders/Orders';
 /* Theme variables */
 import './theme/variables.scss';
+import MPlanCategories from './pages/membership/MPlanCategories';
+import MPlan from './pages/membership/MPlan';
+import MPlans from './pages/membership/MPlans';
+import MembershipForm from './pages/membership/MembershipForm';
+import MemberRegistered from './pages/membership/MemberRegistered';
 
 const { Storage, Device, App } = Plugins;
 const LoginContext = React.createContext(
@@ -60,6 +65,8 @@ const LoginContext = React.createContext(
       password: undefined,
       fname: '',
       lname: '',
+      gender: '',
+      dob: '',
       email: '',
       mobile: undefined,
       image: undefined,
@@ -81,7 +88,7 @@ const CartContext = React.createContext(
     setDeliveryAndBillingAddress: () => {},
     setPromoCodes: ()=>{},
     setPaymentOption: ()=>{},
-    setTransactionId: ()=>{},
+    // setTransactionId: ()=>{},
     setCartCount: () => {},
     setDeliveryCover: () => {},
     resetOrderContext: () => {},
@@ -91,9 +98,16 @@ const CartContext = React.createContext(
       deliveryAddressId: 0,
       promoCodes: [],
       paymentOptionId: undefined,
-      transactionId: undefined,
+      // transactionId: undefined,
       instructions: '',
     }
+  }
+)
+
+const TransactionContext = React.createContext(
+  {
+    setTransactionId: ()=>{},
+    transactionId: undefined
   }
 )
 
@@ -138,6 +152,8 @@ class GrocApp extends React.Component {
           id: '',
           fname: '',
           lname: '',
+          gender: '',
+          dob: '',
           email: '',
           password: undefined,
           mobile: undefined,
@@ -153,8 +169,11 @@ class GrocApp extends React.Component {
           billingAddressId: 0,
           promoCodes: [],
           paymentOptionId: undefined,
-          transactionId: undefined,
+          // transactionId: undefined,
           instructions: ''
+        },
+        transaction: {
+          transactionId: undefined
         },
         device: {
           platform: undefined
@@ -167,6 +186,7 @@ class GrocApp extends React.Component {
 
   async registerNewUser(mobile, emailId, fName, lName, password)
   {
+    // alert(password);
     this.setState({showLoading: true});
     console.log("Sending registration request for: "+mobile+","+emailId+","+fName+","+lName+",");
     let path = serviceBaseURL + '/customers';
@@ -203,6 +223,8 @@ class GrocApp extends React.Component {
         id: receivedData.id,
         fname: receivedData.fname,
         lname: receivedData.lname,
+        gender: receivedData.gender,
+        dob: receivedData.dob,
         email: receivedData.email,
         mobile: receivedData.mobile,
         password: password
@@ -265,6 +287,8 @@ class GrocApp extends React.Component {
         id: serviceRequest.responseObject.customer.id,
         fname: serviceRequest.responseObject.customer.fname,
         lname: serviceRequest.responseObject.customer.lname,
+        gender: serviceRequest.responseObject.customer.gender,
+        dob: serviceRequest.responseObject.customer.dob,
         email: serviceRequest.responseObject.customer.email,
         mobile: serviceRequest.responseObject.customer.mobile,
         image: serviceRequest.responseObject.customer.image
@@ -348,6 +372,8 @@ class GrocApp extends React.Component {
         id: '',
         fname: '',
         lname: '',
+        gender: '',
+        dob: '',
         email: '',
         password: undefined,
         mobile: undefined,
@@ -362,8 +388,11 @@ class GrocApp extends React.Component {
         deliveryAddressId: 0,
         promoCodes: [],
         paymentOptionId: undefined,
-        transactionId: undefined,
+        // transactionId: undefined,
         instructions: ''
+      },
+      transaction: {
+        transactionId: undefined
       },
       showToast: true,
       toastMsg: 'You are logged out!'
@@ -374,6 +403,8 @@ class GrocApp extends React.Component {
       fname: '',
       lname: '',
       email: '',
+      gender: '',
+      dob: '',
       password: undefined,
       mobile: undefined,
       image: undefined,
@@ -420,7 +451,7 @@ class GrocApp extends React.Component {
 
   async retrieveUser() {
     const ret = await Storage.get({key: "user"});
-    // console.log("Retrieved user from storage: "+ret.value);
+    console.log("Retrieved user from storage: "+ret.value);
     const user = JSON.parse(ret.value);
     return Promise.resolve(user);
     // alert(JSON.parse(JSON.stringify(user)).fname);
@@ -570,8 +601,9 @@ class GrocApp extends React.Component {
   }
 
   setTransactionId(tranId){
-    this.setState({order: {
-      ...this.state.order, transactionId: tranId
+    // alert('setting transaction id: '+tranId);
+    this.setState({transaction: {
+      transactionId: tranId
     }})
   }
 
@@ -601,7 +633,7 @@ class GrocApp extends React.Component {
       deliveryAddressId: 0,
       promoCodes: [],
       paymentOptionId: undefined,
-      transactionId: undefined,
+      // transactionId: undefined,
       instructions: ''
     }
   });
@@ -632,7 +664,11 @@ class GrocApp extends React.Component {
       loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);
       receivedState = await resource.post(
         {
-          data: {...this.state.order, customerId: this.state.customer.id, pgiResponse: paymentTransactionResponse},
+          data: {...this.state.order, 
+            customerId: this.state.customer.id, 
+            transactionId: this.state.transaction.transactionId, 
+            pgiResponse: paymentTransactionResponse
+          },
           headers: loginHeaders
         }
         );
@@ -675,7 +711,7 @@ class GrocApp extends React.Component {
                                         setDeliveryAndBillingAddress: this.setDeliveryAndBillingAddress.bind(this),
                                         setPromoCodes: this.setPromoCodes.bind(this),
                                         setPaymentOption: this.setPaymentOption.bind(this),
-                                        setTransactionId: this.setTransactionId.bind(this),
+                                        // setTransactionId: this.setTransactionId.bind(this),
                                         // setTransactionResponse: this.setTransactionResponse.bind(this),
                                         placeOrder: this.placeOrder.bind(this),
                                         // resetOrderState: this.clearOrderId.bind(this),
@@ -684,53 +720,60 @@ class GrocApp extends React.Component {
                                         setDeliveryCover: this.setDeliveryCover.bind(this),
                                         resetOrderContext: this.resetOrderContext.bind(this)
                                         }}>
-            <IonApp>
-              <IonSplitPane contentId="main-content">
-                <GrocMenu entries={appPages}/>
-                <ErrorBoundary>
-                <IonRouterOutlet id="main-content">
-                  <Switch>
-                    <Route path="/home" component={Home} exact={true} />
-                    <Route path="/products" component={ProductsBrowser} />
-                    <Route path="/register" component={Registration} />
-                    <Route path="/login" component={Login} exact={true} />
-                    <Route path="/resetpass" component={PasswordReset} exact={true} />
-                    <Route path="/contactus" component={ContactForm} exact={true} />
-                    <Route path="/faq" component={FAQ} exact={true} />
-                    <Route path="/policies" component={Policies} exact={true} />
-                    <Route path="/support" component={Support} exact={true} />
-                    <Route path="/memberships" component={MPlanMemberForm} exact={true} />
-                    <Route path="/mplandetail" component={PlanDetail} exact={true} />
-                    <Route path="/mplanmemberform" component={MPlanMemberForm} exact={true} />
-                    <Route exact path="/" render={() => <Redirect to="/home" />} />
-                    {this.state.isAuthenticated?
+            <TransactionContext.Provider value={{transactionId: this.state.transaction.transactionId,
+                                                 setTransactionId: this.setTransactionId.bind(this)}}>
+              <IonApp>
+                <IonSplitPane contentId="main-content">
+                  <GrocMenu entries={appPages}/>
+                  <ErrorBoundary>
+                  <IonRouterOutlet id="main-content">
                     <Switch>
-                      <Route path="/account" component={Account} exact={true} />
-                      <Route path="/account/profile" component={Profile} exact={true} />
-                      <Route path="/account/addresslist" component={AddressList} exact={true} />
-                      <Route path="/account/security" component={Security} exact={true} />
-                      <Route path="/checkout" component={Checkout} exact={true} />
-                      <Route path="/orders" component={Orders} exact={true} />
-                      <Route path="/orders/:id" component={OrderDetail} exact={true} />
-                      <Route path="/orderplaced" component={OrderPlaced} exact={true} />
-                      <Route path="/rateandreview/:id" component={OrderRateNReview} exact={true} />
-                    </Switch>
-                    :
-                    <Redirect to={"/login"}/>
+                      <Route path="/home" component={Home} exact={true} />
+                      <Route path="/products" component={ProductsBrowser} />
+                      <Route path="/register" component={Registration} />
+                      <Route path="/login" component={Login} exact={true} />
+                      <Route path="/resetpass" component={PasswordReset} exact={true} />
+                      <Route path="/contactus" component={ContactForm} exact={true} />
+                      <Route path="/faq" component={FAQ} exact={true} />
+                      <Route path="/policies" component={Policies} exact={true} />
+                      <Route path="/support" component={Support} exact={true} />
+                      <Route path="/mplancategories" component={MPlanCategories} exact={true} />
+                      <Route path="/mplans" component={MPlans} exact={true} />
+                      <Route path="/mplans/:id" component={MPlan} exact={true} />
+                      <Route path="/mplanmemberform" component={MPlanMemberForm} exact={true} />
+                      <Route exact path="/" render={() => <Redirect to="/home" />} />
+                      {this.state.isAuthenticated?
+                      <Switch>
+                        <Route path="/account" component={Account} exact={true} />
+                        <Route path="/account/profile" component={Profile} exact={true} />
+                        <Route path="/account/addresslist" component={AddressList} exact={true} />
+                        <Route path="/membership" component={Membership} exact={true} />
+                        <Route path="/membershipform" component={MembershipForm} exact={true} />
+                        <Route path="/memberregistered" component={MemberRegistered} exact={true} />
+                        <Route path="/account/security" component={Security} exact={true} />
+                        <Route path="/checkout" component={Checkout} exact={true} />
+                        <Route path="/orders" component={Orders} exact={true} />
+                        <Route path="/orders/:id" component={OrderDetail} exact={true} />
+                        <Route path="/orderplaced" component={OrderPlaced} exact={true} />
+                        <Route path="/rateandreview/:id" component={OrderRateNReview} exact={true} />
+                      </Switch>
+                      :
+                      <Redirect to={"/login"}/>
                     }
-                  </Switch>
-                </IonRouterOutlet>
-                </ErrorBoundary>
-                <IonToast color="tertiary"
-                    isOpen={this.state.showToast}
-                    position="middle"
-                    onDidDismiss={() => this.setState({showToast: false})}
-                    message={this.state.toastMsg}
-                    duration={500}
-                  />
-                <IonLoading isOpen={this.state.showLoading}/>
-              </IonSplitPane>
-            </IonApp>
+                    </Switch>
+                  </IonRouterOutlet>
+                  </ErrorBoundary>
+                  <IonToast color="tertiary"
+                      isOpen={this.state.showToast}
+                      position="middle"
+                      onDidDismiss={() => this.setState({showToast: false})}
+                      message={this.state.toastMsg}
+                      duration={500}
+                    />
+                  <IonLoading isOpen={this.state.showLoading}/>
+                </IonSplitPane>
+              </IonApp>
+            </TransactionContext.Provider>
           </CartContext.Provider>
         </LoginContext.Provider>
       </DeviceContext.Provider>
@@ -740,5 +783,5 @@ class GrocApp extends React.Component {
 }
 
 export default GrocApp;
-export { LoginContext, CartContext, DeviceContext };
+export { LoginContext, CartContext, DeviceContext, TransactionContext };
 

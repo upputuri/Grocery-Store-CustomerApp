@@ -3,6 +3,7 @@ import Client from 'ketting';
 import React, { useContext, useState } from 'react';
 import { Redirect, useHistory, useLocation } from 'react-router';
 import { LoginContext } from '../../App';
+import { clientConfig } from '../../components/Utilities/AppCommons';
 import { logoURL, serviceBaseURL } from '../../components/Utilities/ServiceCaller';
 
 const PasswordReset = () => {
@@ -46,7 +47,7 @@ const PasswordReset = () => {
                 setErrorState("Please enter a valid registered mobile number");
             }
             else {
-                setErrorState("Server unreachable. Please check your connectivity and try again");
+                setErrorState(clientConfig.connectivityErrorAlertMsg);
             }
             setLoadingState(false);
             return false;

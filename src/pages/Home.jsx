@@ -13,6 +13,7 @@ import { Plugins } from '@capacitor/core';
 import { CartContext } from '../App';
 import AdvertSlider from '../components/Slider/AdvertSlider';
 import { clientConfig } from '../components/Utilities/AppCommons';
+import { useHistory } from 'react-router';
 
   // document.addEventListener('ionBackButton', (ev) => {
   //   alert('registering app closer');
@@ -29,6 +30,7 @@ const Home = () => {
   const [coversState, setCoversState] = useState(undefined);
   const [showCoverOptions, setShowCoverOptions] = useState(false);
   const [checkoutResetAlertState, setCheckoutResetAlertState] = useState({show: false, msg: clientConfig.cityChangeCheckoutResetAlertMsg, coverId: undefined});
+  const history = useHistory();
 
   Plugins.App.addListener('backButton', Plugins.App.exitApp);
 
@@ -60,7 +62,7 @@ const Home = () => {
     // alert(JSON.stringify(receivedData));
     console.log("Received response from service call: "+resource.uri);
     const covers = receivedData.getEmbedded().map((coverState) => coverState.data);
-    // alert(JSON.stringify(covers[0].coverId));
+    // alert(JSON.stringify(covers[0]));
     // console.log(images);
     setCoversState(covers);
     if (!cartContext.order.cover){
@@ -318,7 +320,7 @@ const Home = () => {
                           posters={posterListsState[2] && posterListsState[2].posters}/>
           </ListingSection>}
         </div>}
-            <div className="home-page-slide ion-padding">
+            <div onClick={()=>history.push("/mplancategories")}className="home-page-slide ion-padding">
               <IonRow className="ion-text-center">
                 <IonCol className="p-1">
                   <IonIcon className="mr-1" icon={peopleIcon} size="small" color="light"/>
