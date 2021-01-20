@@ -10,26 +10,28 @@ import GrocSearch from '../components/Menu/GrocSearch';
 import BannerSlider from '../components/Slider/BannerSlider';
 import { categoryImageStoreURL, defaultImageURL, logoURL, serviceBaseURL, smallImageStoreURL } from '../components/Utilities/ServiceCaller';
 import { Plugins } from '@capacitor/core';
-import { CartContext } from '../App';
+import { CartContext, LoginContext } from '../App';
 import AdvertSlider from '../components/Slider/AdvertSlider';
 import { clientConfig } from '../components/Utilities/AppCommons';
 import { useHistory } from 'react-router';
+//
+/*  document.addEventListener('ionBackButton', (ev) => {
+    alert('registering app closer');
+    // ev.detail.register(-1, () => {
+          // MobileApp.exitApp();
 
-  // document.addEventListener('ionBackButton', (ev) => {
-  //   alert('registering app closer');
-  //   // ev.detail.register(-1, () => {
-  //         // MobileApp.exitApp();
-
-  //   // });
-  // });
-
+    // });
+  });
+*/
 const Home = () => {
+  const loginContext = useContext(LoginContext);
   const cartContext = useContext(CartContext);
   const [posterListsState, setPosterListsState] = useState(null);
   const [bannersState, setBannersState] = useState([]);
   const [coversState, setCoversState] = useState(undefined);
   const [showCoverOptions, setShowCoverOptions] = useState(false);
   const [checkoutResetAlertState, setCheckoutResetAlertState] = useState({show: false, msg: clientConfig.cityChangeCheckoutResetAlertMsg, coverId: undefined});
+  const [citySelectionPrompt, setCitySelectionPrompt] = useState({show: false, msg: ''});
   const history = useHistory();
 
   Plugins.App.addListener('backButton', Plugins.App.exitApp);
@@ -41,9 +43,11 @@ const Home = () => {
   }, []);
   
   const initializeData = async () => {
-    const coverId = await loadCovers();
-    loadBanners(coverId);
-    loadPosters(coverId);
+    loadCovers();
+    if (cartContext.order.cover){
+      loadBanners(cartContext.order.cover.coverId);
+      loadPosters(cartContext.order.cover.coverId);
+    }
   }
 
   const loadCovers = async () => {
@@ -66,7 +70,7 @@ const Home = () => {
     // console.log(images);
     setCoversState(covers);
     if (!cartContext.order.cover){
-      cartContext.setDeliveryCover(covers[0]);
+      setCitySelectionPrompt({show: true, msg: 'Please set your delivery location to start shopping!'});
     }
     return Promise.resolve(covers[0].coverId);
   }
@@ -91,6 +95,7 @@ const Home = () => {
     }
     else{
       cartContext.setDeliveryCover(coversState.find((cover) => cover.coverId === coverId));
+      window.location.reload();
     }
   }
   
@@ -99,10 +104,11 @@ const Home = () => {
     cartContext.resetOrderContext();
     //change city
     cartContext.setDeliveryCover(coversState.find((cover) => cover.coverId === coverId));
+    window.location.reload();
   }
 
-  const loadBanners = async () => {
-    const client = new Client(serviceBaseURL+'/application/coverimages');
+  const loadBanners = async (coverId) => {
+    const client = new Client(serviceBaseURL+'/application/coverimages?coverid='+coverId);
     const resource = client.go();
     console.log("Making service call: "+resource.uri);
     let receivedData;
@@ -117,7 +123,7 @@ const Home = () => {
     // alert(JSON.stringify(receivedData));
     console.log("Received response from service call: "+resource.uri);
     const images = receivedData.getEmbedded().map((imageState) => imageState.data.image);
-    // console.log(images);
+    console.log(images);
     setBannersState(images);
   }
 
@@ -129,7 +135,7 @@ const Home = () => {
       result = await loadBestSellingItemPosters(coverId, result);
       // alert(JSON.stringify(result));
       result = await loadNewlyArrivedItemPosters(coverId, result);
-      // alert(JSON.stringify(result));
+      // console.log(JSON.stringify(result));
       setPosterListsState(result);
     }catch(e) {
       console.log("Service call failed with - "+e);
@@ -272,6 +278,12 @@ const Home = () => {
         </div>      
       </IonHeader>
       <IonContent color="dark">
+        <IonAlert isOpen={citySelectionPrompt.show}
+                              onDidDismiss={()=> setCitySelectionPrompt(false)}
+                              header={''}
+                              cssClass='groc-alert'
+                              message={citySelectionPrompt.msg}
+                              buttons={[{text: 'OK', handler: loadCoverPicker}]}/>
         <IonAlert isOpen={checkoutResetAlertState.show}
                             onDidDismiss={()=> setCheckoutResetAlertState({...checkoutResetAlertState, show: false})}
                             header={''}
@@ -320,7 +332,7 @@ const Home = () => {
                           posters={posterListsState[2] && posterListsState[2].posters}/>
           </ListingSection>}
         </div>}
-            <div onClick={()=>history.push("/mplancategories")}className="home-page-slide ion-padding">
+            <div onClick={()=>history.push(loginContext.customer.membershipId && loginContext.customer.membershipId > 0 ? "/membership" : "/mplancategories")}className="home-page-slide ion-padding">
               <IonRow className="ion-text-center">
                 <IonCol className="p-1">
                   <IonIcon className="mr-1" icon={peopleIcon} size="small" color="light"/>

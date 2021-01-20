@@ -1,5 +1,5 @@
-import { IonAlert, IonButton, IonCheckbox, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonItemGroup, IonLabel, IonPage, IonRadio, IonRouterLink, IonRow, IonText } from '@ionic/react';
-import { mail as mailIcon, call as phoneIcon, create as editIcon, keyOutline as keyIcon, lockClosedOutline as lockClosedIcon, navigateCircleOutline as navigateIcon, personCircleOutline as personIcon } from 'ionicons/icons';
+import { IonAlert, IonButton, IonCheckbox, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonItemGroup, IonLabel, IonLoading, IonPage, IonRadio, IonRouterLink, IonRow, IonText } from '@ionic/react';
+import { trashBinOutline as deactivateIcon, mail as mailIcon, call as phoneIcon, create as editIcon, keyOutline as keyIcon, lockClosedOutline as lockClosedIcon, navigateCircleOutline as navigateIcon, personCircleOutline as personIcon } from 'ionicons/icons';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
@@ -14,6 +14,8 @@ const Account = (props) => {
     const history = useHistory();
     const [subscribedState, setSubscribedState] = useState(false);
     const [infoAlertState, setInfoAlertState] = useState({show: false, msg: ''});
+    const [loadingState, setLoadingState] = useState(false);
+    const [deactivateConfirmAlertState, setDeactivateConfirmAlertState] = useState({show: false, msg: ''});
 
     useEffect(()=>{
         loadSubscription();
@@ -24,6 +26,47 @@ const Account = (props) => {
         history.push('/home');
     }
     
+    const confirmBeforeDeactivate = () => {
+        setDeactivateConfirmAlertState({show: true, msg: 'Are you sure you want to deactivate your account?'})
+    }
+
+    const deactivateAccount = async () => {
+        let path = serviceBaseURL + '/customers/me';
+        const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
+        const loginHeaders = new Headers();
+        loginHeaders.append("Content-Type", "application/json");
+        loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
+        setLoadingState(true);
+        let response;
+        try{
+            response = await fetch(path, {method: 'DELETE',
+                            headers: loginHeaders});
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e); 
+            setLoadingState(false);
+            setInfoAlertState({show: true, msg: clientConfig.connectivityErrorAlertMsg});
+            return;
+        }
+        if (response.ok){
+            console.log("Deactivate request successful on server");
+            setLoadingState(false);
+            loginContext.logout();
+            setInfoAlertState({show: true, msg: 'Your account has been deactivated'});
+            history.push("/home");
+            return true;       
+        }
+        else {
+            let responseObj = await response.json();
+            console.log("Server returned a failure response to address delete request :"+responseObj.message);
+            setLoadingState(false); 
+            setInfoAlertState({show: true, msg: 'Deactivation failed, please contact support'});
+            return;         
+        }
+
+    }
+
     const toggleSubscription = () => {
         sendUpdateSubscriptionRequest();
     }
@@ -85,12 +128,19 @@ const Account = (props) => {
             <IonHeader className="osahan-nav border-bottom border-white">
                 <BaseToolbar title="Account"/>     
             </IonHeader>
+            <IonLoading isOpen={loadingState}/>
             <IonAlert isOpen={infoAlertState.show}
                         onDidDismiss={()=> setInfoAlertState(false)}
                         header={''}
                         cssClass='groc-alert'
                         message={infoAlertState.msg}
                         buttons={['OK']}/>  
+            <IonAlert isOpen={deactivateConfirmAlertState.show}
+                        onDidDismiss={()=> setDeactivateConfirmAlertState(false)}
+                        header={''}
+                        cssClass='groc-alert'
+                        message={deactivateConfirmAlertState.msg}
+                        buttons={[{text: 'Yes', handler: deactivateAccount}, {text: 'No'}]}/>  
             <IonContent className="account-info-table ion-padding my-profile-page" color="dark">
                 <div>
                     <IonGrid>
@@ -161,6 +211,12 @@ const Account = (props) => {
                 <IonButton onClick={handleLogout} size="large" className="button-block p-0 m-0" expand="full" color="night">
                     <IonIcon icon={lockClosedIcon}></IonIcon>
                     Logout
+                </IonButton>
+            </IonFooter> 
+            <IonFooter className="border-white border-top">
+                <IonButton onClick={confirmBeforeDeactivate} size="small" className="button-block p-0 m-0" expand="full" color="danger">
+                    <IonIcon icon={deactivateIcon}></IonIcon>
+                    Deactivate Account
                 </IonButton>
             </IonFooter> 
         </IonPage>            

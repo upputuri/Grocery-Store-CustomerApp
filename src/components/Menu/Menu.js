@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react'
 import { IonAvatar, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterLink, IonText, IonTitle } from "@ionic/react"
 import { pencil, paperPlane as paperPlanceIcon, cafe as cafeIcon} from 'ionicons/icons'
-import { people, lockClosed as privacy, home, informationCircle as aboutus, documentText as document, call as phone, list, grid, pricetag, basket, card, person, location, create, heart, mail, helpCircle as help, sadOutline as sad, refresh as refund, logOut as logOutIcon, logIn as logInIcon} from 'ionicons/icons';
+import { cashOutline as cashIcon, people, lockClosed as privacy, home, informationCircle as aboutus, documentText as document, call as phone, list, grid, pricetag, basket, card, person, location, create, heart, mail, helpCircle as help, sadOutline as sad, refresh as refund, logOut as logOutIcon, logIn as logInIcon} from 'ionicons/icons';
 import { LoginContext } from '../../App';
 import '../../App.scss';
-import { aboutUrl, blogUrl, faqUrl, privacyPolicyUrl, profileImageStoreURL, returnPolicyUrl, termsUrl } from '../Utilities/ServiceCaller';
+import { aboutUrl, blogUrl, faqUrl, privacyPolicyUrl, pricingPolicyUrl, profileImageStoreURL, returnPolicyUrl, termsUrl } from '../Utilities/ServiceCaller';
 import Login from '../../pages/auth/Login';
 import { useHistory } from 'react-router';
 
@@ -95,7 +95,8 @@ const GrocMenu = (props) => {
           {props.entries.map((entry, index) =>
           {
             return (
-                    <IonRouterLink key={entry.title} routerLink={entry.url}>
+                    <IonRouterLink key={entry.title} 
+                      routerLink={entry.title==='Membership' ? (loginContext.isAuthenticated ? entry.registereduserurl : entry.guestuserurl) : entry.url}>
                       <IonMenuToggle auto-hide="false" >
                         <IonItem className={index==selectedIndex ? "selected": "none"} onClick={()=>setSelectedIndex(index)} color="night" detail="false">
                           {menuIcons[`${entry.icon}`]}
@@ -129,6 +130,14 @@ const GrocMenu = (props) => {
               <IonItem color="night" detail="false">
                 <IonIcon icon={refund} slot="start"/>
                 <IonText>Return/Refund Policy</IonText>
+              </IonItem>
+            </IonMenuToggle>
+          </IonRouterLink>
+          <IonRouterLink href={pricingPolicyUrl}>
+            <IonMenuToggle auto-hide="false" >
+              <IonItem color="night" detail="false">
+                <IonIcon icon={cashIcon} slot="start"/>
+                <IonText>Pricing Policy</IonText>
               </IonItem>
             </IonMenuToggle>
           </IonRouterLink>

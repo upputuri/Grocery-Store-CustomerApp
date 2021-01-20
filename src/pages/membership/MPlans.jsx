@@ -54,14 +54,13 @@ const MPlans = () => {
     }
 
     const viewPlanDetail = (planId) => {
-        history.push("/mplans/"+planId);
+        history.push("/mplan/"+planId);
     }
 
     return (
         <IonPage>
             <IonHeader className="osahan-nav border-white border-bottom">
-                <BaseToolbar title={catName}/>
-                <GrocSearch/>      
+                <BaseToolbar title={catName}/>     
             </IonHeader>
             <IonAlert isOpen={infoAlertState.show}
                             onDidDismiss={()=> setInfoAlertState(false)}
@@ -72,7 +71,7 @@ const MPlans = () => {
             <IonLoading isOpen={loadingState}/>                
             <IonContent color="dark" className="ion-padding">
                 {mPlansState && mPlansState.map((plan) =>{
-                    return <MPlanTile key={plan.planId} planName={plan.planName} onViewPlanDetailClick={viewPlanDetail.bind(this, plan.planId)}/>
+                    return <MPlanTile key={plan.planId} categoryName={plan.categoryName} planName={plan.planName} onViewPlanDetailClick={viewPlanDetail.bind(this, plan.planId)}/>
                 })}
             </IonContent>
         </IonPage>

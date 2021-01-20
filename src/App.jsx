@@ -70,6 +70,7 @@ const LoginContext = React.createContext(
       email: '',
       mobile: undefined,
       image: undefined,
+      membershipId: undefined
     },
     login: () => {},
     register: () => {},
@@ -158,6 +159,7 @@ class GrocApp extends React.Component {
           password: undefined,
           mobile: undefined,
           image: undefined,
+          membershipId: undefined
         },
         cart: {
           itemCount: 0,
@@ -291,7 +293,8 @@ class GrocApp extends React.Component {
         dob: serviceRequest.responseObject.customer.dob,
         email: serviceRequest.responseObject.customer.email,
         mobile: serviceRequest.responseObject.customer.mobile,
-        image: serviceRequest.responseObject.customer.image
+        image: serviceRequest.responseObject.customer.image,
+        membershipId: serviceRequest.responseObject.customer.membershipId
       }
 
       // alert(JSON.stringify(fetchedCustomer));
@@ -378,12 +381,13 @@ class GrocApp extends React.Component {
         password: undefined,
         mobile: undefined,
         image: undefined,
+        membershipId: undefined,
       },
       cart: {
         itemCount: 0,
       },
       order: {
-        cover: undefined,
+        ...this.state.order,
         id: '',
         deliveryAddressId: 0,
         promoCodes: [],
@@ -408,6 +412,7 @@ class GrocApp extends React.Component {
       password: undefined,
       mobile: undefined,
       image: undefined,
+      membershipId: undefined
     });
 
     // this.storeCart({
@@ -739,7 +744,7 @@ class GrocApp extends React.Component {
                       <Route path="/support" component={Support} exact={true} />
                       <Route path="/mplancategories" component={MPlanCategories} exact={true} />
                       <Route path="/mplans" component={MPlans} exact={true} />
-                      <Route path="/mplans/:id" component={MPlan} exact={true} />
+                      <Route path="/mplan/:id" component={MPlan} exact={true} />
                       <Route path="/mplanmemberform" component={MPlanMemberForm} exact={true} />
                       <Route exact path="/" render={() => <Redirect to="/home" />} />
                       {this.state.isAuthenticated?

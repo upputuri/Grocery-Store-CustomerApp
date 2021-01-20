@@ -32,6 +32,7 @@ const blogUrl = "http://thevegitclub.com/?urlq=blog";
 const termsUrl = "http://thevegitclub.com/?urlq=page/static/Terms%20and%20Conditions";
 const returnPolicyUrl = "https://thevegitclub.com/?urlq=page/static/Refund%20Policy";
 const privacyPolicyUrl = "http://thevegitclub.com/?urlq=page/static/Privacy%20Policy";
+const pricingPolicyUrl = "http://thevegitclub.com/?urlq=page/static/Pricing%20Policy";
 const faqUrl = "http://thevegitclub.com/?urlq=page/static/FAQ";
 
 const advertUrl1 = "http://thevegitclub.com/themes/nyk/images/e435af26d54ecd5b21d7a9af8ec58994.png";
@@ -209,5 +210,5 @@ export { defaultImageURL, serviceBaseURL, smallImageStoreURL, mediumImageStoreUR
     largeImageStoreURL, logoURL, logoIconURL, thumbNailImageStoreURL, coverImageStoreURL, categoryImageStoreURL,
     profileImageStoreURL, invoiceLinkBaseUrl, invoiceLinkPassPhrase };
 
-export {aboutUrl, termsUrl, returnPolicyUrl, privacyPolicyUrl, blogUrl, faqUrl};
+export {aboutUrl, termsUrl, returnPolicyUrl, privacyPolicyUrl, pricingPolicyUrl, blogUrl, faqUrl};
 export {advertUrl1, advertUrl2, advertUrl3};

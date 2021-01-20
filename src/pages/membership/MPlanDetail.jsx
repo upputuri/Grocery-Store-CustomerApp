@@ -2,13 +2,14 @@ import { IonCol, IonContent, IonGrid, IonHeader, IonPage, IonRow, IonText } from
 import React from 'react';
 import BaseToolbar from '../../components/Menu/BaseToolbar';
 import GrocSearch from '../../components/Menu/GrocSearch';
+import { getMembershipCardColorClass } from '../../components/Utilities/AppCommons';
 // import {Editor, EditorState} from 'draft-js';
 
 const MPlanDetail = (props) =>{
-
+    // alert(props.categoryName)
     return (
         <div>
-            <IonGrid className="m-2">
+            <div className={getMembershipCardColorClass(props.categoryName)+'-canvas-dark m-2'}>
                 <IonRow>
                     <IonCol>
                         <IonText color="light">My minimum monthly purchasing</IonText>
@@ -33,8 +34,8 @@ const MPlanDetail = (props) =>{
                         {': '+props.validity+' years'}
                     </IonCol>
                 </IonRow>
-            </IonGrid>
-            <IonGrid className="m-2">
+            </div>
+            <div className={getMembershipCardColorClass(props.categoryName)+'-canvas-dark m-2'}>
                 <IonRow>
                     <IonCol>
                         <div
@@ -42,7 +43,7 @@ const MPlanDetail = (props) =>{
                         </div>
                     </IonCol>
                 </IonRow>
-        </IonGrid>
+        </div>
         </div>
     )
 }

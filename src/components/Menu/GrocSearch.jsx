@@ -1,10 +1,10 @@
-import { IonSearchbar } from '@ionic/react';
+import { IonSearchbar, IonText } from '@ionic/react';
+import { search } from 'ionicons/icons';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 
-const GrocSearch = () => {
-
-    const [searchTextState, setSearchTextState] = useState('');
+const GrocSearch = (props) => {
+    const [searchTextState, setSearchTextState] = useState(props.searchText);
     const history = useHistory();
 
     const setSearchText = (event) => {
@@ -16,7 +16,7 @@ const GrocSearch = () => {
             let keywords = searchTextState.trim().split(' ');
             const searchText = keywords.map((word) => word+'*').join(' ');
             // alert(searchText);
-            history.push("/products/list?keywords="+searchText);
+            history.push("/products/list?keywords="+searchText+"&userinput="+searchTextState);
         }
     }
 
@@ -26,15 +26,16 @@ const GrocSearch = () => {
     }
 
     return (
+        <div>
         <IonSearchbar 
             className="py-1" 
-            placeholder="Search for products"
+            placeholder="Search for productss"
             autocomplete="on"
             value={searchTextState} 
             onIonChange={setSearchText}
             enterkeyhint="go"
             onKeyUp={checkGo}
-            ></IonSearchbar>
+            ></IonSearchbar></div>
     )
 }
 

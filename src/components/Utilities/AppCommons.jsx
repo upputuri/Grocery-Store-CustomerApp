@@ -6,11 +6,13 @@ const passwordFormatError = "Password must contain at least six characters, one 
 
 const clientConfig ={
     productListPageSize: 15,
+    otpTimout : 60000,
     wrongCityAddressSelectedErrorMsg: 'Selected shipping address is outside the selected delivery city. Please select a local shipping address or change your delivery city on home screen',
     cityChangeCheckoutResetAlertMsg: 'You have items in your cart. If you change the city, item prices and availability may change. Are you sure you want to proceed?',
     submitReviewSuccessAlertMsg: 'Your review has been received successfully. We will publish it once verified',
     connectivityErrorAlertMsg: 'Unable to reach server. Please check your internet connectivity and try again!',
     serverErrorAlertMsg: 'Something went wrong! We are working on a resolution. Please try again after some time or contact support',
+    passwordFormatError: "Password must contain at least six characters, one lowercase, one uppercase and one numeric and can not be same as email!",
 
     fileUploadUrl: 'https://thevegitclub.com/tvcwebapi/index.php/?responsetype=json&service=user/userDocumentSavePicture',
 
@@ -34,10 +36,10 @@ const calculateAge = (dateString) => {
 
 const isPasswordValid =(username, password) => {
     let re;
-    if(password.length < 6) {
+    if(password.length < 8) {
         return false;
     }
-    if(password === username) {
+    if(username && password === username) {
         return false;
     }
     re = /[0-9]/;
@@ -53,6 +55,32 @@ const isPasswordValid =(username, password) => {
         return false;
     }
     return true;
+}
+
+const getMembershipCardColorClass = (categoryName) => {
+    let colorClass = 'membership-gold';
+    switch (categoryName) {
+        case 'Copper':
+            colorClass = "membership-copper";
+            break;
+        case 'Silver':
+            colorClass = "membership-silver";
+            break;
+        case 'Gold':
+            colorClass = "membership-gold";
+            break;
+        case 'Platinum':
+            colorClass = "membership-platinum";
+            break;
+        case 'Emerald':
+            colorClass = "membership-emerald";
+            break;
+        default:
+            colorClass = "membership-gold"
+            break;
+        }
+        // alert(colorClass);
+    return colorClass;
 }
 
 const sendEmailNotification = (loginContext, subject, message) => {
@@ -116,4 +144,6 @@ const generateInvoiceLink = (mobile, oid) => {
     return link;
 }
 
-export { isPasswordValid, sendEmailNotification, sendMobileNotification, generateOrderId, generateInvoiceLink, calculateAge, passwordFormatError, clientConfig };
+export { isPasswordValid, sendEmailNotification, sendMobileNotification, 
+        generateOrderId, generateInvoiceLink, calculateAge, getMembershipCardColorClass, 
+        passwordFormatError, clientConfig };

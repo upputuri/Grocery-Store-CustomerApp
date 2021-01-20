@@ -10,6 +10,7 @@ import { chevronBack as previous, chevronForward as next, filter as filterIcon, 
 import { clientConfig } from '../Utilities/AppCommons';
 import InfoMessageTile from '../Cards/InfoMessageTile';
 import { CartContext } from '../../App';
+import { Plugins } from '@capacitor/core';
 
 const ProductList = () => {
     
@@ -19,12 +20,17 @@ const ProductList = () => {
     const [queryResultCount, setQueryResultCount] = useState(clientConfig.productListPageSize);
     const history = useHistory();
     const search = useLocation().search;
+    const [searchTextState, setSearchTextState] = useState(''); 
     const [showLoading, setShowLoading] = useState(false);
     const [currentPageOffset, setCurrentPageOffset] = useState(0);
     const [showFilters, setShowFilters] = useState(false);
     const [showSortOptions, setShowSortOptions] = useState(false);
     const cartContext = useContext(CartContext);
     const [currentSortOption, setCurrentSortOption] = useState('itemname-asc');
+    Plugins.App.addListener('backButton', (event)=> {
+        if (showFilters === true)
+            setShowFilters(false);
+    });
 
     const setFilters = (event) => {
         //alert(event.target.name+" "+event.target.value);
@@ -104,7 +110,9 @@ const ProductList = () => {
     
     useEffect(()=>{
         // const cat = new URLSearchParams(search).get('category');
-        // const keywords = new URLSearchParams(search).get('keywords');
+        const keywords = new URLSearchParams(search).get('userinput');
+        // alert(keywords);
+        setSearchTextState(keywords);
         // const sortKey = new URLSearchParams()
         // let queryString = cat && cat.length>0 ? 'category='+cat : 'category=';
         // queryString = keywords && keywords.length>0 ? queryString+'&keywords='+keywords : queryString+'&keywords=';
@@ -128,6 +136,14 @@ const ProductList = () => {
         history.push('/products/single/'+id);
     }
 
+    const showFiltersModal = () => {
+        // console.log(history.location);
+        // let currentPath = history.location;
+        // currentPath.hash = 'filters';
+        // history.push(currentPath);
+        alert('opening filters')
+        setShowFilters(true);
+    }
     console.log("Rendering product list");
     const SortColumn = {
         name: "sortpicker",
@@ -145,7 +161,8 @@ const ProductList = () => {
                 <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Products"/>
                     <div className="d-flex align-middle">
-                        <GrocSearch/>
+                        <span></span>{/*This line is added so as to make the searchTextState data prop to be passed correctly in GrocSearch in next line. Not sure why it works with this (or any) element placed before it*/}
+                        <GrocSearch searchText={searchTextState}/>
                         <IonButton onClick={setShowSortOptions.bind(this,true)} color="night" className="ion-no-padding ml-0 mr-2"><IonIcon size="small" icon={sortIcon}></IonIcon></IonButton>
                         <IonButton onClick={setShowFilters.bind(this,true)} color="night" className="ion-no-padding ml-0 mr-2"><IonIcon size="small" icon={filterIcon}></IonIcon></IonButton>
                     </div>

@@ -6,7 +6,7 @@ import { setOriginalNode } from 'typescript';
 import { LoginContext } from '../../App';
 import BaseToolbar from '../../components/Menu/BaseToolbar';
 import GrocSearch from '../../components/Menu/GrocSearch';
-import { clientConfig } from '../../components/Utilities/AppCommons';
+import { clientConfig, getMembershipCardColorClass } from '../../components/Utilities/AppCommons';
 import { serviceBaseURL } from '../../components/Utilities/ServiceCaller';
 import MPlanDetail from './MPlanDetail';
 
@@ -61,6 +61,12 @@ const MPlan = (props) => {
         }
         catch(e)
         {
+            console.log("Service call failed with - "+e);
+            if (e.status && e.status === 401)//Unauthorized
+            {
+                history.push("/login");
+                return;
+            } 
             setLoadingState(false);
             setInfoAlertState({show: true, msg: clientConfig.connectivityErrorAlertMsg});
             return;
@@ -77,18 +83,30 @@ const MPlan = (props) => {
     }
 
     const viewMembershipForm = async () => {
-        let response;
-        try{
-            response = await isMember();
-            // alert(JSON.stringify(response.data));
+        if (loginContext.isAuthenticated && loginContext.customer.id){
+            let response;
+            try{
+                response = await isMember();
+                // alert(JSON.stringify(response.data));
+            }
+            catch(e)
+            {
+                console.log("Service call failed with - "+e);
+                if (e.status && e.status === 401)//Unauthorized
+                {
+                    history.push("/login");
+                    return;
+                } 
+                setInfoAlertState({show: true, msg: clientConfig.connectivityErrorAlertMsg});
+                return;
+            }
+            if (response.data && response.data.membershipId && response.data.membershipId > 0){
+                setInfoAlertState({show: true, msg: "You are already a member!"});
+                return;
+            }
         }
-        catch(e)
-        {
-            setInfoAlertState({show: true, msg: clientConfig.connectivityErrorAlertMsg});
-            return;
-        }
-        if (response.data && response.data.membershipId && response.data.membershipId > 0){
-            setInfoAlertState({show: true, msg: "You are already a member!"});
+        else{
+            history.push("/login");
             return;
         }
         history.push("/membershipform?planid="+mPlanState.planId+"&planname="+mPlanState.planName+"&categoryname="+mPlanState.categoryName);
@@ -102,7 +120,6 @@ const MPlan = (props) => {
         <IonPage>
             <IonHeader className="osahan-nav border-white border-bottom">
                 <BaseToolbar title={mPlanState && mPlanState.categoryName}/>
-                <GrocSearch/>      
             </IonHeader>
             <IonLoading isOpen={loadingState}/> 
             <IonAlert isOpen={infoAlertState.show}
@@ -120,21 +137,22 @@ const MPlan = (props) => {
             {/* <IonLoading isOpen={loadingState}/>               */}
             {mPlanState ?
             <IonContent color="dark" className="ion-padding">
-                <IonGrid>
-                    <IonRow>
+                <div className={getMembershipCardColorClass(mPlanState.categoryName)+'-canvas-light p-1'}>
+                    <div>
                         <IonCol>
                             <IonText color="light">{mPlanState.planName}</IonText>
                         </IonCol>
-                    </IonRow>
+                    </div>
 
                     <MPlanDetail minAmount = {mPlanState.minPurchaseAmount} 
                                 maxAmount = {mPlanState.maxPurchaseAmount}
                                 validity = {mPlanState.validityInYears}
-                                detail = {!detailMode ? mPlanState.shortDescription : mPlanState.description}/>
-                    <IonButton onClick={viewMembershipForm} className="mt-2" color="secondary" expand="block">{'Rs. '+mPlanState.planPrice+'/- (One time amount)'}</IonButton>
-                    <IonButton onClick={showWholeSalerMsg} className="mt-2" color="secondary" expand="block">For Wholesaler</IonButton>
+                                detail = {!detailMode ? mPlanState.shortDescription : mPlanState.description}
+                                categoryName = {mPlanState.categoryName}/>
+                    {detailMode && <IonButton onClick={viewMembershipForm} className="mt-2" color="secondary" expand="block">{'Rs. '+mPlanState.planPrice+'/- (One time amount)'}</IonButton>}
+                    {detailMode && <IonButton onClick={showWholeSalerMsg} className="mt-2" color="secondary" expand="block">For Wholesaler</IonButton>}
                     {!detailMode &&<IonButton className="mt-2" onClick={toggleDetailMode} color="secondary" expand="block">View Details</IonButton>}
-                </IonGrid>
+                </div>
             </IonContent>
             :
             <IonContent color="dark" className="ion-padding">

@@ -56,8 +56,7 @@ const MPlanCategories = () => {
     return (
         <IonPage>
             <IonHeader className="osahan-nav border-white border-bottom">
-                <BaseToolbar title="Membership Plans"/>
-                <GrocSearch/>      
+                <BaseToolbar title="Membership Plans"/>      
             </IonHeader>
             <IonAlert isOpen={infoAlertState.show}
                             onDidDismiss={()=> setInfoAlertState(false)}

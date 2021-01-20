@@ -188,29 +188,30 @@ const MembershipForm = () => {
     const isMemberFormInputValid = () => {
         return ((memberFNameState && memberFNameState.trim().length > 1) || setErrorState("Please enter First Name")) &&
         ((memberLNameState && memberLNameState.trim().length > 0) || setErrorState("Please enter Last Name")) &&
-        ((memberMobileState && memberMobileState.trim().length > 0) || setErrorState("Please enter Mobile No.")) &&
         ((memberDobState && memberDobState.trim().length > 0) || setErrorState("Please input date of birth")) &&
-        ((isMemberAgeWithinRange()) || setErrorState("Member must be between 18 years and 29 years old")) &&
         ((memberGenderState && memberGenderState.trim().length > 0) || setErrorState("Please input valid Gender")) &&
-        ((memberAltMobileState && memberAltMobileState.trim().length > 0) || setErrorState("Please input alternate Mobile No.")) &&
+        ((memberMobileState && memberMobileState.trim().length > 0) || setErrorState("Please enter Mobile No.")) &&
+        // ((isMemberAgeWithinRange()) || setErrorState("Member must be between 18 years and 29 years old")) &&
+        // ((memberAltMobileState && memberAltMobileState.trim().length > 0) || setErrorState("Please input alternate Mobile No.")) &&
         ((memberPresentAddressState && memberPresentAddressState.trim().length > 0) || setErrorState("Please input present address")) &&
         ((memberPresentPinCodeState && memberPresentPinCodeState.trim().length > 0) || setErrorState("Please input present pin code")) &&
         ((memberAdhaarFrontImgState && memberAdhaarFrontImgState.trim().length > 0) || setErrorState("Please upload adhaar front page")) &&
-        ((memberAdhaarBackImgState && memberAdhaarBackImgState.trim().length > 0) || setErrorState("Please upload adhaar back page")) &&
-        ((memberPhotoImgState && memberPhotoImgState.trim().length > 0) || setErrorState("Please upload address proof"));
+        ((memberAdhaarBackImgState && memberAdhaarBackImgState.trim().length > 0) || setErrorState("Please upload adhaar back page"));
+        // ((memberPhotoImgState && memberPhotoImgState.trim().length > 0) || setErrorState("Please upload address proof"));
     }
     
     const isNomineeFormInputValid = () => {
         return ((nomineeFNameState && nomineeFNameState.trim().length > 1) || setErrorState("Please enter First Name")) &&
         ((nomineeLNameState && nomineeLNameState.trim().length > 0) || setErrorState("Please enter Last Name")) &&
-        ((nomineeMobileState && nomineeMobileState.trim().length > 0) || setErrorState("Please enter Mobile No.")) &&
         ((nomineeDobState && nomineeDobState.trim().length > 0) || setErrorState("Please input date of birth")) &&
-        ((isNomineeAgeWithinRange()) || setErrorState("Nominee must be between 18 years and 29 years old")) &&
         ((nomineeGenderState && nomineeGenderState.trim().length > 0) || setErrorState("Please input valid Gender")) &&
-        ((nomineeAltMobileState && nomineeAltMobileState.trim().length > 0) || setErrorState("Please input alternate Mobile No.")) &&
+        ((nomineeRelationshipState && nomineeRelationshipState.trim().length > 0) || setErrorState("Please select a relationship")) &&
+        ((nomineeMobileState && nomineeMobileState.trim().length > 0) || setErrorState("Please enter Mobile No.")) &&
+        // ((isNomineeAgeWithinRange()) || setErrorState("Nominee must be between 18 years and 29 years old")) &&
+        // ((nomineeAltMobileState && nomineeAltMobileState.trim().length > 0) || setErrorState("Please input alternate Mobile No.")) &&
         ((nomineeAdhaarFrontImgState && nomineeAdhaarFrontImgState.trim().length > 0) || setErrorState("Please upload adhaar front page")) &&
         ((nomineeAdhaarBackImgState && nomineeAdhaarBackImgState.trim().length > 0) || setErrorState("Please upload adhaar back page")) &&
-        ((nomineePhotoImgState && nomineePhotoImgState.trim().length > 0) || setErrorState("Please upload address proof")) &&
+        // ((nomineePhotoImgState && nomineePhotoImgState.trim().length > 0) || setErrorState("Please upload address proof")) &&
         ((acceptedState == true) || setErrorState("Please accept terms & conditions"));
     }
 
@@ -488,17 +489,18 @@ const MembershipForm = () => {
                 <div className="border-bottom text-center p-2">
                     <IonText color="light" className="headtext">{'Please fill '+ currentFormState + ' details'}</IonText>
                 </div>
-                <div className="border-bottom text-center p-2">
+                {/* <div className="border-bottom text-center p-2">
                     <IonText color="light" className="subtext">
                         We recommend you to buy our membership plan in the name of your family member ranging from 1 year to 29 years of age for maximum benefits in the future
                     </IonText>
-                </div>
+                </div> */}
                 <div className="p-2">
                     {currentFormState === 'member' &&
                     <form className="card">
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
                             <IonLabel position="stacked">First Name
+                                <IonText color="danger">*</IonText>
                             </IonLabel>
                             <IonInput placeholder="First Name" type="text"
                              onIonChange={setMemberFirstName}
@@ -508,6 +510,7 @@ const MembershipForm = () => {
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
                             <IonLabel position="stacked">Last Name
+                                <IonText color="danger">*</IonText>
                             </IonLabel>
                             <IonInput placeholder="Last Name" type="text"
                              onIonChange={setMemberLastName}
@@ -515,8 +518,19 @@ const MembershipForm = () => {
                         </IonItem>
                     </IonList>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
+                        <IonItem>
+                            <IonLabel position="stacked">
+                                Email
+                            </IonLabel>
+                            <IonInput placeholder="Enter Email" type="email" 
+                                    onIonChange={setMemberEmail} 
+                                    value={memberEmailState}></IonInput>
+                        </IonItem>
+                    </IonList>
+                    <IonList lines="full" className="ion-no-margin ion-no-padding">
                             <IonItem>
                                 <IonLabel position="stacked">Date of Birth
+                                    <IonText color="danger">*</IonText>
                                 </IonLabel>
                                 <IonDatetime pickerOptions={customPickerOptions}
                                 onIonChange={setMemberDob} 
@@ -528,21 +542,12 @@ const MembershipForm = () => {
                         <IonItem>
                             <IonLabel position="stacked">
                                 Gender
+                                <IonText color="danger">*</IonText>
                             </IonLabel>
                             <IonSelect value={memberGenderState} className="groc-select" placeholder="Select One" onIonChange={setMemberGender}>
                                 <IonSelectOption value="female">Female</IonSelectOption>
                                 <IonSelectOption value="male">Male</IonSelectOption>
                             </IonSelect>
-                        </IonItem>
-                    </IonList>
-                    <IonList lines="full" className="ion-no-margin ion-no-padding">
-                        <IonItem>
-                            <IonLabel position="stacked">
-                                Email
-                            </IonLabel>
-                            <IonInput placeholder="Enter Email" type="email" 
-                                    onIonChange={setMemberEmail} 
-                                    value={memberEmailState}></IonInput>
                         </IonItem>
                     </IonList>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
@@ -560,7 +565,6 @@ const MembershipForm = () => {
                         <IonItem>
                             <IonLabel position="stacked">
                                 Alternate Contact No. 
-                                <IonText color="danger">*</IonText>
                             </IonLabel>
                             <IonInput placeholder="Mobile No." type="tel" maxlength="10" minlength="10"
                                     onIonChange={setMemberAltMobile} 
@@ -570,6 +574,7 @@ const MembershipForm = () => {
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
                             <IonLabel position="stacked">Present Address
+                            <IonText color="danger">*</IonText>
                             </IonLabel>
                             <IonTextarea rows={5} wrap="soft" maxlength="300"  placeholder="Address" type="text"
                             onIonChange={setMemberPresentAddress}
@@ -578,7 +583,7 @@ const MembershipForm = () => {
                     </IonList>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <IonItem>
-                            <IonLabel position="stacked">Pin Code
+                            <IonLabel position="stacked">Present Pin Code
                             <IonText color="danger">*</IonText>
                             </IonLabel>
                             <IonInput placeholder="Pin Code" type="text"  minlength="6" maxlength="6"
@@ -605,8 +610,7 @@ const MembershipForm = () => {
                                      {/* value={memberAdhaarFrontImgState}> */}
                             </input>
                             <IonLabel position="stacked" class="mb-2">
-                                Upload Address Proof 
-                                <IonText color="danger">*</IonText>
+                                Upload Photo 
                             </IonLabel>
                             <input type="file" name="adhaar" accept="image/png, image/jpeg" 
                                     onChange={uploadAndSetMemberPhotoImg}>
@@ -625,20 +629,20 @@ const MembershipForm = () => {
 
                     }
                     {currentFormState === 'nominee' && 
-                    <NomineeForm nomineeFName={nomineeFNameState} onFNameChange={(e)=>setNomineeFNameState(e.target.value)}
-                                nomineeLName={nomineeLNameState} onLNameChange={(e)=>setNomineeLNameState(e.target.value)}
-                                nomineeDob={nomineeDobState} onDobChange={(e)=>setNomineeDob(e)}
-                                nomineeGender={nomineeGenderState} onGenderChange={(e)=>setNomineeGenderState(e.target.value)}
-                                nomineeMobile={nomineeMobileState} onMobileChange={(e)=>setNomineeMobileState(e.target.value)}
-                                nomineeAltMobile={nomineeAltMobileState} onAltMobileChange={(e)=>setNomineeAltMobileState(e.target.value)}
-                                nomineeEmail={nomineeEmailState} onEmailChange={(e)=>setNomineeEmailState(e.target.value)}
-                                nomineeRelationship={nomineeRelationshipState} onRelationshipChange={(e)=>setNomineeRelationshipState(e.target.value)}
+                    <NomineeForm nomineeFName={nomineeFNameState} onFNameChange={(e)=>{setErrorState(''); setNomineeFNameState(e.target.value)}}
+                                nomineeLName={nomineeLNameState} onLNameChange={(e)=>{setErrorState(''); setNomineeLNameState(e.target.value)}}
+                                nomineeDob={nomineeDobState} onDobChange={(e)=>{setErrorState(''); setNomineeDob(e)}}
+                                nomineeGender={nomineeGenderState} onGenderChange={(e)=>{setErrorState(''); setNomineeGenderState(e.target.value)}}
+                                nomineeMobile={nomineeMobileState} onMobileChange={(e)=>{setErrorState(''); setNomineeMobileState(e.target.value)}}
+                                nomineeAltMobile={nomineeAltMobileState} onAltMobileChange={(e)=>{setErrorState(''); setNomineeAltMobileState(e.target.value)}}
+                                nomineeEmail={nomineeEmailState} onEmailChange={(e)=>{setErrorState(''); setNomineeEmailState(e.target.value)}}
+                                nomineeRelationship={nomineeRelationshipState} onRelationshipChange={(e)=>{setErrorState(''); setNomineeRelationshipState(e.target.value)}}
                                 // nomineePresentAddress={nomineePresentAddressState} onPresentAddressChange={(e)=>setNomineePresentAddressState(e.target.value)}
                                 // nomineePresentPinCode={nomineePresentPinCodeState} onPresentPinCodeChange={(e)=>setNomineePresentPinCodeState(e.target.value)}
-                                nomineeAdhaarFrontImg={nomineeAdhaarFrontImgState} onAdhaarFrontImgChange={(e)=>uploadAndSetNomineeAdhaarFrontImg(e)}
-                                nomineeAdhaarBackImg={nomineeAdhaarBackImgState} onAdhaarBackImgChange={(e)=>uploadAndSetNomineeAdhaarBackImg(e)}
-                                nomineePhotoImg={nomineePhotoImgState} onPhotoImgChange={(e)=>uploadAndSetNomineePhotoImg(e)}
-                                tncAccepted={acceptedState} onToggleAcceptTnc={()=>toggleAccept()}
+                                nomineeAdhaarFrontImg={nomineeAdhaarFrontImgState} onAdhaarFrontImgChange={(e)=>{setErrorState(''); uploadAndSetNomineeAdhaarFrontImg(e)}}
+                                nomineeAdhaarBackImg={nomineeAdhaarBackImgState} onAdhaarBackImgChange={(e)=>{setErrorState(''); uploadAndSetNomineeAdhaarBackImg(e)}}
+                                nomineePhotoImg={nomineePhotoImgState} onPhotoImgChange={(e)=>{setErrorState(''); uploadAndSetNomineePhotoImg(e)}}
+                                tncAccepted={acceptedState} onToggleAcceptTnc={()=>{setErrorState(''); toggleAccept()}}
                                 relationships={relationshipsState}
                                 
                                 />

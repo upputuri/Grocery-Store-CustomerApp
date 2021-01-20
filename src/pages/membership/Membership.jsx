@@ -67,7 +67,6 @@ const Membership = () => {
         <IonPage>
             <IonHeader className="osahan-nav border-white border-bottom">
                 <BaseToolbar title="Your Plan"/>
-                <GrocSearch/>      
             </IonHeader>
             <IonAlert isOpen={infoAlertState.show}
                             onDidDismiss={()=> setInfoAlertState(false)}

@@ -22,6 +22,7 @@ const NomineeForm = (props) => {
             <IonList lines="full" className="ion-no-margin ion-no-padding">
                 <IonItem>
                     <IonLabel position="stacked">First Name
+                        <IonText color="danger">*</IonText>
                     </IonLabel>
                     <IonInput placeholder="First Name" type="text"
                     onIonChange={props.onFNameChange}
@@ -31,6 +32,7 @@ const NomineeForm = (props) => {
             <IonList lines="full" className="ion-no-margin ion-no-padding">
                 <IonItem>
                     <IonLabel position="stacked">Last Name
+                        <IonText color="danger">*</IonText>
                     </IonLabel>
                     <IonInput placeholder="Last Name" type="text"
                     onIonChange={props.onLNameChange}
@@ -38,8 +40,19 @@ const NomineeForm = (props) => {
                 </IonItem>
             </IonList>
             <IonList lines="full" className="ion-no-margin ion-no-padding">
+                <IonItem>
+                    <IonLabel position="stacked">
+                        Email
+                    </IonLabel>
+                    <IonInput placeholder="Enter Email" type="email" 
+                            onIonChange={props.onEmailChange} 
+                            value={props.nomineeEmail}></IonInput>
+                </IonItem>
+            </IonList>
+            <IonList lines="full" className="ion-no-margin ion-no-padding">
                     <IonItem>
                         <IonLabel position="stacked">Date of Birth
+                            <IonText color="danger">*</IonText>
                         </IonLabel>
                         <IonDatetime pickerOptions={customPickerOptions}
                         onIonChange={props.onDobChange} 
@@ -51,6 +64,7 @@ const NomineeForm = (props) => {
                 <IonItem>
                     <IonLabel position="stacked">
                         Gender
+                        <IonText color="danger">*</IonText>
                     </IonLabel>
                     <IonSelect className="groc-select" placeholder="Select One" value={props.nomineeGender} onIonChange={props.onGenderChange}>
                         <IonSelectOption value="female">Female</IonSelectOption>
@@ -69,16 +83,6 @@ const NomineeForm = (props) => {
                             })}
                         </IonSelect>
                     </IonItem>
-                </IonList>
-            <IonList lines="full" className="ion-no-margin ion-no-padding">
-                <IonItem>
-                    <IonLabel position="stacked">
-                        Email
-                    </IonLabel>
-                    <IonInput placeholder="Enter Email" type="email" 
-                            onIonChange={props.onEmailChange} 
-                            value={props.nomineeEmail}></IonInput>
-                </IonItem>
             </IonList>
             <IonList lines="full" className="ion-no-margin ion-no-padding">
                 <IonItem>
@@ -95,7 +99,6 @@ const NomineeForm = (props) => {
                 <IonItem>
                     <IonLabel position="stacked">
                         Alternate Contact No. 
-                        <IonText color="danger">*</IonText>
                     </IonLabel>
                     <IonInput placeholder="Mobile No." type="tel" maxlength="10" minlength="10"
                             onIonChange={props.onAltMobileChange} 
@@ -140,8 +143,7 @@ const NomineeForm = (props) => {
                             {/* value={NomineeAdhaarFrontImgState}> */}
                     </input>
                     <IonLabel position="stacked" class="mb-2">
-                        Upload Address Proof 
-                        <IonText color="danger">*</IonText>
+                        Upload Photo 
                     </IonLabel>
                     <input type="file" name="adhaar" accept="image/png, image/jpeg" 
                             onChange={props.onPhotoImgChange}>

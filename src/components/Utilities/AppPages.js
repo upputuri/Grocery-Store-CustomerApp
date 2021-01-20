@@ -27,7 +27,8 @@ const AppPages =
     },
     {
       title: 'Membership',
-      url: '/membership',
+      registereduserurl: '/membership',
+      guestuserurl: '/mplancategories',
       icon: 'people'
     },
 
