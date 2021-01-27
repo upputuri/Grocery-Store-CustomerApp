@@ -1,16 +1,22 @@
-import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider, IonCheckbox, IonGrid } from '@ionic/react';
+import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider, IonCheckbox, IonGrid, IonModal, IonAlert, IonLoading } from '@ionic/react';
+import Client from 'ketting';
 import React, { useContext, useState } from 'react';
 import { Redirect, useHistory } from 'react-router';
 import { LoginContext } from '../../App';
 import { isPasswordValid, passwordFormatError } from '../../components/Utilities/AppCommons';
-import { logoURL } from '../../components/Utilities/ServiceCaller';
+import { logoURL, serviceBaseURL } from '../../components/Utilities/ServiceCaller';
+import OTPCheck from './OTPCheck';
 
 const Registration = () =>
 {
+    const [loadingState, setLoadingState] = useState(false);
+    const [infoAlertState, setInfoAlertState] = useState(false);
+    const [serviceRequestAlertState, setServiceRequestAlertState] = useState({show: false, msg: ''});
     const loginContext = useContext(LoginContext);
     const history = useHistory();
     const [emailIdState, setEmailIdState] = useState('');
     const [mobileState, setMobileState] = useState('');
+    const [showOTPPanel, setShowOTPPanel] = useState(false);
     const [passwordState, setPasswordState] = useState('');
     const [rePasswordState, setRePasswordState] = useState('');
     const [fNameState, setFNameState] = useState('');
@@ -31,6 +37,7 @@ const Registration = () =>
       setMobileState(event.detail.value);
       setErrorState('');
     }
+
     const setPassword = (event) => {
       setPasswordState(event.detail.value);
       setErrorState('');        
@@ -51,16 +58,61 @@ const Registration = () =>
       setErrorState('');
     }
 
+    const checkInputAndProceed = () => {
+      if (checkInput() && passwordState === rePasswordState)
+      {
+        setShowOTPPanel(true);
+      }
+    }
+
+    const closeOTPCheckAndProceed = () => {
+      setShowOTPPanel(false);
+      sendRegisterRequest();
+    }
+
+    const sendOTPForMobileRequest = async (otp) => {
+        let path = serviceBaseURL + '/application/otptokens';
+        const client = new Client(path);
+        const resource = client.go();
+        // const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
+        // const loginHeaders = new Headers();
+        // loginHeaders.append("Content-Type", "application/json");
+        // loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
+        setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
+        let receivedState;
+        try{
+            receivedState = await resource.post({
+                data: {otp: otp, 
+                    type: 'mobile',
+                    target: mobileState,
+                    message: 'Password(OTP) to verify your mobile number is {}. This OTP is valid for 10 minutes. Do not share OTP with anyone.'}
+            });
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e);
+            setLoadingState(false);
+            setServiceRequestAlertState({show: true, msg: "Failed to send OTP. Please try again"});
+            setShowOTPPanel(false);
+            return false;
+        }
+        console.log("Send OTP request accepted by server");
+        setLoadingState(false);
+        setInfoAlertState({show: true, msg: 'An OTP has been sent to the mobile number you are registering with. Please use the OTP you received to verify your mobile.'});
+        return true;
+    }
+
     const sendRegisterRequest = async () =>
     {
-      if (checkInput() && passwordState === rePasswordState){
+      // if (checkInput() && passwordState === rePasswordState){
 
           let result = loginContext.register(mobileState, emailIdState, fNameState, lNameState, passwordState).then(
               (result) => {
                 if (result === 400)
                 {
                     console.log('Registration failed because an account already exists with given email');
-                    setErrorState("An account already exists with this email! Please login if you are an existing user.");
+                    setErrorState("An account already exists with this email/mobile! Please login if you are an existing user.");
                 }
                 else if(result === 200){
                     console.log('Registration successful');
@@ -72,17 +124,18 @@ const Registration = () =>
                 }
               }
           );
-        }  
+        // }  
     }
 
     const checkInput = () =>
     {
-      if(mobileState === "") {
-        setErrorState("Mobile number cannot be blank!");
-        return false;
+      let mobileRegex = /^\d{10}$/;
+      if(mobileState === "" || !mobileRegex.test(mobileState)) {
+        setErrorState("Please enter a valid 10 digit mobile No.");
+        return;
       }
-      let re = /([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])/;
-      if(emailIdState !== "" && !re.test(emailIdState)) {
+      let emailRegex = /([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])/;
+      if(emailIdState !== "" && !emailRegex.test(emailIdState)) {
         setErrorState("Email Id must be valid");
         return false;
       }
@@ -129,6 +182,31 @@ const Registration = () =>
                 </IonTitle>
             </IonToolbar>
             </IonHeader>
+            <IonLoading isOpen={loadingState}/>
+            <IonAlert isOpen={infoAlertState.show}
+                        onDidDismiss={()=> setInfoAlertState(false)}
+                        header={''}
+                        cssClass='groc-alert'
+                        message={infoAlertState.msg}
+                        buttons={['OK']}/>   
+            <IonAlert isOpen={serviceRequestAlertState.show}
+                        onDidDismiss={()=> setServiceRequestAlertState(false)}
+                        header={''}
+                        cssClass='groc-alert'
+                        message={serviceRequestAlertState.msg}
+                        buttons={['OK']}/>
+            <IonModal isOpen={showOTPPanel}>
+              <IonHeader className="osahan-nav border-bottom border-white">
+                  <IonToolbar>
+                      <IonTitle className="ml-2">OTP Verification
+                      </IonTitle>
+                      <IonButtons slot="end">
+                          <IonButton size="small" onClick={()=>setShowOTPPanel(false)}>Cancel</IonButton>
+                      </IonButtons>
+                  </IonToolbar>
+              </IonHeader>
+              <OTPCheck otpCreated={sendOTPForMobileRequest} otpVerified={closeOTPCheckAndProceed}/>
+            </IonModal>      
             <IonContent className="ion-padding" color="dark">
             <IonGrid>
                 <div className="border-bottom text-center p-2">
@@ -212,7 +290,7 @@ const Registration = () =>
                     </form>
                 </div>
                 <div className="p-2 border-top">
-                    <IonButton color="secondary" routerDirection="forward" expand="block" onClick={sendRegisterRequest} className="ion-no-margin">Submit</IonButton>
+                    <IonButton color="secondary" routerDirection="forward" expand="block" onClick={checkInputAndProceed} className="ion-no-margin">Submit</IonButton>
                     {/* <div className='ion-text-center m-3'>Registered User?</div>
                     <IonButton color="secondary" routerDirection="forward" expand="block" onClick={()=>history.goBack()} className="ion-no-margin">Login</IonButton> */}
                 </div>

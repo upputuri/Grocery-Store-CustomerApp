@@ -42,6 +42,7 @@ const Checkout = (props) => {
     const [promoCodeState, setPromoCodeState] = useState(cartContext.order.promoCodes[0]);
     const [paymentOptionIdState, setPaymentOptionIdState] = useState(cartContext.order.paymentOptionId);
     const [razorPayOrderIdState, setRazorPayOrderIdState] = useState(undefined);                                                                   
+    const [variablesState, setVariablesState] = useState(undefined);
     const history = useHistory();
 
     useEffect(()=>{
@@ -64,6 +65,10 @@ const Checkout = (props) => {
                 break;
         }
     }, [retryState, promoCodeState]);
+
+    useEffect(()=>{
+        loadVariables();
+    }, []);
 
     const loadAddressList = async () => {
         let path = serviceBaseURL + '/customers/'+loginContext.customer.id+'/addresses';
@@ -101,6 +106,28 @@ const Checkout = (props) => {
         setLoadingState(false);  
     }
 
+
+    const loadVariables = async () => {
+        let path = serviceBaseURL + '/application/variables?keys=contact_no';
+        const client = new Client(path);
+        const resource = client.go();
+        let receivedState;
+        // setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
+        try{
+            receivedState = await resource.get();
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e);
+            setLoadingState(false);
+            return;
+        }
+        const variablesMap = receivedState.data;
+        // alert(JSON.stringify(variables));
+        setVariablesState(variablesMap.variables);
+        // setLoadingState(false);  
+    }
     // const loadStatesList = async () => {
     //     let path = serviceBaseURL + '/application/states';
     //     const client = new Client(path);
@@ -326,7 +353,11 @@ const Checkout = (props) => {
             // alert(encodeURIComponent(newOrder.createdTS));
             history.push("/orderplaced?id="+newOrder.id+"&canceltimeout="+newOrder.cancelTimeout+"&createdts="+encodeURIComponent(newOrder.createdTS));
             if (newOrder.id > 0) {
-                const msg = "Thank you for shopping with us! Your order has been placed successfully. We will process your order at the earliest";
+                let receivedOrderTS = newOrder.createdTS;
+                let displayOrderId = generateOrderId(newOrder.id, receivedOrderTS);
+                const msg = `Dear ${loginContext.isAuthenticated && loginContext.customer.fname && loginContext.customer.fname.trim() !== '' ? loginContext.customer.fname : 'Customer'}, 
+                Your order ${displayOrderId}  is placed successfully. Please use this number for all queries regarding your order. You can reach us at ${variablesState ? variablesState.contact_no : '7767988348'}. Thanks.`
+                // const msg = "Thank you for shopping with us! Your order has been placed successfully. We will process your order at the earliest";
                 sendEmailNotification(loginContext, "We have received your order", msg);
                 sendMobileNotification(loginContext, msg);
             }

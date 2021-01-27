@@ -36,7 +36,8 @@ const Categories = (props) => {
         // alert(JSON.stringify(categoriesState));
         console.log("Received response from service call: "+resource.uri);
         const categoriesListState = categoriesState.getEmbedded();
-        const categories = categoriesListState.map((categoryState) => categoryState.data)
+        const categories = categoriesListState.map((categoryState) => categoryState.data);
+        categories.splice(categories.findIndex((cat)=>cat.name === 'All Categories'), 1);
         setCategoriesState(categories);
         setShowLoading(false);       
     }

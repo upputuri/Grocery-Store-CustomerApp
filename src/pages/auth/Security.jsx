@@ -86,7 +86,7 @@ const Security = () => {
                 data: {otp: otp, 
                     type: 'mobile',
                     target: mobileState,
-                    message: 'Password(OTP) to update your email Id is {}. This OTP is valid for 10 minutes. Do not share OTP with anyone.'}
+                    message: 'Password(OTP) to update your mobile number is {}. This OTP is valid for 10 minutes. Do not share OTP with anyone.'}
             });
         }
         catch(e)

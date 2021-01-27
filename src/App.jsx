@@ -130,7 +130,7 @@ class GrocApp extends React.Component {
       user && user.mobile && user.password && this.refreshAccount(user.mobile, user.password);
     });
     this.retrieveCover().then((cover)=>{
-      // console.log("Loading cover from store: "+ (cover === undefined || cover === null) ? 'undefined': cover.coverCity);
+      // alert(JSON.stringify(cover));
       this.setState({order: {
         ...this.state.order, cover: cover
       }})
@@ -422,7 +422,7 @@ class GrocApp extends React.Component {
 
 
   async storeUser(user) {
-    console.log("Storing in app: "+JSON.stringify(user));
+    // console.log("Storing in app: "+JSON.stringify(user));
     await Storage.set({
       key: "user",
       value: JSON.stringify(user)
@@ -456,7 +456,7 @@ class GrocApp extends React.Component {
 
   async retrieveUser() {
     const ret = await Storage.get({key: "user"});
-    console.log("Retrieved user from storage: "+ret.value);
+    // console.log("Retrieved user from storage: "+ret.value);
     const user = JSON.parse(ret.value);
     return Promise.resolve(user);
     // alert(JSON.parse(JSON.stringify(user)).fname);
@@ -746,25 +746,24 @@ class GrocApp extends React.Component {
                       <Route path="/mplans" component={MPlans} exact={true} />
                       <Route path="/mplan/:id" component={MPlan} exact={true} />
                       <Route path="/mplanmemberform" component={MPlanMemberForm} exact={true} />
+                      <Route path="/membership" component={Membership} exact={true} />
+                      <Route path="/account" component={Account} exact={true} />
+                      <Route path="/orders" component={Orders} exact={true} />
                       <Route exact path="/" render={() => <Redirect to="/home" />} />
                       {this.state.isAuthenticated?
                       <Switch>
-                        <Route path="/account" component={Account} exact={true} />
                         <Route path="/account/profile" component={Profile} exact={true} />
                         <Route path="/account/addresslist" component={AddressList} exact={true} />
-                        <Route path="/membership" component={Membership} exact={true} />
                         <Route path="/membershipform" component={MembershipForm} exact={true} />
                         <Route path="/memberregistered" component={MemberRegistered} exact={true} />
                         <Route path="/account/security" component={Security} exact={true} />
                         <Route path="/checkout" component={Checkout} exact={true} />
-                        <Route path="/orders" component={Orders} exact={true} />
                         <Route path="/orders/:id" component={OrderDetail} exact={true} />
                         <Route path="/orderplaced" component={OrderPlaced} exact={true} />
                         <Route path="/rateandreview/:id" component={OrderRateNReview} exact={true} />
                       </Switch>
                       :
-                      <Redirect to={"/login"}/>
-                    }
+                      <Redirect to={"/login"}/>}
                     </Switch>
                   </IonRouterOutlet>
                   </ErrorBoundary>

@@ -24,23 +24,32 @@ const OTPCheck = (props) => {
         createOTP();
     },[]);
 
+    useEffect(()=>{
+        return cleanup;
+    },[otpClearingTimerState])
+
+    const cleanup = () => {
+        clearTimeout(otpClearingTimerState);
+    }
+
     const setOtp = (event) => {
         setOtpState(event.detail.value);
         setErrorState('');
     }
 
     const createOTP = () => {
-        let re = /^\d{10}$/;
+        // let re = /^\d{10}$/;
         // if(mobileState === "" || !re.test(mobileState)) {
         //   setErrorState("Please enter a valid 10 digit mobile No.");
         //   return;
         // }
         const otp = generateOTP();
-        props.otpCreated();
         setGeneratedOtpState(otp);
+        props.otpCreated(otp);
 
         //Expire OTP after 10 mins
         const otpClearingTimer = setTimeout(()=>setGeneratedOtpState(''), clientConfig.otpTimout);
+        console.log(otpClearingTimer);
         setWaitingForOTPState(true);
         setOTPClearingTimerState(otpClearingTimer);
         setResendOTPEnabledState(false);
@@ -54,6 +63,7 @@ const OTPCheck = (props) => {
         for (let i = 0; i < 4; i++ ) { 
             OTP += digits[Math.floor(Math.random() * 10)]; 
         } 
+        console.log("Generated OTP: "+OTP);
         return OTP; 
     }
     
@@ -65,37 +75,37 @@ const OTPCheck = (props) => {
             setWaitingForOTPState(false);
             props.otpVerified();
         }
+        else{
+            setErrorState('Invalid OTP. Please try again.');
+        }
     }
 
     return (
-
             <IonContent className="ion-padding shop-cart-page" color="dark">
             <div className="card mb-2">
-                <div className="border-bottom text-center p-3">
-                    <img alt="img" className="single-img" src={logoURL}/>
-                </div>
                 <div className="p-3">
                     <form className="card">
+                    {/* <IonText color="light">We sent you an OTP to the mobile number you are registering. Please input the OTP to verify the mobile number</IonText> */}
                     <IonList lines="full" className="ion-no-margin ion-no-padding">
                         <div>
                             <IonItem>
                                 <IonLabel> OTP </IonLabel>
                                 <IonInput autofocus={true} className="border m-2" type="text" value={otpState} onIonChange={setOtp}></IonInput>
                             </IonItem>
+                            {errorState !== '' &&
+                            <div className="d-flex justify-content-center">
+                                <IonLabel className="ion-text-wrap" color="danger">
+                                    <small>{errorState}</small>
+                                </IonLabel>
+                            </div>}
                             <div className="d-flex p-2 justify-content-center align-items-center">
                                 <IonButton onClick={verifyOTP} size="small" color="secondary">Verify</IonButton>
                                 {resendOTPEnabledState ?
-                                    <IonButton onClick={sendOTP} size="small" color="secondary">Resend OTP</IonButton>
+                                    <IonButton onClick={createOTP} size="small" color="secondary">Resend OTP</IonButton>
                                 :
                                     <CountDownTimer seconds={waitTimeForResendOTP} onTimeOut={() => setResendOTPEnabledState(true)}/>}
                             </div>
                         </div>
-                        {errorState !== '' &&
-                            <IonItem>
-                                <IonLabel className="ion-text-center ion-text-wrap" color="danger">
-                                    <small>{errorState}</small>
-                                </IonLabel>
-                            </IonItem>}
                     </IonList>
                     </form>
                 </div>

@@ -1,7 +1,7 @@
 import { IonAlert, IonCol, IonContent, IonGrid, IonHeader, IonLoading, IonPage, IonRow, IonText } from '@ionic/react';
 import { Client,  basicAuth } from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router';
+import { Redirect, useHistory, useLocation } from 'react-router';
 import { LoginContext } from '../../../App';
 import InfoMessageTile from '../../../components/Cards/InfoMessageTile';
 import OrderTile from '../../../components/Cards/OrderTile';
@@ -22,7 +22,12 @@ const Orders = () => {
     const newOrderId = new URLSearchParams(search).get('id');
 
     useEffect(()=>{
-        loadOrders();
+        if (loginContext.isAuthenticated){
+            loadOrders();
+        }
+        else{
+            history.push("/login");
+        }
     },[])
     
     const loadOrders = async () => {
@@ -101,6 +106,11 @@ const Orders = () => {
         console.log("Rendering Orders page");
         return (
             <IonPage>
+                <LoginContext.Consumer>
+                    {
+                    (context) => !context.isAuthenticated ? <Redirect to='/login'/>: ''
+                    }
+                </LoginContext.Consumer>
                 <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Your Orders"/>     
                 </IonHeader>
@@ -139,6 +149,11 @@ const Orders = () => {
         console.log("show alert "+serviceRequestAlertState.show);
             return (
             <IonPage>
+                <LoginContext.Consumer>
+                    {
+                    (context) => !context.isAuthenticated ? <Redirect to='/login'/>: ''
+                    }
+                </LoginContext.Consumer>
                 <IonHeader className="osahan-nav border-white border-bottom">
                     <BaseToolbar title="Your Orders"/>     
                 </IonHeader>

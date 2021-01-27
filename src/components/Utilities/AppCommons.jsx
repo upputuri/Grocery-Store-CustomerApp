@@ -2,7 +2,7 @@ import { invoiceLinkBaseUrl, serviceBaseURL, invoiceLinkPassPhrase } from "./Ser
 
 var CryptoJS = require("crypto-js");
 
-const passwordFormatError = "Password must contain at least six characters, one lowercase, one uppercase and one numeric and can not be same as email!";
+const passwordFormatError = "Password must contain at least eight characters, one lowercase, one uppercase and one numeric and can not be same as email!";
 
 const clientConfig ={
     productListPageSize: 15,
@@ -12,7 +12,7 @@ const clientConfig ={
     submitReviewSuccessAlertMsg: 'Your review has been received successfully. We will publish it once verified',
     connectivityErrorAlertMsg: 'Unable to reach server. Please check your internet connectivity and try again!',
     serverErrorAlertMsg: 'Something went wrong! We are working on a resolution. Please try again after some time or contact support',
-    passwordFormatError: "Password must contain at least six characters, one lowercase, one uppercase and one numeric and can not be same as email!",
+    passwordFormatError: "Password must contain at least eight characters, one lowercase, one uppercase and one numeric and can not be same as email!",
 
     fileUploadUrl: 'https://thevegitclub.com/tvcwebapi/index.php/?responsetype=json&service=user/userDocumentSavePicture',
 

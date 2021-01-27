@@ -14,6 +14,13 @@ import { CartContext, LoginContext } from '../App';
 import AdvertSlider from '../components/Slider/AdvertSlider';
 import { clientConfig } from '../components/Utilities/AppCommons';
 import { useHistory } from 'react-router';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUsers, faTruck } from "@fortawesome/free-solid-svg-icons";
+import { faGift } from '@fortawesome/free-solid-svg-icons';
+import { faLeaf } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faCreditCard } from '@fortawesome/free-solid-svg-icons';
+import { faClock } from '@fortawesome/free-solid-svg-icons';
 //
 /*  document.addEventListener('ionBackButton', (ev) => {
     alert('registering app closer');
@@ -29,6 +36,7 @@ const Home = () => {
   const [posterListsState, setPosterListsState] = useState(null);
   const [bannersState, setBannersState] = useState([]);
   const [coversState, setCoversState] = useState(undefined);
+  const [widgetDataState, setWidgetDataState] = useState(undefined);
   const [showCoverOptions, setShowCoverOptions] = useState(false);
   const [checkoutResetAlertState, setCheckoutResetAlertState] = useState({show: false, msg: clientConfig.cityChangeCheckoutResetAlertMsg, coverId: undefined});
   const [citySelectionPrompt, setCitySelectionPrompt] = useState({show: false, msg: ''});
@@ -44,6 +52,7 @@ const Home = () => {
   
   const initializeData = async () => {
     loadCovers();
+    loadWidgetData();
     if (cartContext.order.cover){
       loadBanners(cartContext.order.cover.coverId);
       loadPosters(cartContext.order.cover.coverId);
@@ -72,7 +81,24 @@ const Home = () => {
     if (!cartContext.order.cover){
       setCitySelectionPrompt({show: true, msg: 'Please set your delivery location to start shopping!'});
     }
-    return Promise.resolve(covers[0].coverId);
+  }
+
+  const loadWidgetData = async () => {
+    const client = new Client(serviceBaseURL+'/application/widgetdata');
+    const resource = client.go();
+    console.log("Making service call: "+resource.uri);
+    let receivedData;
+    try{
+        receivedData = await resource.get();
+    }
+    catch(e)
+    {
+        console.log("Service call failed with - "+e);
+        return;
+    }
+    // alert(JSON.stringify(receivedData));
+    console.log("Received response from service call: "+resource.uri);
+    setWidgetDataState(receivedData.data);
   }
 
   const loadCoverPicker = () => {
@@ -90,12 +116,12 @@ const Home = () => {
     }
     
   const checkAndProceedToCityChange = (coverId) => {
-    if (coverId !== cartContext.order.cover.coverId && cartContext.itemCount > 0) {
+    if (cartContext.order.cover && coverId !== cartContext.order.cover.coverId && cartContext.itemCount > 0) {
       setCheckoutResetAlertState({...checkoutResetAlertState, show: true, coverId: coverId});
     }
     else{
       cartContext.setDeliveryCover(coversState.find((cover) => cover.coverId === coverId));
-      window.location.reload();
+      history.go();
     }
   }
   
@@ -104,7 +130,7 @@ const Home = () => {
     cartContext.resetOrderContext();
     //change city
     cartContext.setDeliveryCover(coversState.find((cover) => cover.coverId === coverId));
-    window.location.reload();
+    history.go();
   }
 
   const loadBanners = async (coverId) => {
@@ -163,6 +189,7 @@ const Home = () => {
     console.log("Received response from service call: "+resource.uri);
     const categoriesListState = categoriesState.getEmbedded();
     const categories = categoriesListState.map((categoryState) => categoryState.data)
+    categories.splice(categories.findIndex((cat)=>cat.name === 'All Categories'), 1);
     const posters = categories.map((cat) =>{
       return {
         id: cat.id,
@@ -174,7 +201,7 @@ const Home = () => {
         leadQuery: 'category='+cat.id
       }
     });
-    const posterList = {slot: 1, title: 'Categories', posters: posters}
+    const posterList = {slot: 1, title: 'Categories', posters: posters};
     const newPosterLists = [...posterLists, posterList];
     return Promise.resolve(newPosterLists);      
   }
@@ -304,6 +331,43 @@ const Home = () => {
 
         </IonPicker>
         <BannerSlider images={bannersState}/>
+        <div className="home-page-slide p-2 my-2">
+          <IonRow className="ion-text-center">
+            <IonCol className="p-1 border-right border-bottom border-white">
+              <IonText color="light" className="headtext">
+                <FontAwesomeIcon icon={faUsers} />
+                <section><em>Happy Customers</em></section>
+                <section>42835+</section>
+                {/* <section>{widgetDataState && widgetDataState.customersCount+'+'}</section> */}
+              </IonText>
+            </IonCol>
+            <IonCol className="p-1 border-bottom border-white">
+              <IonText color="light" className="headtext">
+                <FontAwesomeIcon icon={faTruck} />
+                <section><em>Orders Delivered</em></section>
+                <section>49081+</section>
+                {/* <section>{widgetDataState && widgetDataState.ordersCount+'+'}</section> */}
+              </IonText>
+            </IonCol>
+          </IonRow>
+          <IonRow className="ion-text-center">
+            <IonCol className="p-1">
+              <IonText color="light" className="headtext">
+                <FontAwesomeIcon icon={faLeaf} />
+                <section><em>No of Products</em></section>
+                <section>103+</section>
+                {/* <section>{widgetDataState && widgetDataState.productsCount+'+'}</section> */}
+                </IonText>
+            </IonCol>
+            <IonCol className="p-1 border-left border-white">
+              <IonText color="light" className="headtext">
+                <FontAwesomeIcon icon={faGift} />
+                <section><em>Club Members</em></section>
+                <section>10708+</section></IonText>
+                {/* <section>{widgetDataState && widgetDataState.membersCount+'+'}</section></IonText> */}
+            </IonCol>
+          </IonRow>
+        </div>
         {/*Slot 1 posterslider*/}
         {posterListsState &&
         <div>
@@ -332,19 +396,58 @@ const Home = () => {
                           posters={posterListsState[2] && posterListsState[2].posters}/>
           </ListingSection>}
         </div>}
-            <div onClick={()=>history.push(loginContext.customer.membershipId && loginContext.customer.membershipId > 0 ? "/membership" : "/mplancategories")}className="home-page-slide ion-padding">
-              <IonRow className="ion-text-center">
-                <IonCol className="p-1">
-                  <IonIcon className="mr-1" icon={peopleIcon} size="small" color="light"/>
-                  <IonText color="light" className="headtext">Membership</IonText>
-                </IonCol>
-              </IonRow>
-              <IonRow className="ion-text-center">
-                <IonCol>
-                  <IonButton color="secondary" size="small"><IonIcon className="mr-1" icon={cardIcon} size="small"/>Buy Now</IonButton>
-                </IonCol>
-              </IonRow>
-            </div>
+        <div className="home-page-slide p-2 my-2">
+          <IonRow className="ion-text-center">
+            <IonCol className="p-1 border-right border-bottom border-white">
+              {/* <IonText color="light" className="headtext"> */}
+                <FontAwesomeIcon icon={faTruck} />
+                <section><strong>Free Delivery</strong></section>
+                <section><IonText className="subheadtext">{'Fast & Accurate at your doorstep'}</IonText></section>
+              {/* </IonText> */}
+            </IonCol>
+            <IonCol className="p-1 border-bottom border-white">
+              {/* <IonText color="light" className="headtext"> */}
+                <FontAwesomeIcon icon={faThumbsUp} />
+                <section><strong>{'Fresh & Healthy'}</strong></section>
+                <section><IonText className="subheadtext">Sourced directly from the farms</IonText></section>
+              {/* </IonText> */}
+            </IonCol>
+          </IonRow>
+          <IonRow className="ion-text-center">
+            <IonCol className="p-1">
+              {/* <IonText color="light" className="headtext"> */}
+                <FontAwesomeIcon icon={faCreditCard} />
+                <section><strong>Payment</strong></section>
+                <section><IonText className="subheadtext">{'Safe, Secure & Cash On Delivery'}</IonText></section>
+                {/* </IonText> */}
+            </IonCol>
+            <IonCol className="p-1 border-left border-white">
+              {/* <IonText color="light" className="headtext"> */}
+                <FontAwesomeIcon icon={faClock} />
+                <section><strong>Customer Care</strong></section>
+                <section><IonText className="subheadtext">Dedicated support team at your service</IonText></section>
+                {/* </IonText> */}
+            </IonCol>
+          </IonRow>
+        </div>
+
+        <div className="d-flex mt-3 mb-1 justify-content-center">
+          <IonText className="headtext">The Vegit Loyalty Club</IonText>
+        </div>
+        <div onClick={()=>history.push(loginContext.customer.membershipId && loginContext.customer.membershipId > 0 ? "/membership" : "/mplancategories")}className="home-page-slide ion-padding">
+          <IonRow className="ion-text-center">
+            <IonCol className="p-1">
+              {/* <IonIcon className="mr-1" icon={peopleIcon} size="small" color="light"/> */}
+              <IonText color="light" className="headtext">Exclusive Membership</IonText>
+            </IonCol>
+          </IonRow>
+          <IonRow className="ion-text-center">
+            <IonCol>
+              <IonButton color="secondary" size="small"><IonIcon className="mr-1" icon={cardIcon} size="small"/>Buy Now</IonButton>
+            </IonCol>
+          </IonRow>
+        </div>
+                  
         <div  className="ion-text-center"><IonText>Thanks for scrolling till the end!</IonText></div>
         {/*Slot 2 posterslider*/}
         {/* <ListingSection title="Everyday essentials">

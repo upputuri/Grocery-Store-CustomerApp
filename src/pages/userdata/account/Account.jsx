@@ -2,7 +2,7 @@ import { IonAlert, IonButton, IonCheckbox, IonCol, IonContent, IonFooter, IonGri
 import { trashBinOutline as deactivateIcon, mail as mailIcon, call as phoneIcon, create as editIcon, keyOutline as keyIcon, lockClosedOutline as lockClosedIcon, navigateCircleOutline as navigateIcon, personCircleOutline as personIcon } from 'ionicons/icons';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import { Redirect, useHistory } from 'react-router';
 import { LoginContext } from '../../../App';
 import BaseToolbar from '../../../components/Menu/BaseToolbar';
 import { clientConfig } from '../../../components/Utilities/AppCommons';
@@ -18,7 +18,12 @@ const Account = (props) => {
     const [deactivateConfirmAlertState, setDeactivateConfirmAlertState] = useState({show: false, msg: ''});
 
     useEffect(()=>{
-        loadSubscription();
+        if (loginContext.isAuthenticated){
+            loadSubscription();
+        }
+        else{
+            history.push("/login");
+        }
     }, []);
 
     const handleLogout = () => {
@@ -125,6 +130,11 @@ const Account = (props) => {
 
     return (
         <IonPage>
+            <LoginContext.Consumer>
+                {
+                (context) => !context.isAuthenticated ? <Redirect to='/login'/>: ''
+                }
+            </LoginContext.Consumer>
             <IonHeader className="osahan-nav border-bottom border-white">
                 <BaseToolbar title="Account"/>     
             </IonHeader>
@@ -192,7 +202,7 @@ const Account = (props) => {
                             </IonItem>
                         </IonRouterLink>
                         <IonRouterLink routerLink="/contactus">
-                            <IonItem color="night" lines="full" className="border-bottom border-secondary">
+                            <IonItem color="night" lines="full">
                                 <IonIcon slot="start" icon={mailIcon} color="light" size="small"/>
                                 <IonLabel>Tickets</IonLabel>
                             </IonItem>
@@ -209,7 +219,7 @@ const Account = (props) => {
 
             <IonFooter className="border-white border-top">
                 <IonButton onClick={handleLogout} size="large" className="button-block p-0 m-0" expand="full" color="night">
-                    <IonIcon icon={lockClosedIcon}></IonIcon>
+                    <IonIcon icon={lockClosedIcon} size="small"></IonIcon>
                     Logout
                 </IonButton>
             </IonFooter> 

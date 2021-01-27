@@ -134,13 +134,15 @@ const SingleProduct = (props) => {
                 <IonContent color="dark" className="ion-padding">
                     {productState && 
                     <div>
-                        <IonSlides options={sliderOptions} pager="true">
-                            {slideImageUrls && slideImageUrls.map((imageUrl, index) => {
-                            return <IonSlide key={index}>
-                                        <img alt="img" className="single-img" src={imageUrl}/>
-                                    </IonSlide>
-                            })}
-                        </IonSlides>
+                        <IonGrid>
+                            <IonSlides options={sliderOptions} pager="true">
+                                {slideImageUrls && slideImageUrls.map((imageUrl, index) => {
+                                return <IonSlide key={index}>
+                                            <img alt="img" className="single-img" src={imageUrl}/>
+                                        </IonSlide>
+                                })}
+                            </IonSlides>
+                        </IonGrid>
                         <div>
                             <IonGrid>
                             <div className="mb-2 p-2">

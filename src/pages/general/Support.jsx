@@ -1,7 +1,7 @@
 import { IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonLoading, IonMenuToggle, IonPage, IonRow, IonText, IonTextarea, IonTitle } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import BaseToolbar from '../../components/Menu/BaseToolbar';
-import { mail as mailIcon, callOutline as phoneIcon, logoTwitter as twitterIcon, logoYoutube as youtubeIcon, logoFacebook as fbIcon, logoInstagram as instaIcon, navigate as navigateIcon} from 'ionicons/icons';
+import { mail as mailIcon, callOutline as phoneIcon, logoTwitter as twitterIcon, logoPinterest as pinterestIcon, logoYoutube as youtubeIcon, logoFacebook as fbIcon, logoInstagram as instaIcon, navigate as navigateIcon} from 'ionicons/icons';
 import { serviceBaseURL } from '../../components/Utilities/ServiceCaller';
 import Client from 'ketting';
 const Support = () => {
@@ -99,6 +99,8 @@ const Support = () => {
                                 <a href={socialHandlesState.instagram}><IonIcon  size="large" color="light" icon={instaIcon}/></a>}
                                 {socialHandlesState && socialHandlesState.facebook && 
                                 <a href={socialHandlesState.facebook}><IonIcon  size="large" color="light" icon={fbIcon}/></a>}
+                                {socialHandlesState && socialHandlesState.facebook && 
+                                <a href={socialHandlesState.pinterest}><IonIcon  size="large" color="light" icon={pinterestIcon}/></a>}
                             </div>
                         </IonCol>
                     </IonRow>

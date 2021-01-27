@@ -60,7 +60,7 @@ const PasswordReset = () => {
                 data: {
                     type: 'mobile',
                     target: mobileState,
-                    message: 'Password(OTP) to verify your mobile is {}. This OTP is valid for 10 minutes. Do not share OTP with anyone.'}
+                    message: 'OTP to reset your password is {}. Do not share OTP with anyone.'}
             });
         }
         catch(e)
