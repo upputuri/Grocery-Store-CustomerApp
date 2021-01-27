@@ -1,11 +1,12 @@
-import { IonAlert, IonButton, IonButtons, IonCheckbox, IonContent, IonDatetime, IonGrid, IonHeader, IonInput, IonItem, IonLabel, IonList, IonLoading, IonMenuButton, IonPage, IonSelect, IonSelectOption, IonText, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAlert, IonButton, IonButtons, IonCheckbox, IonContent, IonDatetime, IonGrid, IonHeader, IonInput, IonItem, IonLabel, IonList, IonLoading, IonMenuButton, IonModal, IonPage, IonSelect, IonSelectOption, IonText, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { LoginContext, TransactionContext } from '../../App';
-import { clientConfig, calculateAge } from '../../components/Utilities/AppCommons';
+import { clientConfig, calculateAge, sendEmailNotification, sendMobileNotification } from '../../components/Utilities/AppCommons';
 import RazorPayService from '../../components/Utilities/RazorPayService';
 import { logoURL, serviceBaseURL } from '../../components/Utilities/ServiceCaller';
+import OTPCheck from '../auth/OTPCheck';
 import NomineeForm from './NomineeForm';
 
 const MembershipForm = () => {
@@ -18,6 +19,7 @@ const MembershipForm = () => {
 
     const [memberEmailState, setMemberEmailState] = useState(loginContext.customer.email);
     const [memberMobileState, setMemberMobileState] = useState(loginContext.customer.mobile);
+    const [verifiedMobileState, setVerifiedMobileState] = useState(undefined);
     const [memberAltMobileState, setMemberAltMobileState] = useState(undefined);
     const [memberFNameState, setMemberFNameState] = useState(loginContext.customer.fname);
     const [memberLNameState, setMemberLNameState] = useState(loginContext.customer.lname);
@@ -42,11 +44,14 @@ const MembershipForm = () => {
     const [nomineeAdhaarFrontImgState, setNomineeAdhaarFrontImgState] = useState(undefined);
     const [nomineeAdhaarBackImgState, setNomineeAdhaarBackImgState] = useState(undefined);
     const [nomineePhotoImgState, setNomineePhotoImgState] = useState(undefined);
-
+    
+    const [variablesState, setVariablesState] = useState(undefined);
     const [errorState, setErrorState] = useState('');
     const [acceptedState, setAcceptedState] = useState(false);
     const [loadingState, setLoadingState] = useState(false);
+    const [showOTPPanel, setShowOTPPanel] = useState(false);
     const [infoAlertState, setInfoAlertState] = useState({show: false, msg: ''});
+    const [serviceRequestAlertState, setServiceRequestAlertState] = useState({show: false, msg: ''});
     const [submitConfirmAlertState, setSubmitConfirmAlertState] = useState({show: false, msg: 'Are you ready to make the payment?'});
     
     const [transactionState, setTransactionState] = useState(undefined);
@@ -58,8 +63,31 @@ const MembershipForm = () => {
 
     useEffect(()=>{
         loadRelationships();
+        loadVariables();
     },[]);
     
+    const loadVariables = async () => {
+        let path = serviceBaseURL + '/application/variables?keys=contact_no,site_url';
+        const client = new Client(path);
+        const resource = client.go();
+        let receivedState;
+        // setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
+        try{
+            receivedState = await resource.get();
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e);
+            setLoadingState(false);
+            return;
+        }
+        const variablesMap = receivedState.data;
+        // alert(JSON.stringify(variables));
+        setVariablesState(variablesMap.variables);
+        // setLoadingState(false);  
+    }
+
     const loadRelationships = async () => {
         let path = serviceBaseURL + '/membership/relationships';
         const client = new Client(path);
@@ -151,13 +179,25 @@ const MembershipForm = () => {
         setErrorState('');
     }
   
-    const toggleForm = () => {
-        if (currentFormState === 'member') {
-            if(!isMemberFormInputValid())
-            {
-                return;
+    const checkInputAndProceed = () => {
+        if (currentFormState === 'member' && isMemberFormInputValid())
+        {
+            if (verifiedMobileState !== memberMobileState && loginContext.customer.mobile !== memberMobileState){
+                setShowOTPPanel(true);
+            }
+            else{
+                toggleForm();
             }
         }
+    }
+
+    const closeOTPCheckAndProceed = () => {
+        setShowOTPPanel(false);
+        setVerifiedMobileState(memberMobileState);
+        toggleForm();
+    }
+
+    const toggleForm = () => {
         setErrorState('');
         currentFormState === 'member' ? setCurrentFormState('nominee') : setCurrentFormState('member');
     }
@@ -186,11 +226,12 @@ const MembershipForm = () => {
 
     
     const isMemberFormInputValid = () => {
+        let mobileRegex = /^\d{10}$/;
         return ((memberFNameState && memberFNameState.trim().length > 1) || setErrorState("Please enter First Name")) &&
         ((memberLNameState && memberLNameState.trim().length > 0) || setErrorState("Please enter Last Name")) &&
         ((memberDobState && memberDobState.trim().length > 0) || setErrorState("Please input date of birth")) &&
         ((memberGenderState && memberGenderState.trim().length > 0) || setErrorState("Please input valid Gender")) &&
-        ((memberMobileState && memberMobileState.trim().length > 0) || setErrorState("Please enter Mobile No.")) &&
+        ((memberMobileState && mobileRegex.test(memberMobileState.trim())) || setErrorState("Please enter valid 10 digit mobile no.")) &&
         // ((isMemberAgeWithinRange()) || setErrorState("Member must be between 18 years and 29 years old")) &&
         // ((memberAltMobileState && memberAltMobileState.trim().length > 0) || setErrorState("Please input alternate Mobile No.")) &&
         ((memberPresentAddressState && memberPresentAddressState.trim().length > 0) || setErrorState("Please input present address")) &&
@@ -201,12 +242,13 @@ const MembershipForm = () => {
     }
     
     const isNomineeFormInputValid = () => {
+        let mobileRegex = /^\d{10}$/;
         return ((nomineeFNameState && nomineeFNameState.trim().length > 1) || setErrorState("Please enter First Name")) &&
         ((nomineeLNameState && nomineeLNameState.trim().length > 0) || setErrorState("Please enter Last Name")) &&
         ((nomineeDobState && nomineeDobState.trim().length > 0) || setErrorState("Please input date of birth")) &&
         ((nomineeGenderState && nomineeGenderState.trim().length > 0) || setErrorState("Please input valid Gender")) &&
         ((nomineeRelationshipState && nomineeRelationshipState.trim().length > 0) || setErrorState("Please select a relationship")) &&
-        ((nomineeMobileState && nomineeMobileState.trim().length > 0) || setErrorState("Please enter Mobile No.")) &&
+        ((nomineeMobileState && mobileRegex.test(nomineeMobileState.trim())) || setErrorState("Please enter valid 10 digit mobile no.")) &&
         // ((isNomineeAgeWithinRange()) || setErrorState("Nominee must be between 18 years and 29 years old")) &&
         // ((nomineeAltMobileState && nomineeAltMobileState.trim().length > 0) || setErrorState("Please input alternate Mobile No.")) &&
         ((nomineeAdhaarFrontImgState && nomineeAdhaarFrontImgState.trim().length > 0) || setErrorState("Please upload adhaar front page")) &&
@@ -275,11 +317,64 @@ const MembershipForm = () => {
             return {membershipId: 0};
         }
         const membership = response.data;
+        const emailMsg = `Dear Customer,
+
+        Thank You for becoming a member of The Vegit Club.
+
+        Your Membership ID :${membership.membershipId}
+
+        Your Membership Plan :${membership.plan.planName}
+
+        Link to Navigate to Purchased Plan.
+
+        Regards,
+        The Vegit Club Family
+        
+        ${variablesState ? variablesState.site_url : 'www.thevegitclub.com'}`;
+        // const msg = "Thank you for purchasing our membership plan. Welcome to the Vegit Loyalty Club!";
+        sendEmailNotification(loginContext, "Welcome to Vegit Loyalty Club", emailMsg);
+
+        const smsMsg = `Thank you for becoming a member of The Vegit Club. Your membership id is ${membership.membershipId}.
+         Please use this number for all queries regarding your membership plan. You can reach us at ${variablesState ? variablesState.contact_no : '7767988348'}. Thanks.`;
+        sendMobileNotification(loginContext, smsMsg);
         history.push('/memberregistered?membershipid='+membership.membershipId);
     }
     
     const onPaymentCancelled = () => {
-        history.push('/memberregistered?membershipid=-1');
+        //history.push('/memberregistered?membershipid=-1');
+    }
+
+    const sendOTPForMobileRequest = async (otp) => {
+        let path = serviceBaseURL + '/application/otptokens';
+        const client = new Client(path);
+        const resource = client.go();
+        // const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
+        // const loginHeaders = new Headers();
+        // loginHeaders.append("Content-Type", "application/json");
+        // loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);        
+        setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
+        let receivedState;
+        try{
+            receivedState = await resource.post({
+                data: {otp: otp, 
+                    type: 'mobile',
+                    target: memberMobileState,
+                    message: 'Password(OTP) to verify your mobile number is {}. This OTP is valid for 10 minutes. Do not share OTP with anyone.'}
+            });
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e);
+            setLoadingState(false);
+            setServiceRequestAlertState({show: true, msg: "Failed to send OTP. Please try again"});
+            setShowOTPPanel(false);
+            return false;
+        }
+        console.log("Send OTP request accepted by server");
+        setLoadingState(false);
+        setInfoAlertState({show: true, msg: 'An OTP has been sent to the mobile number you are registering with. Please use the OTP you received to verify your mobile.'});
+        return true;
     }
 
     const sendRegisterRequest = async (payload) => {
@@ -463,13 +558,13 @@ const MembershipForm = () => {
     return (
         <IonPage>
             <IonHeader className="osahan-nav border-bottom border-white">
-            <IonToolbar>
-                <IonButtons slot="start">
-                    <IonMenuButton></IonMenuButton>
-                </IonButtons>
-                <IonTitle>{planName}
-                </IonTitle>
-            </IonToolbar>
+                <IonToolbar>
+                    <IonButtons slot="start">
+                        <IonMenuButton></IonMenuButton>
+                    </IonButtons>
+                    <IonTitle>{planName}
+                    </IonTitle>
+                </IonToolbar>
             </IonHeader>
             <IonLoading isOpen={loadingState}/> 
             <IonAlert isOpen={infoAlertState.show}
@@ -478,12 +573,30 @@ const MembershipForm = () => {
                             cssClass='groc-alert'
                             message={infoAlertState.msg}
                             buttons={['OK']}/>
+            <IonAlert isOpen={serviceRequestAlertState.show}
+                onDidDismiss={()=> setServiceRequestAlertState(false)}
+                header={''}
+                cssClass='groc-alert'
+                message={serviceRequestAlertState.msg}
+                buttons={['OK']}/>                
             <IonAlert isOpen={submitConfirmAlertState.show}
                             onDidDismiss={()=> setSubmitConfirmAlertState({...submitConfirmAlertState, show: false})}
                             header={''}
                             cssClass='groc-alert'
                             message={submitConfirmAlertState.msg}
-                            buttons={[{text: 'Yes', handler: submitForm}, {text: 'No'}]}/>  
+                            buttons={[{text: 'Yes', handler: submitForm}, {text: 'No'}]}/>
+            <IonModal isOpen={showOTPPanel}>
+              <IonHeader className="osahan-nav border-bottom border-white">
+                  <IonToolbar>
+                      <IonTitle className="ml-2">OTP Verification
+                      </IonTitle>
+                      <IonButtons slot="end">
+                          <IonButton size="small" onClick={()=>setShowOTPPanel(false)}>Cancel</IonButton>
+                      </IonButtons>
+                  </IonToolbar>
+              </IonHeader>
+              <OTPCheck otpCreated={sendOTPForMobileRequest} otpVerified={closeOTPCheckAndProceed}/>
+            </IonModal>   
             <IonContent className="ion-padding" color="dark">
             <IonGrid>
                 <div className="border-bottom text-center p-2">
@@ -649,17 +762,18 @@ const MembershipForm = () => {
                     }   
                 </div>
                 {errorState !== '' &&
-                    <IonList lines="full" className="ion-no-margin ion-no-padding">
-                        <IonItem>
+                    // <IonList lines="full" className="ion-no-margin ion-no-padding">
+                        <div className="d-flex justify-content-center">
                             <IonLabel className="ion-text-center ion-text-wrap" color="danger">
                                 <small>{errorState}</small>
                             </IonLabel>
-                        </IonItem>
-                    </IonList>}
+                        </div>
+                    // </IonList>
+                    }
                 <div className="p-2 d-flex border-top">
                     {currentFormState === 'nominee' && 
                     <IonButton onClick={toggleForm} color="secondary" className="ion-no-margin">Back</IonButton>}
-                    <IonButton onClick={currentFormState === 'member' ? toggleForm : confirmFormSubmission} color="secondary" routerDirection="forward" expand="block" className="ion-no-margin">
+                    <IonButton onClick={currentFormState === 'member' ? checkInputAndProceed : confirmFormSubmission} color="secondary" routerDirection="forward" expand="block" className="ion-no-margin">
                         {currentFormState === 'member' ? 'Next' : 'Pay'}
                         </IonButton>
                     {/* <div className='ion-text-center m-3'>Registered User?</div>

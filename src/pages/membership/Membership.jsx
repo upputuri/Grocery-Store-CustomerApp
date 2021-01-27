@@ -6,7 +6,7 @@ import { LoginContext } from '../../App';
 import InfoMessageTile from '../../components/Cards/InfoMessageTile';
 import BaseToolbar from '../../components/Menu/BaseToolbar';
 import GrocSearch from '../../components/Menu/GrocSearch';
-import { clientConfig } from '../../components/Utilities/AppCommons';
+import { clientConfig, getMembershipCardColorClass } from '../../components/Utilities/AppCommons';
 import { serviceBaseURL } from '../../components/Utilities/ServiceCaller';
 import MPlanDetail from './MPlanDetail';
 
@@ -53,6 +53,7 @@ const Membership = () => {
             return;
         }
         const membership = receivedState.data;
+        // alert(JSON.stringify(membership.plan));
         membership && membership.plan && membership.plan != null ? setMPlanState(membership.plan) : setMPlanState(null);
         console.log("Request successful on server");
         setLoadingState(false);   
@@ -77,18 +78,19 @@ const Membership = () => {
             <IonLoading isOpen={loadingState}/>              
             <IonContent color="dark" className="ion-padding">
                 {mPlanState != null ?
-                <IonGrid>
-                    <IonRow className="ion-text-center">
+                <div className={getMembershipCardColorClass(mPlanState.categoryName)+'-canvas-light p-1'}>
+                    <div>
                         <IonCol>
-                            <IonText className="headtext" color="light">{mPlanState.planName}</IonText>
+                            <IonText color="light">{mPlanState.planName}</IonText>
                         </IonCol>
-                    </IonRow>
+                    </div>
                     <MPlanDetail minAmount = {mPlanState.minPurchaseAmount} 
                             maxAmount = {mPlanState.maxPurchaseAmount}
                             validity = {mPlanState.validityInYears}
-                            detail = {mPlanState.description}/>
+                            detail = {mPlanState.description}
+                            categoryName = {mPlanState.categoryName}/>
                     <IonButton className="mt-2" onClick={()=>history.push("/mplancategories")} color="secondary" expand="block">View All Plans</IonButton>
-                </IonGrid>                            
+                </div>                            
                 :
                 <InfoMessageTile
                     detail="You have not purchased any plans yet. Would you like to purchase one?"
