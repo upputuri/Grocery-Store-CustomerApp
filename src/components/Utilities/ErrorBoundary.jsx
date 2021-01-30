@@ -27,6 +27,8 @@ class ErrorBoundary extends React.Component {
 
     logErrorToService(error, errorInfo) {
       // Send error detail to service
+      // alert(JSON.stringify(error));
+      // alert(JSON.stringify(errorInfo));
     }
   
     resetError() {

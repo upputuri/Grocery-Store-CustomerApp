@@ -555,6 +555,10 @@ const MembershipForm = () => {
         cssClass: 'groc-date-picker'
     };
 
+    const customAlertOptions = {
+        cssClass: 'groc-select'
+    };
+
     return (
         <IonPage>
             <IonHeader className="osahan-nav border-bottom border-white">
@@ -657,7 +661,7 @@ const MembershipForm = () => {
                                 Gender
                                 <IonText color="danger">*</IonText>
                             </IonLabel>
-                            <IonSelect value={memberGenderState} className="groc-select" placeholder="Select One" onIonChange={setMemberGender}>
+                            <IonSelect value={memberGenderState} interfaceOptions={customAlertOptions} placeholder="Select One" onIonChange={setMemberGender}>
                                 <IonSelectOption value="female">Female</IonSelectOption>
                                 <IonSelectOption value="male">Male</IonSelectOption>
                             </IonSelect>

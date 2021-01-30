@@ -15,11 +15,11 @@ const AppPages =
       url: '/account',
       icon: 'person'
     },
-    {
-      title: 'Track Order',
-      url: '/home',
-      icon: 'location'
-    },
+    // {
+    //   title: 'Track Order',
+    //   url: '/home',
+    //   icon: 'location'
+    // },
     {
       title: 'My Orders',
       url: '/orders',

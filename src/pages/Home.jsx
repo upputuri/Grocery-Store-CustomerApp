@@ -207,7 +207,7 @@ const Home = () => {
   }
 
   const loadBestSellingItemPosters = async (coverId, posterLists) => {
-    const query = '?offset=0&size=12&sortkey=sales&sortorder=desc&coverid='+coverId;
+    const query = '?sortkey=sales&sortorder=desc&coverid='+coverId;
     const client = new Client(serviceBaseURL+'/products'+query);
     const resource = client.go();
     let receivedData;
@@ -240,7 +240,7 @@ const Home = () => {
   }
 
   const loadNewlyArrivedItemPosters = async (coverId, posterLists) => {
-    const query = '?offset=0&size=12&sortkey=created_ts&sortorder=desc&coverid='+coverId;
+    const query = '?sortkey=created_ts&sortorder=desc&coverid='+coverId;
     const client = new Client(serviceBaseURL+'/products'+query);
     const resource = client.go();
     let receivedData;
@@ -330,8 +330,12 @@ const Home = () => {
                     ]}>
 
         </IonPicker>
-        <BannerSlider images={bannersState}/>
-        <div className="home-page-slide p-2 my-2">
+
+        {/*Slot 1 posterslider*/}
+        {posterListsState &&
+        <div>
+          <BannerSlider images={bannersState}/>
+          <div className="home-page-slide p-2 my-2">
           <IonRow className="ion-text-center">
             <IonCol className="p-1 border-right border-bottom border-white">
               <IonText color="light" className="headtext">
@@ -368,10 +372,7 @@ const Home = () => {
             </IonCol>
           </IonRow>
         </div>
-        {/*Slot 1 posterslider*/}
-        {posterListsState &&
-        <div>
-          {posterListsState[0].posters.length > 0 && <ListingSection title={posterListsState[0].title} viewAllRoute={"/products/categories"}>
+        {posterListsState[0].posters.length > 0 && <ListingSection title={posterListsState[0].title}>
             <PosterSlider slidesPerView={2.6} 
                           loop={false} 
                           centeredSlides={false} 
@@ -432,7 +433,7 @@ const Home = () => {
         </div>
 
         <div className="d-flex mt-3 mb-1 justify-content-center">
-          <IonText className="headtext">The Vegit Loyalty Club</IonText>
+          <IonText className="headtext">The Vegit Club</IonText>
         </div>
         <div onClick={()=>history.push(loginContext.customer.membershipId && loginContext.customer.membershipId > 0 ? "/membership" : "/mplancategories")}className="home-page-slide ion-padding">
           <IonRow className="ion-text-center">
@@ -448,7 +449,7 @@ const Home = () => {
           </IonRow>
         </div>
                   
-        <div  className="ion-text-center"><IonText>Thanks for scrolling till the end!</IonText></div>
+        <div  className="ion-text-center mt-3"><IonText>Thanks for scrolling till the end!</IonText></div>
         {/*Slot 2 posterslider*/}
         {/* <ListingSection title="Everyday essentials">
           <PosterSlider/>

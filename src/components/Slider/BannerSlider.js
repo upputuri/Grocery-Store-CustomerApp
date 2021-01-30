@@ -1,12 +1,16 @@
 import { IonSlide, IonSlides } from '@ionic/react'
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 import React, { useEffect, useState } from 'react'
 import { coverImageStoreURL } from '../Utilities/ServiceCaller'
 
 const BannerSlider = (props) => {
     const slideOpts = {
-        speed: 200,
+        speed: 700,
+        delay: 2000,
         loop: true,
-        autoplay: true,
+        autoplay: {
+            disableOnInteraction: false
+        }
       };
 
     return (

@@ -1,4 +1,4 @@
-import { IonAlert, IonButton, IonContent, IonDatetime, IonGrid, IonHeader, IonInput, IonItem, IonLabel, IonList, IonLoading, IonPage } from '@ionic/react';
+import { IonAlert, IonButton, IonContent, IonDatetime, IonGrid, IonHeader, IonInput, IonItem, IonLabel, IonList, IonLoading, IonPage, IonSelect, IonSelectOption } from '@ionic/react';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
@@ -15,6 +15,7 @@ const Profile = () => {
     const [emailState, setEmailState] = useState('');
     const [fNameState, setFNameState] = useState('');
     const [lNameState, setLNameState] = useState('');
+    const [genderState, setGenderState] = useState(undefined);
     const [dobState, setDobState] = useState('');
     const [mobileState, setMobileState] = useState('');
     const [errorState, setErrorState] = useState('');
@@ -40,6 +41,12 @@ const Profile = () => {
         setLNameState(event.target.value);
         setErrorState('');
     }
+
+    const setGender = (event) => {
+        setGenderState(event.target.value);
+        setErrorState('');
+    }
+
     const setDob = (event) => {
         setDobState(event.target.value);
         setErrorState('');
@@ -84,6 +91,7 @@ const Profile = () => {
         setEmailState(profile.email);
         setFNameState(profile.fname);
         setLNameState(profile.lname);
+        setGenderState(profile.gender);
         setMobileState(profile.mobile);
         setDobState(profile.dob);
         setLoadingState(false);  
@@ -104,6 +112,7 @@ const Profile = () => {
             let profileObj = {
                 "fname": fNameState,
                 "lname": lNameState,
+                "gender": genderState,
             };
             profileObj = dobState ? {...profileObj, "dob": dobState.substr(0,10)} : profileObj;
             loginContext.updateProfile(profileObj).then((result) => {
@@ -138,8 +147,12 @@ const Profile = () => {
 
     const customPickerOptions = {
         cssClass: 'groc-date-picker'
-        };
-
+    };
+    
+    const customAlertOptions = {
+        cssClass: 'groc-select'
+    };
+    
     if (profileState !== null) {
         return (
             <IonPage>
@@ -195,6 +208,17 @@ const Profile = () => {
                                 <IonInput placeholder="Last Name" type="text" disabled={!editableState}
                                 onIonChange={setLastName}
                                 value={lNameState}></IonInput>
+                            </IonItem>
+                        </IonList>
+                        <IonList lines="full" className="ion-no-margin ion-no-padding">
+                            <IonItem>
+                                <IonLabel position="stacked">
+                                    Gender
+                                </IonLabel>
+                                <IonSelect interfaceOptions={customAlertOptions} value={genderState} placeholder="Select One" onIonChange={setGender} disabled={true}>
+                                    <IonSelectOption value="male">Male</IonSelectOption>
+                                    <IonSelectOption value="female">Female</IonSelectOption>
+                                </IonSelect>
                             </IonItem>
                         </IonList>
                         {/* <IonList lines="full" className="ion-no-margin ion-no-padding">

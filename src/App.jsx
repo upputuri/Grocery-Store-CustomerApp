@@ -186,7 +186,7 @@ class GrocApp extends React.Component {
     }
   }
 
-  async registerNewUser(mobile, emailId, fName, lName, password)
+  async registerNewUser(mobile, emailId, fName, lName, gender, password)
   {
     // alert(password);
     this.setState({showLoading: true});
@@ -204,7 +204,8 @@ class GrocApp extends React.Component {
               email: emailId,
               password: password,
               fname: fName,
-              lname: lName
+              lname: lName,
+              gender: gender
             }
           }
         );

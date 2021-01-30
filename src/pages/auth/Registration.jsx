@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider, IonCheckbox, IonGrid, IonModal, IonAlert, IonLoading } from '@ionic/react';
+import { IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonMenuButton, IonPage, IonText, IonTitle, IonToolbar, IonItemDivider, IonCheckbox, IonGrid, IonModal, IonAlert, IonLoading, IonSelect, IonSelectOption } from '@ionic/react';
 import Client from 'ketting';
 import React, { useContext, useState } from 'react';
 import { Redirect, useHistory } from 'react-router';
@@ -21,6 +21,7 @@ const Registration = () =>
     const [rePasswordState, setRePasswordState] = useState('');
     const [fNameState, setFNameState] = useState('');
     const [lNameState, setLNameState] = useState('');
+    const [genderState, setGenderState] = useState(undefined);
     const [acceptedState, setAcceptedState] = useState(false);
     const [errorState, setErrorState] = useState('');
 
@@ -55,6 +56,11 @@ const Registration = () =>
 
     const setLastName = (event) => {
       setLNameState(event.detail.value);
+      setErrorState('');
+    }
+
+    const setGender = (event) => {
+      setGenderState(event.detail.value);
       setErrorState('');
     }
 
@@ -107,7 +113,7 @@ const Registration = () =>
     {
       // if (checkInput() && passwordState === rePasswordState){
 
-          let result = loginContext.register(mobileState, emailIdState, fNameState, lNameState, passwordState).then(
+          let result = loginContext.register(mobileState, emailIdState, fNameState, lNameState, genderState, passwordState).then(
               (result) => {
                 if (result === 400)
                 {
@@ -165,6 +171,10 @@ const Registration = () =>
       }
       return true;
     }
+
+    const customAlertOptions = {
+      cssClass: 'groc-select'
+      };
 
     return (
         <IonPage>
@@ -251,6 +261,17 @@ const Registration = () =>
                             <IonInput placeholder="Last Name" type="text"
                              onIonChange={setLastName}
                              value={lNameState}></IonInput>
+                        </IonItem>
+                    </IonList>
+                    <IonList lines="full" className="ion-no-margin ion-no-padding">
+                        <IonItem>
+                            <IonLabel position="stacked">
+                                Gender
+                            </IonLabel>
+                            <IonSelect interfaceOptions={customAlertOptions} value={genderState} placeholder="Select One" onIonChange={setGender}>
+                                <IonSelectOption value="male">Male</IonSelectOption>
+                                <IonSelectOption value="female">Female</IonSelectOption>
+                            </IonSelect>
                         </IonItem>
                     </IonList>
                     <IonList lines="full" className="ion-no-margin ion-no-padding">

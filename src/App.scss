@@ -446,6 +446,10 @@ div.membership-platinum-canvas-light{
   background: linear-gradient(to right,rgb(171,171,171),rgb(152,152,152), rgb(223,223,223));
 }
 
+.slides-md {
+  --bullet-background-active: var(--ion-color-light)
+}
+
 // *
 // {
 // 	margin: 0px;

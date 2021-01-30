@@ -356,7 +356,7 @@ const Checkout = (props) => {
                 let receivedOrderTS = newOrder.createdTS;
                 let displayOrderId = generateOrderId(newOrder.id, receivedOrderTS);
                 const msg = `Dear ${loginContext.isAuthenticated && loginContext.customer.fname && loginContext.customer.fname.trim() !== '' ? loginContext.customer.fname : 'Customer'}, 
-                Your order ${displayOrderId}  is placed successfully. Please use this number for all queries regarding your order. You can reach us at ${variablesState ? variablesState.contact_no : '7767988348'}. Thanks.`
+Your order ${displayOrderId}  is placed successfully. Please use this number for all queries regarding your order. You can reach us at ${variablesState ? variablesState.contact_no : '7767988348'}. Thanks.`
                 // const msg = "Thank you for shopping with us! Your order has been placed successfully. We will process your order at the earliest";
                 sendEmailNotification(loginContext, "We have received your order", msg);
                 sendMobileNotification(loginContext, msg);

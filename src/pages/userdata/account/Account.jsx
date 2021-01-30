@@ -196,17 +196,17 @@ const Account = (props) => {
                             </IonItem>
                         </IonRouterLink>
                         <IonRouterLink routerLink="/account/addresslist">
-                            <IonItem color="night" lines="full" className="border-bottom border-secondary">
+                            <IonItem color="night" lines="full">
                                 <IonIcon slot="start" icon={navigateIcon} color="light" size="small"/>
                                 <IonLabel>Addresses</IonLabel>
                             </IonItem>
                         </IonRouterLink>
-                        <IonRouterLink routerLink="/contactus">
+                        {/* <IonRouterLink routerLink="/contactus">
                             <IonItem color="night" lines="full">
                                 <IonIcon slot="start" icon={mailIcon} color="light" size="small"/>
                                 <IonLabel>Tickets</IonLabel>
                             </IonItem>
-                        </IonRouterLink>
+                        </IonRouterLink> */}
                     </IonItemGroup>
                 </IonGrid>
                 <IonGrid className="mt-3 card bg-black profile-box text-center">

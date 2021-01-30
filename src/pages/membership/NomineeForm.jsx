@@ -66,7 +66,7 @@ const NomineeForm = (props) => {
                         Gender
                         <IonText color="danger">*</IonText>
                     </IonLabel>
-                    <IonSelect className="groc-select" placeholder="Select One" value={props.nomineeGender} onIonChange={props.onGenderChange}>
+                    <IonSelect interfaceOptions={customAlertOptions} placeholder="Select One" value={props.nomineeGender} onIonChange={props.onGenderChange}>
                         <IonSelectOption value="female">Female</IonSelectOption>
                         <IonSelectOption value="male">Male</IonSelectOption>
                     </IonSelect>
