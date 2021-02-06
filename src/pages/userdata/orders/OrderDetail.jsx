@@ -250,6 +250,7 @@ const OrderDetail = (props) => {
                         line2={orderDetailState.shippingAddress.line2}
                         city={orderDetailState.shippingAddress.city}
                         state={orderDetailState.shippingAddress.state}
+                        country={orderDetailState.shippingAddress.country}
                         zipCode={orderDetailState.shippingAddress.zipcode}
                         phone={orderDetailState.shippingAddress.phoneNumber} />
 
@@ -261,6 +262,7 @@ const OrderDetail = (props) => {
                         line2={orderDetailState.billingAddress.line2}
                         city={orderDetailState.billingAddress.city}
                         state={orderDetailState.billingAddress.state}
+                        country={orderDetailState.billingAddress.country}
                         zipCode={orderDetailState.billingAddress.zipcode}
                         phone={orderDetailState.billingAddress.phoneNumber} />
                 </IonContent>

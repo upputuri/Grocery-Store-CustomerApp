@@ -64,12 +64,35 @@ const Registration = () =>
       setErrorState('');
     }
 
-    const checkInputAndProceed = () => {
+    const checkInputAndProceed = async () => {
       if (checkInput() && passwordState === rePasswordState)
       {
-        setShowOTPPanel(true);
+        let queryString = 'mobile='+mobileState;
+        queryString = emailIdState ? queryString+'&email='+emailIdState : queryString; 
+        let path = serviceBaseURL + '/customers/idpool?'+queryString;
+        const client = new Client(path);
+        const resource = client.go();      
+        setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
+        let receivedState;
+        try{
+          receivedState = await resource.get({
+          });
       }
+      catch(e)
+      {
+        if (e.status && e.status === 400)
+        {
+          console.log("Service call failed with - "+e);
+          setErrorState("An account already exists with this email/mobile! Please login if you are an existing user.");
+        } 
+        setLoadingState(false);
+        return false;
+      }
+      setLoadingState(false);
+      setShowOTPPanel(true);
     }
+  }
 
     const closeOTPCheckAndProceed = () => {
       setShowOTPPanel(false);

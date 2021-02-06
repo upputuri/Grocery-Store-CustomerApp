@@ -106,6 +106,7 @@ const Profile = () => {
             return;
         if (checkInput() === true)
         {
+            setErrorState('');
             // alert(fNameState+lNameState+mobileState+","+dobState)
             setLoadingState(true);
             // const dob = dobState && dobState.length >= 10 ? new Date(dobState.substr(0,10)+"T00:00:00") : '';
@@ -210,7 +211,7 @@ const Profile = () => {
                                 value={lNameState}></IonInput>
                             </IonItem>
                         </IonList>
-                        <IonList lines="full" className="ion-no-margin ion-no-padding">
+                        {genderState && <IonList lines="full" className="ion-no-margin ion-no-padding">
                             <IonItem>
                                 <IonLabel position="stacked">
                                     Gender
@@ -220,7 +221,7 @@ const Profile = () => {
                                     <IonSelectOption value="female">Female</IonSelectOption>
                                 </IonSelect>
                             </IonItem>
-                        </IonList>
+                        </IonList>}
                         {/* <IonList lines="full" className="ion-no-margin ion-no-padding">
                             <IonItem>
                                 <IonLabel position="stacked">Mobile Number

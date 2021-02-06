@@ -75,6 +75,7 @@ const OrderConfirm = (props) => {
                             line2={props.preOrder.shippingAddress.line2}
                             city={props.preOrder.shippingAddress.city}
                             state={props.preOrder.shippingAddress.state}
+                            country={props.preOrder.shippingAddress.country}
                             zipCode={props.preOrder.shippingAddress.zipcode}
                             phone={props.preOrder.shippingAddress.phoneNumber} />
 
@@ -86,6 +87,7 @@ const OrderConfirm = (props) => {
                             line2={props.preOrder.billingAddress.line2}
                             city={props.preOrder.billingAddress.city}
                             state={props.preOrder.billingAddress.state}
+                            country={props.preOrder.shippingAddress.country}
                             zipCode={props.preOrder.billingAddress.zipcode}
                             phone={props.preOrder.billingAddress.phoneNumber} />
             </IonContent>

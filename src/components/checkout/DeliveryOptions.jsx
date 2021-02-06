@@ -17,8 +17,9 @@ const DeliveryOptions = (props) => {
             // alert(props.selectedDeliveryAddressId);
             if (!props.selectedDeliveryAddressId && props.addresses){
                 const defaultAddress = props.addresses.find((e)=>e.default === true);
-                if (defaultAddress && defaultAddress) {
-                    props.onDeliveryAddressSelected(defaultAddress.id, defaultAddress.city, false);
+                if (defaultAddress) {
+                    // alert(JSON.stringify(defaultAddress));
+                    props.onDeliveryAddressSelected(defaultAddress.id, defaultAddress.zipcode, false);
                 }
             }
         // }
@@ -29,8 +30,8 @@ const DeliveryOptions = (props) => {
         setBillingAddressSameState(!billingAddressSameState);
     }
 
-    const selectShippingAddress = (addressId, city) => {
-        props.onDeliveryAddressSelected(addressId, city, true);
+    const selectShippingAddress = (addressId, zipcode) => {
+        props.onDeliveryAddressSelected(addressId, zipcode, true);
     }
 
     const openNewAddressForm = () => {
@@ -64,7 +65,7 @@ const DeliveryOptions = (props) => {
             :
             <AddressForm 
                     addressId={-1}
-                    // states={props.states} 
+                    statesList={props.statesList} 
                     citiesList = {props.citiesList}  
                     submitClickHandler={addAddress}
                     backClickHandler={cancelEdit.bind(this, -1)}/>}
@@ -81,11 +82,13 @@ const DeliveryOptions = (props) => {
                                     city={address.city}
                                     state={address.state}
                                     stateId={address.stateId}
+                                    country={address.country}
+                                    countryId={address.countryId}
                                     zipCode={address.zipcode}
                                     phone={address.phoneNumber} 
                                     selectedId={props.selectedDeliveryAddressId}
                                     selectedMessage='Selected for Delivery'
-                                    selectClickHandler={selectShippingAddress.bind(this, address.id, address.city)} />
+                                    selectClickHandler={selectShippingAddress.bind(this, address.id, address.zipcode)} />
                             {address.id === props.selectedDeliveryAddressId &&                 
                             <IonGrid className="text-center">
                                 <IonItem color="night">

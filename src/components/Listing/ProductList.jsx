@@ -141,7 +141,7 @@ const ProductList = () => {
         // let currentPath = history.location;
         // currentPath.hash = 'filters';
         // history.push(currentPath);
-        alert('opening filters')
+        // alert('opening filters')
         setShowFilters(true);
     }
     console.log("Rendering product list");

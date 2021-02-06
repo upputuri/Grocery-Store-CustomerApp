@@ -7,7 +7,7 @@ const passwordFormatError = "Password must contain at least eight characters, on
 const clientConfig ={
     productListPageSize: 15,
     otpTimout : 60000,
-    wrongCityAddressSelectedErrorMsg: 'Selected shipping address is outside the selected delivery city. Please select a local shipping address or change your delivery city on home screen',
+    wrongCityAddressSelectedErrorMsg: 'The item(s) in your order are not deliverable to the shipping address(pincode) you provided. You can update your address and try checkout again.',
     cityChangeCheckoutResetAlertMsg: 'You have items in your cart. If you change the city, item prices and availability may change. Are you sure you want to proceed?',
     submitReviewSuccessAlertMsg: 'Your review has been received successfully. We will publish it once verified',
     connectivityErrorAlertMsg: 'Unable to reach server. Please check your internet connectivity and try again!',
@@ -109,6 +109,14 @@ const generateOrderId = (oid, orderTS) => {
     return orderId;
 }
 
+const generateTransactionId = (tid, tranTS) => {
+    const date = new Date(tranTS);
+    let tranId = 'VEGI'+ tid.padStart(10,0) +
+                (date.getMonth()+1).toString().padStart(2, 0)+
+                date.getDate().toString().padStart(2, 0);
+    return tranId;
+}
+
 const sendNotificationRequest = async (loginContext, notification) => {
     let path = serviceBaseURL + '/customers/'+loginContext.customer.id+'/notifications';
     const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
@@ -144,6 +152,6 @@ const generateInvoiceLink = (mobile, oid) => {
     return link;
 }
 
-export { isPasswordValid, sendEmailNotification, sendMobileNotification, 
+export { isPasswordValid, sendEmailNotification, sendMobileNotification, generateTransactionId,
         generateOrderId, generateInvoiceLink, calculateAge, getMembershipCardColorClass, 
         passwordFormatError, clientConfig };

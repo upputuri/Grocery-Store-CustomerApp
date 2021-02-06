@@ -195,7 +195,6 @@ const Home = () => {
         id: cat.id,
         title: '',
         mainText: cat.metaDescription,
-        subText: cat.name,
         image: cat.image ? (categoryImageStoreURL + "/" + cat.image) : defaultImageURL,
         leadType: 'productlist',
         leadQuery: 'category='+cat.id
@@ -373,7 +372,7 @@ const Home = () => {
           </IonRow>
         </div>
         {posterListsState[0].posters.length > 0 && <ListingSection title={posterListsState[0].title}>
-            <PosterSlider slidesPerView={2.6} 
+            <PosterSlider slidesPerView={posterListsState[0].posters.length < 3 ? 2 : 2.6} 
                           loop={false} 
                           centeredSlides={false} 
                           spaceBetween={10} 

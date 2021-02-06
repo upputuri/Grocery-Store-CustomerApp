@@ -23,6 +23,7 @@ const AddressTile = (props) =>
             line2: props.line2,
             city: props.city,
             stateId: props.stateId,
+            countryId: 1, //India
             zipcode: props.zipCode,
             phone: props.phone,
             typeId: labelId
@@ -38,6 +39,7 @@ const AddressTile = (props) =>
             line2: props.line2,
             city: props.city,
             stateId: props.stateId,
+            countryId: 1,//India
             zipcode: props.zipCode,
             phone: props.phone,
             typeId: props.labelId,
@@ -84,7 +86,7 @@ const AddressTile = (props) =>
                     <IonText color="light"><h6>{props.fName+" "+props.lName}</h6></IonText>
                     <div className="ion-text-wrap">{props.line1}</div>
                     <div className="ion-text-wrap">{props.line2}</div>
-                    <div className="ion-text-wrap">{props.city}, {props.state}</div>
+                    <div className="ion-text-wrap">{props.city}, {props.state}, {props.country}</div>
                     <div className="ion-text-wrap">{props.zipCode}
                     </div>
                     <h6><IonIcon className="mr-2" icon={phoneIcon} size="small" color="light"/>{props.phone}</h6>

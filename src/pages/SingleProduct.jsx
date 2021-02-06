@@ -164,7 +164,7 @@ const SingleProduct = (props) => {
                                     </div>
                                     <small className="text-secondary">
                                         <div className="d-flex">
-                                        <div><IonIcon color="success" icon={checkMarkIcon}></IonIcon>Available in - </div>
+                                        <div><IonIcon color="success" icon={checkMarkIcon}></IonIcon>Available in </div>
                                         <div>
                                             {productState.variations.map((v, index) => {
                                                 return <IonBadge key={v.name} color={

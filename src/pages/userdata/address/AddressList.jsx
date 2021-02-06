@@ -11,7 +11,7 @@ import { serviceBaseURL } from '../../../components/Utilities/ServiceCaller';
 
 const AddressList = () => {
     const [addressListState, setAddressListState] = useState(null);
-    // const [statesList, setStatesList] = useState(null);
+    const [statesList, setStatesList] = useState(undefined);
     const [citiesList, setCitiesList] = useState([]);
     const [addressTypesState, setAddressTypesState] = useState({});
     const [pinCodesList, setPinCodesList] = useState([]);
@@ -28,33 +28,33 @@ const AddressList = () => {
         loadAddressList();
         loadCities();
         loadLabels();
-        // loadStatesList();
+        loadStatesList();
 
     }, [retryState]);
 
-    // const loadStatesList = async () => {
-    //     let path = serviceBaseURL + '/application/states';
-    //     const client = new Client(path);
-    //     const resource = client.go();
-    //     setLoadingState(true);
-    //     console.log("Making service call: "+resource.uri);
-    //     let receivedState;
-    //     try{
-    //         receivedState = await resource.get();
-    //     }
-    //     catch(e)
-    //     {
-    //         console.log("Service call failed with - "+e);
-    //         setLoadingState(false);
-    //         setServiceRequestAlertState({show: true, msg: e.toString()});
-    //         return;
-    //     }
-    //     // alert(JSON.stringify(receivedState));
-    //     const states = receivedState.getEmbedded().map((state) => state.data);
-    //     console.log("Loaded states from server");
-    //     // alert(JSON.stringify(states));
-    //     setStatesList(states);
-    // }
+    const loadStatesList = async () => {
+        let path = serviceBaseURL + '/application/states';
+        const client = new Client(path);
+        const resource = client.go();
+        setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
+        let receivedState;
+        try{
+            receivedState = await resource.get();
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e);
+            setLoadingState(false);
+            setServiceRequestAlertState({show: true, msg: e.toString()});
+            return;
+        }
+        // alert(JSON.stringify(receivedState));
+        const states = receivedState.getEmbedded().map((state) => state.data);
+        console.log("Loaded states from server");
+        // alert(JSON.stringify(states));
+        setStatesList(states);
+    }
 
     const loadCities = async () => {
         const client = new Client(serviceBaseURL+'/stores/covers/cities');
@@ -149,7 +149,7 @@ const AddressList = () => {
         }
         // alert(JSON.stringify(receivedState));
         const addresses = receivedState.getEmbedded().map((addressState) => addressState.data);
-        // alert(JSON.stringify(addresses));
+        // console.log(JSON.stringify(addresses));
         setAddressListState(addresses);
         console.log("Loaded addresses from server");
         setLoadingState(false);  
@@ -280,6 +280,7 @@ const AddressList = () => {
     }
 
     const saveEditedAddress = async (address) => {
+        // alert(JSON.stringify(address));
         setLoadingState(true);
         //Send service request
         console.log("Saving edited address with Id "+ address.id);
@@ -331,7 +332,8 @@ const AddressList = () => {
                                     // zipCode={address.zipcode}
                                     // phone={address.phoneNumber}
                                     // states={statesList}
-                                    citiesList={citiesList}   
+                                    citiesList={citiesList}
+                                    statesList={statesList}   
                                     submitClickHandler={saveEditedAddress}
                                     backClickHandler={cancelEdit.bind(this, -1)}
                                     />
@@ -353,6 +355,8 @@ const AddressList = () => {
                                 city={address.city}
                                 state={address.state}
                                 stateId={address.stateId}
+                                countryId={address.countryId}
+                                country={address.country}
                                 zipCode={address.zipcode}
                                 phone={address.phoneNumber} 
                                 editClickHandler={editAddress.bind(this, address.id)}
@@ -368,11 +372,11 @@ const AddressList = () => {
                                 line1={address.line1}
                                 line2={address.line2}
                                 city={address.city}
-                                // state={address.state}
-                                // stateId={address.stateId}
+                                state={address.state}
+                                stateId={address.stateId}
                                 zipCode={address.zipcode}
                                 phone={address.phoneNumber}
-                                // states={statesList}
+                                statesList={statesList}
                                 citiesList={citiesList}   
                                 submitClickHandler={saveEditedAddress}
                                 backClickHandler={cancelEdit.bind(this, address.id)}

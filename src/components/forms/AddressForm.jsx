@@ -9,7 +9,7 @@ const AddressForm = (props) => {
     const [line1State, setLine1State] = useState(props.line1);
     const [line2State, setLine2State] = useState(props.line2);
     const [cityState, setCityState] = useState(props.city);
-    // const [stateIdState, setStateIdState] = useState(props.stateId);
+    const [stateIdState, setStateIdState] = useState(`${props.stateId}`);
     const [zipCodeState, setZipCodeState] = useState(props.zipCode);
     const [errorState, setErrorState] = useState('');
 
@@ -37,9 +37,9 @@ const AddressForm = (props) => {
         setLine2State(event.detail.value);
     }
 
-    // const setStateId = (event) => {
-    //     setStateIdState(event.detail.value);
-    // }
+    const setStateId = (event) => {
+        setStateIdState(event.detail.value);
+    }
 
     const setZipCode = (event) => {
         setZipCodeState(event.detail.value);
@@ -55,7 +55,7 @@ const AddressForm = (props) => {
         ((line1State && line1State.trim().length > 0) || setErrorState("Please enter Line 1")) &&
         ((cityState && cityState.trim().length > 0) || setErrorState("Please select a City")) &&
         ((zipCodeState && zipCodeState.trim().length > 0) || setErrorState("Please select a Pin code")) &&
-        // (stateIdState && stateIdState > 0) &&
+        ((stateIdState && stateIdState.trim().length > 0) || setErrorState("Please select a state")) &&
         ((zipCodeState && zipCodeRegEx.test(zipCodeState.trim())) || setErrorState("Invalid Pin code")) &&
         ((mobileState && phoneRegEx.test(mobileState.trim())) || setErrorState("Invalid Mobile No."));
     }
@@ -72,7 +72,9 @@ const AddressForm = (props) => {
             line1: line1State,
             line2: line2State,
             city: cityState,
-            stateId: props.citiesList.find((city) => city.name.toLowerCase() === cityState.toLowerCase()).stateId,
+            // stateId: props.citiesList.find((city) => city.name.toLowerCase() === cityState.toLowerCase()).stateId,
+            stateId: stateIdState,
+            countryId: 1,//India
             zipcode: zipCodeState,
             phone: mobileState
         });
@@ -142,19 +144,38 @@ const AddressForm = (props) => {
                         {/* <IonPicker placeholder="State" type="text" 
                         onIonChange={setStateId}
                         value={stateIdState}></IonPicker> */}
-                        <IonSelect interfaceOptions={customAlertOptions} value={cityState} placeholder="Select One" onIonChange={setCity}>
+                        <IonInput placeholder="City" type="text" minlength="2" maxlength="50" 
+                            onIonChange={setCity}
+                            value={cityState}></IonInput>
+                        {/* <IonSelect interfaceOptions={customAlertOptions} value={cityState} placeholder="Select One" onIonChange={setCity}>
                             {props.citiesList && props.citiesList.map((city)=>{
                                 return <IonSelectOption key={city.name} value={city.name}>{city.name}</IonSelectOption>
                             })}
-                        </IonSelect>
+                        </IonSelect> */}
                     </IonItem>
                 </IonList>
                 <IonList lines="full" className="ion-no-margin ion-no-padding">
                     <IonItem>
                         <IonLabel position="stacked">State
+                        <IonText color="danger">*</IonText>
+                        </IonLabel>
+                        <IonSelect value={stateIdState} interfaceOptions={customAlertOptions} placeholder="Select One" onIonChange={setStateId}>
+                            {props.statesList && props.statesList.map((state)=>{
+                                // console.log(state.stateId)
+                                return <IonSelectOption key={state.stateId} value={`${state.stateId}`}>{state.name}</IonSelectOption>
+                            })}
+                        </IonSelect>
+                        {/* <IonInput disabled={true} placeholder="State" type="text" 
+                        value={cityState ? props.citiesList.find((city) => city.name.toLowerCase() === cityState.toLowerCase()).state : undefined}>
+                        </IonInput> */}
+                    </IonItem>
+                </IonList>
+                <IonList lines="full" className="ion-no-margin ion-no-padding">
+                    <IonItem>
+                        <IonLabel position="stacked">Country
                         </IonLabel>
                         <IonInput disabled={true} placeholder="State" type="text" 
-                        value={cityState ? props.citiesList.find((city) => city.name.toLowerCase() === cityState.toLowerCase()).state : undefined}>
+                        value={'India'}>
                         </IonInput>
                     </IonItem>
                 </IonList>

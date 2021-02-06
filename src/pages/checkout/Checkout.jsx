@@ -28,7 +28,7 @@ const Checkout = (props) => {
     const [phaseData, setPhaseData] = useState(null);
     const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
     const [shippingAddressIdState, setShippingAddressIdState] = useState(0);
-    // const [statesList, setStatesList] = useState(undefined);
+    const [statesList, setStatesList] = useState(undefined);
     const [citiesList, setCitiesList] = useState(undefined);
     const [finalBillAmountState, setFinalBillAmountState] = useState(0);
     const [loadingState, setLoadingState] = useState(false);
@@ -49,6 +49,7 @@ const Checkout = (props) => {
         switch (currentPhaseIndex) {
             case 0:
             case 1:
+                loadStatesList();
                 loadCities().then(()=>{
                     loadAddressList();
                 });
@@ -128,29 +129,29 @@ const Checkout = (props) => {
         setVariablesState(variablesMap.variables);
         // setLoadingState(false);  
     }
-    // const loadStatesList = async () => {
-    //     let path = serviceBaseURL + '/application/states';
-    //     const client = new Client(path);
-    //     const resource = client.go();
-    //     setLoadingState(true);
-    //     console.log("Making service call: "+resource.uri);
-    //     let receivedState;
-    //     try{
-    //         receivedState = await resource.get();
-    //     }
-    //     catch(e)
-    //     {
-    //         console.log("Service call failed with - "+e);
-    //         setLoadingState(false);
-    //         setServiceRequestAlertState({show: true, msg: e.toString()});
-    //         return;
-    //     }
-    //     // alert(JSON.stringify(receivedState));
-    //     const states = receivedState.getEmbedded().map((state) => state.data);
-    //     console.log("Loaded states from server");
-    //     // alert(JSON.stringify(states));
-    //     setStatesList(states);
-    // }
+    const loadStatesList = async () => {
+        let path = serviceBaseURL + '/application/states';
+        const client = new Client(path);
+        const resource = client.go();
+        setLoadingState(true);
+        console.log("Making service call: "+resource.uri);
+        let receivedState;
+        try{
+            receivedState = await resource.get();
+        }
+        catch(e)
+        {
+            console.log("Service call failed with - "+e);
+            setLoadingState(false);
+            setServiceRequestAlertState({show: true, msg: e.toString()});
+            return;
+        }
+        // alert(JSON.stringify(receivedState));
+        const states = receivedState.getEmbedded().map((state) => state.data);
+        console.log("Loaded states from server");
+        // alert(JSON.stringify(states));
+        setStatesList(states);
+    }
 
     const loadCities = async () => {
         const client = new Client(serviceBaseURL+'/stores/covers/cities');
@@ -377,10 +378,10 @@ Your order ${displayOrderId}  is placed successfully. Please use this number for
         (currentPhaseIndex === 3 && cartContext.order.paymentOptionId)
     }
 
-    const deliveryAddressSelected = (addressId, city, showWarning) => {
+    const deliveryAddressSelected = (addressId, zipcode, showWarning) => {
         console.log("Address seleted for delivery - Id: "+addressId);
         // alert(city+" "+cartContext.order.cover.coverCity);
-        if (city.toLowerCase() !== cartContext.order.cover.coverCity.toLowerCase()){
+        if (citiesList.find((e)=>e.name.toLowerCase() === cartContext.order.cover.coverCity.toLowerCase()).pinCodes.findIndex(e=>e===zipcode) == -1){
             if (showWarning === true){
                 setInfoAlertState({show: true, msg: clientConfig.wrongCityAddressSelectedErrorMsg})
             }
@@ -508,7 +509,7 @@ Your order ${displayOrderId}  is placed successfully. Please use this number for
                 <IonLoading isOpen={loadingState}/>
 
                 {currentPhaseIndex === 0 && <DeliveryOptions addresses={phaseData}
-                                                                // states={statesList} 
+                                                                statesList={statesList} 
                                                                 citiesList={citiesList} 
                                                                 selectedDeliveryAddressId={cartContext.order.deliveryAddressId}
                                                                 selectedBillingAddressId={cartContext.order.billingAddressId}
@@ -516,7 +517,7 @@ Your order ${displayOrderId}  is placed successfully. Please use this number for
                                                                 onBillingAddressSelected={billingAddressSelected}
                                                                 addressAddHandler={saveNewAddress}/>}
                 {currentPhaseIndex === 1 && <BillingOptions addresses={phaseData}
-                                                                // states={statesList} 
+                                                                statesList={statesList} 
                                                                 citiesList = {citiesList}
                                                                 selectedBillingAddressId={cartContext.order.billingAddressId}
                                                                 onBillingAddressSelected={billingAddressSelected}

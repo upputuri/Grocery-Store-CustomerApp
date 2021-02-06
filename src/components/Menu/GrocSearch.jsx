@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 
 const GrocSearch = (props) => {
-    const [searchTextState, setSearchTextState] = useState(props.searchText);
+    const [searchTextState, setSearchTextState] = useState(undefined);
     const history = useHistory();
-
+    const searchText = props.searchText;
     const setSearchText = (event) => {
         setSearchTextState(event.detail.value);
     }
@@ -31,7 +31,7 @@ const GrocSearch = (props) => {
             className="py-1" 
             placeholder="Search for products"
             autocomplete="on"
-            value={searchTextState} 
+            value={searchTextState !== undefined ? (searchTextState !== "" ? searchTextState : "") : searchText} 
             onIonChange={setSearchText}
             enterkeyhint="go"
             onKeyUp={checkGo}

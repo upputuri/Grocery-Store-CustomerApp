@@ -12,7 +12,7 @@ const MPlanDetail = (props) =>{
             <div className={getMembershipCardColorClass(props.categoryName)+'-canvas-dark m-2'}>
                 <IonRow>
                     <IonCol>
-                        <IonText color="light">My minimum monthly purchasing</IonText>
+                        <IonText color="light">My minimum monthly purchasing limit</IonText>
                     </IonCol>
                     <IonCol size="3">
                     {': '+props.minAmount+'/-'}

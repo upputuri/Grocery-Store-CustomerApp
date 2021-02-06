@@ -532,31 +532,36 @@ class GrocApp extends React.Component {
     }
     catch(e)
     {
+      if (e.status && e.status === 401)
+      {
         console.log("Service call failed with - "+e);
-        this.setState({showLoading: false});
-        return;
-      }
-      console.log("Received response from service call: "+resource.uri);
-      // alert(JSON.stringify(receivedState));
-      const newCartCount = receivedState.data.variables.cartItemCount;
-      // let cartItems = new Map(this.state.cart.items);
-      // const cartMapKey = productId+'#'+variationId;
-      // let cartItemCount = cartItems.get(cartMapKey);
-      // const newQty = (cartItemCount?cartItemCount:0)+qty;
-      // newQty > 0 ? cartItems.set(cartMapKey, newQty) : cartItems.delete(cartMapKey);
-      this.setState({
-        cart: {
-          itemCount: newCartCount,
-          // items: cartItems          
-        }
-      });
-      // this.storeCart({itemCount: newCartCount});
-      this.setState({
-        showToast: true,
-        toastMsg: Math.abs(qty)+(qty>0?' items added to cart':' items removed from cart'),
-        showLoading: false
-      })
+        this.logoutHandler();
+      } 
+      console.log("Service call failed with - "+e);
+      this.setState({showLoading: false});
+      return;
     }
+    console.log("Received response from service call: "+resource.uri);
+    // alert(JSON.stringify(receivedState));
+    const newCartCount = receivedState.data.variables.cartItemCount;
+    // let cartItems = new Map(this.state.cart.items);
+    // const cartMapKey = productId+'#'+variationId;
+    // let cartItemCount = cartItems.get(cartMapKey);
+    // const newQty = (cartItemCount?cartItemCount:0)+qty;
+    // newQty > 0 ? cartItems.set(cartMapKey, newQty) : cartItems.delete(cartMapKey);
+    this.setState({
+      cart: {
+        itemCount: newCartCount,
+        // items: cartItems          
+      }
+    });
+    // this.storeCart({itemCount: newCartCount});
+    this.setState({
+      showToast: true,
+      toastMsg: Math.abs(qty)+(qty>0?' items added to cart':' items removed from cart'),
+      showLoading: false
+    })
+  }
 
   setCartCount(count){
     this.setState({cart: {itemCount: count}});

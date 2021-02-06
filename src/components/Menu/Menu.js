@@ -62,7 +62,7 @@ const GrocMenu = (props) => {
                 context.isAuthenticated ? 
                 (
                   <IonList className="bg-black menu-top-section">
-                    <IonRouterLink routerLink="/account">
+                    {/* <IonRouterLink routerLink="/account"> */}
                       <IonMenuToggle auto-hide="false" >
                       <IonAvatar class="ion-margin-start ios hydrated mb-2">
                         <img alt="img" src={context.customer.image ? profileImageStoreURL + "/" + context.customer.image : "assets/user/blank_profile.png"}>
@@ -74,7 +74,7 @@ const GrocMenu = (props) => {
                         <IonNote>{context.customer.email}</IonNote>
                       </IonItem> } */}
                       </IonMenuToggle>
-                    </IonRouterLink>
+                    {/* </IonRouterLink> */}
                   </IonList>   
                 ) : (
                     <IonList className="bg-black menu-top-section">

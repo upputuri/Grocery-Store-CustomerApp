@@ -410,6 +410,7 @@ const MembershipForm = () => {
                 fname: nomineeFNameState,
                 lname: nomineeLNameState,
                 gender: nomineeGenderState,
+                relationshipId: nomineeRelationshipState,
                 email: nomineeEmailState,
                 dob: nomineeDobState,
                 mobile: nomineeMobileState,
