@@ -1,0 +1,14 @@
+{
+  "appId": "com.thevegitclub.customer",
+  "appName": "The Vegit Club",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "build",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0,
+      "launchAutoHide": false
+    }
+  },
+  "cordova": {}
+}
