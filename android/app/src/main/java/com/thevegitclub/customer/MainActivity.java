@@ -1,4 +1,4 @@
-package com.dolittletech.retail.vegitcustomer;
+package com.thevegitclub.customer;
 
 import android.os.Bundle;
 

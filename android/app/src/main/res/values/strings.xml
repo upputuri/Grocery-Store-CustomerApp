@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">The Vegit Club</string>
     <string name="title_activity_main">The Vegit Club</string>
-    <string name="package_name">com.dolittletech.retail.vegitcustomer</string>
-    <string name="custom_url_scheme">com.dolittletech.retail.vegitcustomer</string>
+    <string name="package_name">com.thevegitclub.customer</string>
+    <string name="custom_url_scheme">com.thevegitclub.customer</string>
 </resources>
