@@ -47,8 +47,7 @@ const CartItemTile = (props) =>
                             <div className="d-flex justify-content-end">
                             <CartItemQtyControl qty={props.qty}
                                             productId={props.productId}
-                                            variantId={props.variationId} 
-                                            onQtyUpdate={props.qtyChangeHandler} />
+                                            variantId={props.variationId} />
                             </div>
                         </IonCol>
                     </IonRow>

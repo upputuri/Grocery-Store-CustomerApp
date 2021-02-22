@@ -47,7 +47,7 @@ const ProductCard = (props: ProductCardProps) =>
                     <small className="subtext">{props.unitLabel}</small>
                 </div>
                 <div className="small text-gray-500 d-flex ml-3 align-items-center justify-content-end">
-                    {props.inStock ? <AddToCartButton productId={props.productId} variationId={props.variationId}/>
+                    {props.inStock ? <AddToCartButton productId={props.productId} variantId={props.variationId}/>
                     :
                     <IonText color="secondary">Out of Stock</IonText>}
                 </div>

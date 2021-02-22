@@ -53,6 +53,7 @@ import MPlan from './pages/membership/MPlan';
 import MPlans from './pages/membership/MPlans';
 import MembershipForm from './pages/membership/MembershipForm';
 import MemberRegistered from './pages/membership/MemberRegistered';
+import { ServiceResponse } from './components/Utilities/AppCommons';
 
 const { Storage, Device, App } = Plugins;
 const LoginContext = React.createContext(
@@ -536,6 +537,7 @@ class GrocApp extends React.Component {
       {
         console.log("Service call failed with - "+e);
         this.logoutHandler();
+        return new ServiceResponse(false, 401, 'Unauthorized', undefined)
       } 
       console.log("Service call failed with - "+e);
       this.setState({showLoading: false});
@@ -561,6 +563,8 @@ class GrocApp extends React.Component {
       toastMsg: Math.abs(qty)+(qty>0?' items added to cart':' items removed from cart'),
       showLoading: false
     })
+
+    return new ServiceResponse(true, undefined, undefined, newCartCount);
   }
 
   setCartCount(count){

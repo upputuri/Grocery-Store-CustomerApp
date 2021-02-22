@@ -22,6 +22,13 @@ const clientConfig ={
     membershipNomineeMaxAge: 29
 }
 
+function ServiceResponse (success, code, reason, data) {
+    this.success = success;
+    this.code = code;
+    this.reason = reason;
+    this.data = data;
+}
+
 const calculateAge = (dateString) => {
     var today = new Date();
     var birthDate = new Date(dateString);
@@ -154,4 +161,4 @@ const generateInvoiceLink = (mobile, oid) => {
 
 export { isPasswordValid, sendEmailNotification, sendMobileNotification, generateTransactionId,
         generateOrderId, generateInvoiceLink, calculateAge, getMembershipCardColorClass, 
-        passwordFormatError, clientConfig };
+        passwordFormatError, clientConfig, ServiceResponse};
