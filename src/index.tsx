@@ -3,12 +3,18 @@ import { Plugins } from '@capacitor/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
-import { useIonRouter } from '@ionic/react';
 import GrocApp from './App';
-const { MobileApp } = Plugins
+import {createStore, combineReducers} from 'redux';
+import {Provider} from 'react-redux';
+import orderStateReducer from './store/reducers/orderStateReducer';
+import { devToolsEnhancer } from 'redux-devtools-extension';
 
 const { SplashScreen } = Plugins;
-ReactDOM.render(<GrocApp />, document.getElementById('root'));
+const rootReducer = combineReducers({
+    orderState: orderStateReducer,
+});
+const store = createStore(rootReducer, devToolsEnhancer({name: 'Srikanth'}));
+ReactDOM.render(<Provider store={store}><GrocApp /></Provider>, document.getElementById('root'));
 SplashScreen.hide();
 
 

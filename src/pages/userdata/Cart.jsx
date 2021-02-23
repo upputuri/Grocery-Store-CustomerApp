@@ -2,6 +2,7 @@ import { IonButton, IonButtons, IonCol, IonContent, IonFooter, IonHeader, IonIco
 import { chevronForwardOutline as nextIcon } from 'ionicons/icons';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import { useHistory, withRouter } from "react-router-dom";
 import { CartContext, LoginContext } from '../../App';
 import CartItemTile from '../../components/Cards/CartItemTile';
@@ -44,7 +45,7 @@ const Cart = (props) =>{
             history.push("/login");
             return;
         }
-        let path = serviceBaseURL + '/customers/'+customerId+'/cart?coverid='+cartContext.order.cover.coverId;
+        let path = serviceBaseURL + '/customers/'+customerId+'/cart?coverid='+props.selectedCover.coverId;
         setShowLoading(true);
         const client = new Client(path);
         const resource = client.go();
@@ -154,4 +155,10 @@ const Cart = (props) =>{
 
 }
 
-export default withRouter(Cart);
+const mapStateToProps = (state) => {
+    return {
+        selectedCover: state.orderState.cover
+    }
+}
+
+export default withRouter(connect(mapStateToProps)(Cart));

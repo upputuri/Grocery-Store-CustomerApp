@@ -1,20 +1,14 @@
 import { IonButton, IonCheckbox, IonContent, IonGrid, IonItem, IonText } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import { CartContext } from '../../App';
 import AddressTile from '../Cards/AddressTile';
 import AddressForm from '../forms/AddressForm';
 
 const DeliveryOptions = (props) => {
     const [editingState, setEditingState] = useState(false);
-    const [billingAddressSameState, setBillingAddressSameState] = useState(false);
-    // const [chosenDeliveryAddressId, setChosenDeliveryAddressId] = useState(props.selectedDeliveryAddressId);
 
     useEffect(()=>{
-        // if (props.selectedDeliveryAddressId) {
-        //     chosenDeliveryAddressId = props.selectedBillingAddressId;
-        // }
-        // else{
-            // alert(props.selectedDeliveryAddressId);
             if (!props.selectedDeliveryAddressId && props.addresses){
                 const defaultAddress = props.addresses.find((e)=>e.default === true);
                 if (defaultAddress) {
@@ -22,12 +16,10 @@ const DeliveryOptions = (props) => {
                     props.onDeliveryAddressSelected(defaultAddress.id, defaultAddress.zipcode, false);
                 }
             }
-        // }
     },[props.selectedDeliveryAddressId])
 
-    const toggleBilllingAddressSameSelection = (addressId) => {
-        !billingAddressSameState ? props.onBillingAddressSelected(addressId) : props.onBillingAddressSelected(0);
-        setBillingAddressSameState(!billingAddressSameState);
+    const toggleBillingAddressSameSelection = (addressId) => {
+        props.selectedBillingAddressId && props.selectedBillingAddressId === addressId ? props.onBillingAddressSelected(undefined) : props.onBillingAddressSelected(addressId);
     }
 
     const selectShippingAddress = (addressId, zipcode) => {
@@ -92,16 +84,21 @@ const DeliveryOptions = (props) => {
                             {address.id === props.selectedDeliveryAddressId &&                 
                             <IonGrid className="text-center">
                                 <IonItem color="night">
-                                    <IonCheckbox slot="start" onClick={toggleBilllingAddressSameSelection.bind(this, address.id)} checked={address.id === props.selectedBillingAddressId} />
+                                    <IonCheckbox slot="start" onClick={toggleBillingAddressSameSelection.bind(this, address.id)} checked={address.id === props.selectedBillingAddressId} />
                                     <IonText className="maintext" color="light">My Billing address is same</IonText>
                                 </IonItem>
                             </IonGrid>}
                         </div>
                 })}
-
-
         </IonContent>
     )
 }
 
-export default DeliveryOptions;
+const mapStateToProps = (state) => {
+    return {
+        selectedDeliveryAddressId: state.orderState.deliveryAddressId,
+        selectedBillingAddressId: state.orderState.billingAddressId
+    }
+}
+
+export default connect(mapStateToProps)(DeliveryOptions);

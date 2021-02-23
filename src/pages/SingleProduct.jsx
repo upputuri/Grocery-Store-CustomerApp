@@ -2,6 +2,7 @@ import { IonAlert, IonBadge, IonCol, IonContent, IonGrid, IonHeader, IonIcon, Io
 import { checkmarkCircle as checkMarkIcon } from 'ionicons/icons';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import { useHistory, withRouter } from "react-router-dom";
 import { CartContext } from '../App';
 import AddToCartButton from '../components/Menu/AddToCartButton';
@@ -58,7 +59,7 @@ const SingleProduct = (props) => {
 
     const loadSingleProduct = async (id) =>
     {
-        let path = serviceBaseURL + '/products/'+id+'?coverid='+cartContext.order.cover.coverId;
+        let path = serviceBaseURL + '/products/'+id+'?coverid='+props.selectedCover.coverId;
         if (resourceState !== null && path.localeCompare(resourceState.uri) === 0)
             return;
 
@@ -256,4 +257,10 @@ const SingleProduct = (props) => {
 
 }
 
-export default withRouter(SingleProduct);
+const mapStateToProps = (state) => {
+    return {
+        selectedCover: state.orderState.cover
+    }
+}
+
+export default withRouter(connect(mapStateToProps)(SingleProduct));

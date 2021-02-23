@@ -8,11 +8,13 @@ import DeliveryOptions from '../../components/checkout/DeliveryOptions';
 import Client from 'ketting';
 import { logoURL, serviceBaseURL } from '../../components/Utilities/ServiceCaller';
 import PaymentOptions from '../../components/checkout/PaymentOptions';
-import OrderReview from '../../components/checkout/OrderReview'
+import OrderReview from '../../components/checkout/OrderReview';
 import OrderConfirm from '../../components/checkout/OrderConfirm';
 import BillingOptions from '../../components/checkout/BillingOptions';
 import { clientConfig, generateOrderId, sendEmailNotification, sendMobileNotification } from '../../components/Utilities/AppCommons';
 import { loadStripe } from '@stripe/stripe-js';
+import { connect } from 'react-redux';
+import {SET_DELIVERY_ADDRESS_ID, SET_BILLING_ADDRESS_ID, RESET_BILLING_ADDRESS_ID, SET_PROMOCODES, SET_PAYMENT_OPTION} from '../../store/reducers/reducerConstants';
 
 var RazorpayCheckout = require('com.razorpay.cordova/www/RazorpayCheckout');
 
@@ -39,9 +41,7 @@ const Checkout = (props) => {
     const loginContext = useContext(LoginContext);
     const cartContext = useContext(CartContext);
     const transactionContext = useContext(TransactionContext);
-    const [promoCodeState, setPromoCodeState] = useState(cartContext.order.promoCodes[0]);
-    const [paymentOptionIdState, setPaymentOptionIdState] = useState(cartContext.order.paymentOptionId);
-    const [razorPayOrderIdState, setRazorPayOrderIdState] = useState(undefined);                                                                   
+    const [promoCodeState, setPromoCodeState] = useState(props.appliedPromoCodes[0]);                                                                   
     const [variablesState, setVariablesState] = useState(undefined);
     const history = useHistory();
 
@@ -215,7 +215,7 @@ const Checkout = (props) => {
     }
 
     const loadPreOrderSummary = async () => {
-        let path = serviceBaseURL + '/orders/preorders?coverid='+cartContext.order.cover.coverId;
+        let path = serviceBaseURL + '/orders/preorders?coverid='+props.selectedCover.coverId;
         const client = new Client(path);
         const resource = client.go();
         const authHeaderBase64Value = btoa(loginContext.customer.mobile+':'+loginContext.customer.password);
@@ -228,7 +228,13 @@ const Checkout = (props) => {
         try{
             receivedState = await resource.post({
                 headers: loginHeaders,
-                data: {...cartContext.order, customerId: loginContext.customer.id}
+                data: {...cartContext.order,
+                    coverId: props.selectedCover.coverId,
+                    deliveryAddressId: props.selectedDeliveryAddressId,
+                    billingAddressId: props.selectedBillingAddressId,
+                    promoCodes: props.appliedPromoCodes,
+                    paymentOptionId: props.selectedPaymentOptionId,
+                    customerId: loginContext.customer.id}
             });
         }
         catch(e)
@@ -372,27 +378,28 @@ Your order ${displayOrderId}  is placed successfully. Please use this number for
     }
 
     const checkPhaseDone = () => {
-        return (currentPhaseIndex === 0 && cartContext.order.deliveryAddressId > 0) ||
-        (currentPhaseIndex === 1 && cartContext.order.billingAddressId > 0) ||
+        return (currentPhaseIndex === 0 && props.selectedDeliveryAddressId) ||
+        (currentPhaseIndex === 1 && props.selectedBillingAddressId) ||
         (currentPhaseIndex === 2 && true) ||
-        (currentPhaseIndex === 3 && cartContext.order.paymentOptionId)
+        (currentPhaseIndex === 3 && props.selectedPaymentOptionId)
     }
 
     const deliveryAddressSelected = (addressId, zipcode, showWarning) => {
         console.log("Address seleted for delivery - Id: "+addressId);
-        // alert(city+" "+cartContext.order.cover.coverCity);
-        if (citiesList.find((e)=>e.name.toLowerCase() === cartContext.order.cover.coverCity.toLowerCase()).pinCodes.findIndex(e=>e===zipcode) == -1){
+        // alert(city+" "+props.selectedCover.coverCity);
+        if (citiesList.find((e)=>e.name.toLowerCase() === props.selectedCover.coverCity.toLowerCase()).pinCodes.findIndex(e=>e===zipcode) == -1){
             if (showWarning === true){
                 setInfoAlertState({show: true, msg: clientConfig.wrongCityAddressSelectedErrorMsg})
             }
             return;
         }
-        cartContext.setDeliveryAndBillingAddress(addressId, 0);
+        props.setDeliveryAddressId(addressId);
+        props.resetBillingAddressId();
     }
 
     const billingAddressSelected = (addressId) => {
         console.log("Address seleted for billing - Id: "+addressId);
-        cartContext.setBillingAddress(addressId);
+        props.setBillingAddressId(addressId);
     }
 
     const preOrderConfirmed = () => {
@@ -401,19 +408,18 @@ Your order ${displayOrderId}  is placed successfully. Please use this number for
 
     const paymentOptionConfirmed = (paymentOptionId) => {
         console.log("Payment option selected: "+paymentOptionId);
-        cartContext.setPaymentOption(paymentOptionId);
-        setPaymentOptionIdState(paymentOptionId);
+        props.setPaymentOptionId(paymentOptionId);
     }
 
     // Promo code logic
     const updatePromoCodeInCart = (code) => {
-        cartContext.setPromoCodes([code]);
+        props.setPromoCodes([code]);
         setPromoCodeState(code);
         //loadPreOrderSummary();
     }
 
     const clearPromoCodeInCart = () => {
-        cartContext.setPromoCodes([]);
+        props.setPromoCodes([]);
         setPromoCodeState('');
     }
 
@@ -511,15 +517,15 @@ Your order ${displayOrderId}  is placed successfully. Please use this number for
                 {currentPhaseIndex === 0 && <DeliveryOptions addresses={phaseData}
                                                                 statesList={statesList} 
                                                                 citiesList={citiesList} 
-                                                                selectedDeliveryAddressId={cartContext.order.deliveryAddressId}
-                                                                selectedBillingAddressId={cartContext.order.billingAddressId}
+                                                                // selectedDeliveryAddressId={cartContext.order.deliveryAddressId}
+                                                                // selectedBillingAddressId={cartContext.order.billingAddressId}
                                                                 onDeliveryAddressSelected={deliveryAddressSelected}
                                                                 onBillingAddressSelected={billingAddressSelected}
                                                                 addressAddHandler={saveNewAddress}/>}
                 {currentPhaseIndex === 1 && <BillingOptions addresses={phaseData}
                                                                 statesList={statesList} 
                                                                 citiesList = {citiesList}
-                                                                selectedBillingAddressId={cartContext.order.billingAddressId}
+                                                                // selectedBillingAddressId={cartContext.order.billingAddressId}
                                                                 onBillingAddressSelected={billingAddressSelected}
                                                                 addressAddHandler={saveNewAddress}/>}
                 {currentPhaseIndex === 2 && <OrderReview 
@@ -527,9 +533,9 @@ Your order ${displayOrderId}  is placed successfully. Please use this number for
                                                     preOrderConfirmHandler={preOrderConfirmed}
                                                     promoCodeApplied={updatePromoCodeInCart}
                                                     promoCodeCleared={clearPromoCodeInCart}
-                                                    appliedPromoCode={cartContext.order.promoCodes[0]}/>}
+                                                    appliedPromoCode={props.appliedPromoCodes[0]}/>}
                 {currentPhaseIndex === 3 && <PaymentOptions paymentOptions={phaseData} 
-                                                            selectedOption={cartContext.order.paymentOptionId}
+                                                            selectedOption={props.seletedPaymentOptionId}
                                                             paymentOptionSelectHandler={paymentOptionConfirmed}/>}           
                 {currentPhaseIndex === 4 && <OrderConfirm preOrder={phaseData}/>}       
 
@@ -594,4 +600,23 @@ Your order ${displayOrderId}  is placed successfully. Please use this number for
     }        
 }
 
-export default Checkout;
+const mapStateToProps = (state) => {
+    return {
+        selectedDeliveryAddressId: state.orderState.deliveryAddressId,
+        selectedBillingAddressId: state.orderState.billingAddressId,
+        selectedCover: state.orderState.cover,
+        appliedPromoCodes: state.orderState.promoCodes,
+        selectedPaymentOptionId: state.orderState.paymentOptionId
+    }
+}
+
+const mapActionsToProps = (dispatch) => {
+    return {
+        setDeliveryAddressId: (id) => dispatch({type: SET_DELIVERY_ADDRESS_ID, value: id}),
+        setBillingAddressId: (id) => dispatch({type: SET_BILLING_ADDRESS_ID, value: id}),
+        resetBillingAddressId: () => dispatch({type: RESET_BILLING_ADDRESS_ID}),
+        setPromoCodes: (codes) => dispatch({type: SET_PROMOCODES, value: codes}),
+        setPaymentOptionId: (id) => dispatch({type: SET_PAYMENT_OPTION, value: id})
+    }
+}
+export default connect(mapStateToProps, mapActionsToProps)(Checkout);

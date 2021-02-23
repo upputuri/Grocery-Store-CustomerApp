@@ -53,6 +53,8 @@ import MPlan from './pages/membership/MPlan';
 import MPlans from './pages/membership/MPlans';
 import MembershipForm from './pages/membership/MembershipForm';
 import MemberRegistered from './pages/membership/MemberRegistered';
+import { connect } from 'react-redux';
+import { RESET_ORDER_CONTEXT, SET_COVER } from './store/reducers/reducerConstants';
 
 const { Storage, Device, App } = Plugins;
 const LoginContext = React.createContext(
@@ -84,24 +86,12 @@ const CartContext = React.createContext(
     addItem: async (p,v,q)=>{},
     removeItem: (p,v,q)=>{},
     placeOrder: () =>{},
-    setDeliveryAddress: ()=>{},
-    setBillingAddress: () => {},
-    setDeliveryAndBillingAddress: () => {},
     setPromoCodes: ()=>{},
     setPaymentOption: ()=>{},
     // setTransactionId: ()=>{},
     setCartCount: () => {},
-    setDeliveryCover: () => {},
+    // setDeliveryCover: () => {},
     resetOrderContext: () => {},
-    order: {
-      cover: undefined,
-      id: '',
-      deliveryAddressId: 0,
-      promoCodes: [],
-      paymentOptionId: undefined,
-      // transactionId: undefined,
-      instructions: '',
-    }
   }
 )
 
@@ -128,12 +118,6 @@ class GrocApp extends React.Component {
     this.retrieveUser().then((user)=>{
       // alert(JSON.stringify(user));
       user && user.mobile && user.password && this.refreshAccount(user.mobile, user.password);
-    });
-    this.retrieveCover().then((cover)=>{
-      // alert(JSON.stringify(cover));
-      this.setState({order: {
-        ...this.state.order, cover: cover
-      }})
     });
     this.loadDeviceInfo().then((deviceInfo)=>{
       this.setState({device:{platform: deviceInfo.platform}})
@@ -163,16 +147,6 @@ class GrocApp extends React.Component {
         },
         cart: {
           itemCount: 0,
-        },
-        order: {
-          cover: undefined,
-          id: '',
-          deliveryAddressId: 0,
-          billingAddressId: 0,
-          promoCodes: [],
-          paymentOptionId: undefined,
-          // transactionId: undefined,
-          instructions: ''
         },
         transaction: {
           transactionId: undefined
@@ -387,15 +361,6 @@ class GrocApp extends React.Component {
       cart: {
         itemCount: 0,
       },
-      order: {
-        ...this.state.order,
-        id: '',
-        deliveryAddressId: 0,
-        promoCodes: [],
-        paymentOptionId: undefined,
-        // transactionId: undefined,
-        instructions: ''
-      },
       transaction: {
         transactionId: undefined
       },
@@ -427,13 +392,6 @@ class GrocApp extends React.Component {
     await Storage.set({
       key: "user",
       value: JSON.stringify(user)
-    })
-  }
-
-  async storeCover(cover) {
-    await Storage.set({
-      key: "cover",
-      value: JSON.stringify(cover)
     })
   }
 
@@ -484,12 +442,6 @@ class GrocApp extends React.Component {
     //               (user && user.mobile && user.mobile.length>0)});
     // alert(JSON.stringify(ret));
     // JSON.parse(ret);
-  }
-
-  async retrieveCover() {
-    const ret = await Storage.get({key: "cover"});
-    const cover = JSON.parse(ret.value);
-    return Promise.resolve(cover);
   }
 
   async retrieveCart() {
@@ -567,50 +519,6 @@ class GrocApp extends React.Component {
     this.setState({cart: {itemCount: count}});
   }
 
-  setDeliveryCover(cover){
-    this.storeCover(cover);
-    this.setState({order: {
-      ...this.state.order, cover: cover
-    }})
-  }
-  setDeliveryAddress(addressId){
-    this.setState({order: {
-      ...this.state.order, deliveryAddressId: addressId
-    }})
-  }
-
-  setBillingAddress(addressId){
-    this.setState({order: {
-      ...this.state.order, billingAddressId: addressId
-    }})
-  }
-
-  setDeliveryAndBillingAddress(delivery, billing){
-    delivery = delivery ? delivery : 0;
-    billing = billing ? billing : 0;
-    this.setState({order: {
-      ...this.state.order, deliveryAddressId: delivery, billingAddressId: billing
-    }})
-  }
-
-  setPromoCodes(promoCodes){
-    this.setState({order: {
-      ...this.state.order, promoCodes: promoCodes
-    }})
-  }
-
-  setPaymentOption(paymentOptionId){
-    this.setState({order: {
-      ...this.state.order, paymentOptionId: paymentOptionId
-    }})
-  }
-
-  setOrderId(orderId){
-    this.setState({order: {
-      ...this.state.order, id: orderId
-    }})
-  }
-
   setTransactionId(tranId){
     // alert('setting transaction id: '+tranId);
     this.setState({transaction: {
@@ -628,44 +536,22 @@ class GrocApp extends React.Component {
     this.setState({
       cart: {
         itemCount: 0
-      },
-      // order: {
-      //   ...this.state.order,
-      //   id : 0,
-      //   promoCodes : []
-      // }
+      }
     })
   }
 
   resetOrderContext(){
-    this.setState({order: {
-      cover: this.state.order.cover,
-      id: '',
-      deliveryAddressId: 0,
-      promoCodes: [],
-      paymentOptionId: undefined,
-      // transactionId: undefined,
-      instructions: ''
-    }
-  });
-  // console.log("Reset order context");
-  }
-  // clearOrderId(){
-  //   this.setState({
-  //     order: {
-  //       id: 0
-  //     }
-  //   })
-  // }
+    this.props.resetOrderContext();
+  };
+
 
   async placeOrder(paymentTransactionResponse){
-    // alert(this.state.order.cover.coverId);
+    // alert(this.props.selectedCover.coverId);
     this.setState({showLoading: true});
-    let path = serviceBaseURL + '/orders?coverid='+this.state.order.cover.coverId;
+    let path = serviceBaseURL + '/orders?coverid='+this.props.selectedCover.coverId;
     const client = new Client(path);
     const resource = client.go();
     //Clear previous order Id;
-    this.setOrderId(0);
     let receivedState;
     try{
       console.log("Making service call: "+resource.uri);  
@@ -675,7 +561,12 @@ class GrocApp extends React.Component {
       loginHeaders.append("Authorization","Basic "+authHeaderBase64Value);
       receivedState = await resource.post(
         {
-          data: {...this.state.order, 
+          data: {
+            coverId: this.props.selectedCover.coverId,
+            deliveryAddressId: this.props.selectedDeliveryAddressId,
+            billingAddressId: this.props.selectedBillingAddressId,
+            promoCodes: this.props.appliedPromoCodes,
+            paymentOptionId: this.props.selectedPaymentOptionId,
             customerId: this.state.customer.id, 
             transactionId: this.state.transaction.transactionId, 
             pgiResponse: paymentTransactionResponse
@@ -693,7 +584,6 @@ class GrocApp extends React.Component {
       console.log("Received response from service call: "+resource.uri);
       console.log("Order successfully created on server - Order Id: "+receivedState.data.id);
       // alert(JSON.stringify(receivedState));
-      // this.setOrderId(receivedState.data.id);
       this.resetCart();
       this.resetOrderContext();
       this.setState({showLoading: false});
@@ -716,19 +606,13 @@ class GrocApp extends React.Component {
                                       loginWithGoogle: this.loginWithGoogle.bind(this)
                                       }}>
           <CartContext.Provider value={{itemCount: this.state.cart.itemCount, 
-                                        order: this.state.order,
-                                        setDeliveryAddress: this.setDeliveryAddress.bind(this),
-                                        setBillingAddress: this.setBillingAddress.bind(this),
-                                        setDeliveryAndBillingAddress: this.setDeliveryAndBillingAddress.bind(this),
-                                        setPromoCodes: this.setPromoCodes.bind(this),
-                                        setPaymentOption: this.setPaymentOption.bind(this),
                                         // setTransactionId: this.setTransactionId.bind(this),
                                         // setTransactionResponse: this.setTransactionResponse.bind(this),
                                         placeOrder: this.placeOrder.bind(this),
                                         // resetOrderState: this.clearOrderId.bind(this),
                                         addItem: (pId, vId, qty)=>this.addItemToCart(pId, vId, qty),
                                         setCartCount: this.setCartCount.bind(this),
-                                        setDeliveryCover: this.setDeliveryCover.bind(this),
+                                        // setDeliveryCover: this.setDeliveryCover.bind(this),
                                         resetOrderContext: this.resetOrderContext.bind(this)
                                         }}>
             <TransactionContext.Provider value={{transactionId: this.state.transaction.transactionId,
@@ -792,6 +676,23 @@ class GrocApp extends React.Component {
   }
 }
 
-export default GrocApp;
+const mapStateToProps = (state) => {
+  return {
+      selectedDeliveryAddressId: state.orderState.deliveryAddressId,
+      selectedBillingAddressId: state.orderState.billingAddressId,
+      selectedCover: state.orderState.cover,
+      appliedPromoCodes: state.orderState.appliedPromoCodes,
+      selectedPaymentOptionId: state.orderState.paymentOptionId
+  }
+}
+
+const mapActionsToProps = (dispatch) => {
+  return {
+      setDeliveryCover: (cover) => dispatch({type: SET_COVER, value: cover}),
+      resetOrderContext: () => dispatch({type: RESET_ORDER_CONTEXT})
+  }
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(GrocApp);
 export { LoginContext, CartContext, DeviceContext, TransactionContext };
 

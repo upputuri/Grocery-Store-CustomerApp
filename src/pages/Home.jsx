@@ -21,6 +21,9 @@ import { faLeaf } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import { faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
+import { SET_COVER } from '../store/reducers/reducerConstants';
+import { connect } from 'react-redux';
+const { Storage } = Plugins;
 //
 /*  document.addEventListener('ionBackButton', (ev) => {
     alert('registering app closer');
@@ -30,7 +33,7 @@ import { faClock } from '@fortawesome/free-solid-svg-icons';
     // });
   });
 */
-const Home = () => {
+const Home = (props) => {
   const loginContext = useContext(LoginContext);
   const cartContext = useContext(CartContext);
   const [posterListsState, setPosterListsState] = useState(null);
@@ -53,9 +56,9 @@ const Home = () => {
   const initializeData = async () => {
     loadCovers();
     loadWidgetData();
-    if (cartContext.order.cover){
-      loadBanners(cartContext.order.cover.coverId);
-      loadPosters(cartContext.order.cover.coverId);
+    if (props.selectedCover){
+      loadBanners(props.selectedCover.coverId);
+      loadPosters(props.selectedCover.coverId);
     }
   }
 
@@ -78,9 +81,22 @@ const Home = () => {
     // alert(JSON.stringify(covers[0]));
     // console.log(images);
     setCoversState(covers);
-    if (!cartContext.order.cover){
-      setCitySelectionPrompt({show: true, msg: 'Please set your delivery location to start shopping!'});
+    if (!props.selectedCover){
+      let storedCover = await retrieveCover();
+      // alert(JSON.stringify(storedCover));
+      if (!storedCover) {
+        setCitySelectionPrompt({show: true, msg: 'Please set your delivery location to start shopping!'});
+      }
+      else {
+        props.setDeliveryCover(storedCover);
+      }
     }
+  }
+
+  const retrieveCover = async () => {
+    const ret = await Storage.get({key: "cover"});
+    const cover = JSON.parse(ret.value);
+    return Promise.resolve(cover);
   }
 
   const loadWidgetData = async () => {
@@ -116,12 +132,11 @@ const Home = () => {
     }
     
   const checkAndProceedToCityChange = (coverId) => {
-    if (cartContext.order.cover && coverId !== cartContext.order.cover.coverId && cartContext.itemCount > 0) {
+    if (props.selectedCover && coverId !== props.selectedCover.coverId && cartContext.itemCount > 0) {
       setCheckoutResetAlertState({...checkoutResetAlertState, show: true, coverId: coverId});
     }
     else{
-      cartContext.setDeliveryCover(coversState.find((cover) => cover.coverId === coverId));
-      history.go();
+      changeCity(coverId);
     }
   }
   
@@ -129,7 +144,13 @@ const Home = () => {
     //reset cart
     cartContext.resetOrderContext();
     //change city
-    cartContext.setDeliveryCover(coversState.find((cover) => cover.coverId === coverId));
+    changeCity(coverId);
+  }
+  
+  const changeCity = (coverId) => {
+    let cover = coversState.find((cover) => cover.coverId === coverId);
+    storeCover(cover);
+    props.setDeliveryCover(cover);
     history.go();
   }
 
@@ -282,6 +303,13 @@ const Home = () => {
     // ]
   }: undefined;
 
+  const storeCover = async (cover) => {
+    await Storage.set({
+      key: "cover",
+      value: JSON.stringify(cover)
+    })
+  }
+
   return (
     <IonPage>
       <IonHeader class="osahan-nav border-white border-bottom">
@@ -297,7 +325,7 @@ const Home = () => {
             <IonText className="maintext" color="light">Delivery Location:</IonText>
             <div className="d-flex" onClick={loadCoverPicker}>
               <IonText className="maintext ml-2" color="secondary">
-                {cartContext.order.cover ? cartContext.order.cover.coverCity : 'Select'}
+                {props.selectedCover ? props.selectedCover.coverCity : 'Select'}
               </IonText>
               <IonIcon color="secondary" size="small" icon={pullDownIcon}></IonIcon>
             </div>
@@ -458,4 +486,16 @@ const Home = () => {
   );
 };
 
-export default Home;
+const mapStateToProps = (state) => {
+  return {
+      selectedCover: state.orderState.cover
+  }
+}
+
+const mapActionsToProps = (dispatch) => {
+  return {
+      setDeliveryCover: (cover) => dispatch({type: SET_COVER, value: cover}),
+  }
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(Home);

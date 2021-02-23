@@ -11,8 +11,9 @@ import { clientConfig } from '../Utilities/AppCommons';
 import InfoMessageTile from '../Cards/InfoMessageTile';
 import { CartContext } from '../../App';
 import { Plugins } from '@capacitor/core';
+import { connect } from 'react-redux';
 
-const ProductList = () => {
+const ProductList = (props) => {
     
     const [productListState, setProductListState] = useState(undefined);
     const [filtersState, setFiltersState] = useState({});
@@ -75,7 +76,7 @@ const ProductList = () => {
         if (query.length > 0) {
             query = query + (sortOption? '&sortkey='+sortOption.split('-')[0]+
                                 '&sortorder='+sortOption.split('-')[1] : '')+
-                                '&coverid='+cartContext.order.cover.coverId+
+                                '&coverid='+props.selectedCover.coverId+
                                 '&offset='+offset+'&size='+clientConfig.productListPageSize;
         }
         let path = serviceBaseURL+'/products'+query;     
@@ -283,4 +284,10 @@ const ProductList = () => {
         
 }
 
-export default ProductList;
+const mapStateToProps = (state) => {
+    return {
+        selectedCover: state.orderState.cover
+    }
+}
+
+export default connect(mapStateToProps)(ProductList);

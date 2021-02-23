@@ -1,5 +1,6 @@
 import { IonButton, IonCheckbox, IonCol, IonContent, IonGrid, IonItem, IonRow, IonText, IonToolbar } from '@ionic/react';
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import AddressTile from '../Cards/AddressTile';
 import AddressForm from '../forms/AddressForm';
 
@@ -61,4 +62,10 @@ const BillingOptions = (props) => {
     )
 }
 
-export default BillingOptions;
+const mapStateToProps = (state) => {
+    return {
+        selectedBillingAddressId: state.orderState.billingAddressId
+    }
+}
+
+export default connect(mapStateToProps)(BillingOptions);
