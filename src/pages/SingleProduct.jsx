@@ -259,7 +259,7 @@ const SingleProduct = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        selectedCover: state.orderState.cover
+        selectedCover: state.userPrefs.cover
     }
 }
 

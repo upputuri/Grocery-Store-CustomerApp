@@ -604,7 +604,7 @@ const mapStateToProps = (state) => {
     return {
         selectedDeliveryAddressId: state.orderState.deliveryAddressId,
         selectedBillingAddressId: state.orderState.billingAddressId,
-        selectedCover: state.orderState.cover,
+        selectedCover: state.userPrefs.cover,
         appliedPromoCodes: state.orderState.promoCodes,
         selectedPaymentOptionId: state.orderState.paymentOptionId
     }

@@ -621,41 +621,46 @@ class GrocApp extends React.Component {
                 <IonSplitPane contentId="main-content">
                   <GrocMenu entries={appPages}/>
                   <ErrorBoundary>
-                  <IonRouterOutlet id="main-content">
-                    <Switch>
-                      <Route path="/home" component={Home} exact={true} />
-                      <Route path="/products" component={ProductsBrowser} />
-                      <Route path="/register" component={Registration} />
-                      <Route path="/login" component={Login} exact={true} />
-                      <Route path="/resetpass" component={PasswordReset} exact={true} />
-                      <Route path="/contactus" component={ContactForm} exact={true} />
-                      <Route path="/faq" component={FAQ} exact={true} />
-                      <Route path="/policies" component={Policies} exact={true} />
-                      <Route path="/support" component={Support} exact={true} />
-                      <Route path="/mplancategories" component={MPlanCategories} exact={true} />
-                      <Route path="/mplans" component={MPlans} exact={true} />
-                      <Route path="/mplan/:id" component={MPlan} exact={true} />
-                      <Route path="/mplanmemberform" component={MPlanMemberForm} exact={true} />
-                      <Route path="/membership" component={Membership} exact={true} />
-                      <Route path="/account" component={Account} exact={true} />
-                      <Route path="/orders" component={Orders} exact={true} />
-                      <Route exact path="/" render={() => <Redirect to="/home" />} />
-                      {this.state.isAuthenticated?
-                      <Switch>
-                        <Route path="/account/profile" component={Profile} exact={true} />
-                        <Route path="/account/addresslist" component={AddressList} exact={true} />
-                        <Route path="/membershipform" component={MembershipForm} exact={true} />
-                        <Route path="/memberregistered" component={MemberRegistered} exact={true} />
-                        <Route path="/account/security" component={Security} exact={true} />
-                        <Route path="/checkout" component={Checkout} exact={true} />
-                        <Route path="/orders/:id" component={OrderDetail} exact={true} />
-                        <Route path="/orderplaced" component={OrderPlaced} exact={true} />
-                        <Route path="/rateandreview/:id" component={OrderRateNReview} exact={true} />
+                    <IonRouterOutlet id="main-content">
+                      {this.props.selectedCover ? <Switch>
+                        <Route path="/home" component={Home} exact={true} />
+                        <Route path="/products" component={ProductsBrowser} />
+                        <Route path="/register" component={Registration} />
+                        <Route path="/login" component={Login} exact={true} />
+                        <Route path="/resetpass" component={PasswordReset} exact={true} />
+                        <Route path="/contactus" component={ContactForm} exact={true} />
+                        <Route path="/faq" component={FAQ} exact={true} />
+                        <Route path="/policies" component={Policies} exact={true} />
+                        <Route path="/support" component={Support} exact={true} />
+                        <Route path="/mplancategories" component={MPlanCategories} exact={true} />
+                        <Route path="/mplans" component={MPlans} exact={true} />
+                        <Route path="/mplan/:id" component={MPlan} exact={true} />
+                        <Route path="/mplanmemberform" component={MPlanMemberForm} exact={true} />
+                        <Route path="/membership" component={Membership} exact={true} />
+                        <Route path="/account" component={Account} exact={true} />
+                        <Route path="/orders" component={Orders} exact={true} />
+                        <Route exact path="/" render={() => <Redirect to="/home" />} />
+                        {this.state.isAuthenticated?
+                        <Switch>
+                          <Route path="/account/profile" component={Profile} exact={true} />
+                          <Route path="/account/addresslist" component={AddressList} exact={true} />
+                          <Route path="/membershipform" component={MembershipForm} exact={true} />
+                          <Route path="/memberregistered" component={MemberRegistered} exact={true} />
+                          <Route path="/account/security" component={Security} exact={true} />
+                          <Route path="/checkout" component={Checkout} exact={true} />
+                          <Route path="/orders/:id" component={OrderDetail} exact={true} />
+                          <Route path="/orderplaced" component={OrderPlaced} exact={true} />
+                          <Route path="/rateandreview/:id" component={OrderRateNReview} exact={true} />
+                        </Switch>
+                        :
+                        <Redirect to={"/login"}/>}
                       </Switch>
                       :
-                      <Redirect to={"/login"}/>}
-                    </Switch>
-                  </IonRouterOutlet>
+                      <Switch>
+                        <Route path="/home" component={Home} exact={true} />/*Cover City not set so only home can be rendered, where it is forced to be set*/
+                        <Route exact path="/" render={() => <Redirect to="/home" />}/>
+                      </Switch>}
+                    </IonRouterOutlet>
                   </ErrorBoundary>
                   <IonToast color="tertiary"
                       isOpen={this.state.showToast}
@@ -680,7 +685,7 @@ const mapStateToProps = (state) => {
   return {
       selectedDeliveryAddressId: state.orderState.deliveryAddressId,
       selectedBillingAddressId: state.orderState.billingAddressId,
-      selectedCover: state.orderState.cover,
+      selectedCover: state.userPrefs.cover,
       appliedPromoCodes: state.orderState.appliedPromoCodes,
       selectedPaymentOptionId: state.orderState.paymentOptionId
   }

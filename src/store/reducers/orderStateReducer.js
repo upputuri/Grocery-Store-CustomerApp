@@ -2,21 +2,14 @@ import { SET_BILLING_ADDRESS_ID, SET_COVER, SET_DELIVERY_ADDRESS_ID, RESET_BILLI
 
 const initialState = {
     cover: undefined,
-    id: undefined,
     deliveryAddressId: undefined,
     billingAddressId: undefined,
     promoCodes: [],
     paymentOptionId: undefined,
-    instructions: ''
 }
 
 const orderStateReducer = (state = initialState, action) => {
     switch(action.type){
-        case SET_COVER:         
-            return {
-                ...state,
-                cover: action.value
-            }
         case SET_DELIVERY_ADDRESS_ID:
             return {
                 ...state,

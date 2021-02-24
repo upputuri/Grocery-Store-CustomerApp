@@ -7,11 +7,13 @@ import GrocApp from './App';
 import {createStore, combineReducers} from 'redux';
 import {Provider} from 'react-redux';
 import orderStateReducer from './store/reducers/orderStateReducer';
+import userPreferencesReducer from './store/reducers/userPreferencesReducer';
 import { devToolsEnhancer } from 'redux-devtools-extension';
 
 const { SplashScreen } = Plugins;
 const rootReducer = combineReducers({
     orderState: orderStateReducer,
+    userPrefs: userPreferencesReducer
 });
 const store = createStore(rootReducer, devToolsEnhancer({name: 'Srikanth'}));
 ReactDOM.render(<Provider store={store}><GrocApp /></Provider>, document.getElementById('root'));

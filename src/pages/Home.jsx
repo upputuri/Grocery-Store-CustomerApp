@@ -54,12 +54,32 @@ const Home = (props) => {
   }, []);
   
   const initializeData = async () => {
-    loadCovers();
-    loadWidgetData();
-    if (props.selectedCover){
-      loadBanners(props.selectedCover.coverId);
-      loadPosters(props.selectedCover.coverId);
-    }
+    loadCovers().then(async (covers)=>{ //Ensure covers are loaded before we possibly prompt user to select a cover city
+      if (!props.selectedCover){ //Do we have the user's selected cover in the redux store already? If so, do not prompt user to choose again
+        let storedCover = await retrieveCover();
+        // alert(JSON.stringify(storedCover));
+        if (!storedCover) { //Check the storage to see if the cover is saved in a previous run of the app. If not, prompt user to choose
+          setCitySelectionPrompt({show: true, msg: 'Please set your delivery location to start shopping!'});
+          return;
+        }
+        else { //Found user's selected cover in storage, push it to redux store for further use.
+          props.setDeliveryCover(storedCover);
+          return storedCover;
+        }
+      }
+      else{
+        return props.selectedCover;
+      }
+    }).then((cover)=>{ //Load the below items only if a user's selected cover is known and loaded.
+        loadWidgetData();
+        loadBanners(cover.coverId);
+        loadPosters(cover.coverId);
+      });
+    // console.log(props.selectedCover);
+    // if (props.selectedCover){
+    //   loadBanners(props.selectedCover.coverId);
+    //   loadPosters(props.selectedCover.coverId);
+    // }
   }
 
   const loadCovers = async () => {
@@ -81,16 +101,7 @@ const Home = (props) => {
     // alert(JSON.stringify(covers[0]));
     // console.log(images);
     setCoversState(covers);
-    if (!props.selectedCover){
-      let storedCover = await retrieveCover();
-      // alert(JSON.stringify(storedCover));
-      if (!storedCover) {
-        setCitySelectionPrompt({show: true, msg: 'Please set your delivery location to start shopping!'});
-      }
-      else {
-        props.setDeliveryCover(storedCover);
-      }
-    }
+    return covers;
   }
 
   const retrieveCover = async () => {
@@ -488,7 +499,7 @@ const Home = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-      selectedCover: state.orderState.cover
+      selectedCover: state.userPrefs.cover
   }
 }
 
