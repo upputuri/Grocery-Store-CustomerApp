@@ -15,6 +15,7 @@ import { clientConfig, generateOrderId, sendEmailNotification, sendMobileNotific
 import { loadStripe } from '@stripe/stripe-js';
 import { connect } from 'react-redux';
 import {SET_DELIVERY_ADDRESS_ID, SET_BILLING_ADDRESS_ID, RESET_BILLING_ADDRESS_ID, SET_PROMOCODES, SET_PAYMENT_OPTION} from '../../store/reducers/reducerConstants';
+import { resetBillingAddressId, setBillingAddressId, setDeliveryAddressId, setPaymentOption, setPromoCodes } from '../../store/reducers/orderState/orderStateActions';
 
 var RazorpayCheckout = require('com.razorpay.cordova/www/RazorpayCheckout');
 
@@ -612,11 +613,11 @@ const mapStateToProps = (state) => {
 
 const mapActionsToProps = (dispatch) => {
     return {
-        setDeliveryAddressId: (id) => dispatch({type: SET_DELIVERY_ADDRESS_ID, value: id}),
-        setBillingAddressId: (id) => dispatch({type: SET_BILLING_ADDRESS_ID, value: id}),
-        resetBillingAddressId: () => dispatch({type: RESET_BILLING_ADDRESS_ID}),
-        setPromoCodes: (codes) => dispatch({type: SET_PROMOCODES, value: codes}),
-        setPaymentOptionId: (id) => dispatch({type: SET_PAYMENT_OPTION, value: id})
+        setDeliveryAddressId: (id) => dispatch(setDeliveryAddressId(id)),
+        setBillingAddressId: (id) => dispatch(setBillingAddressId(id)),
+        resetBillingAddressId: () => dispatch(resetBillingAddressId()),
+        setPromoCodes: (codes) => dispatch(setPromoCodes(codes)),
+        setPaymentOptionId: (id) => dispatch(setPaymentOption(id))
     }
 }
 export default connect(mapStateToProps, mapActionsToProps)(Checkout);

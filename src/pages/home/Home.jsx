@@ -2,17 +2,17 @@ import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader
 import { card as cardIcon, people as peopleIcon, chevronDown as pullDownIcon } from 'ionicons/icons';
 import Client from 'ketting';
 import React, { useContext, useEffect, useState } from 'react';
-import '../App.scss';
-import ListingSection from '../components/Listing/ListingSection';
-import PosterSlider from '../components/Listing/PosterSlider';
-import CartButton from '../components/Menu/CartButton';
-import GrocSearch from '../components/Menu/GrocSearch';
-import BannerSlider from '../components/Slider/BannerSlider';
-import { categoryImageStoreURL, defaultImageURL, logoURL, serviceBaseURL, smallImageStoreURL } from '../components/Utilities/ServiceCaller';
+import '../../App.scss';
+import ListingSection from '../../components/Listing/ListingSection';
+import PosterSlider from '../../components/Listing/PosterSlider';
+import CartButton from '../../components/Menu/CartButton';
+import GrocSearch from '../../components/Menu/GrocSearch';
+import BannerSlider from '../../components/Slider/BannerSlider';
+import { categoryImageStoreURL, defaultImageURL, logoURL, serviceBaseURL, smallImageStoreURL } from '../../components/Utilities/ServiceCaller';
 import { Plugins } from '@capacitor/core';
-import { CartContext, LoginContext } from '../App';
-import AdvertSlider from '../components/Slider/AdvertSlider';
-import { clientConfig } from '../components/Utilities/AppCommons';
+import { CartContext, LoginContext } from '../../App';
+import AdvertSlider from '../../components/Slider/AdvertSlider';
+import { clientConfig } from '../../components/Utilities/AppCommons';
 import { useHistory } from 'react-router';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers, faTruck } from "@fortawesome/free-solid-svg-icons";
@@ -21,8 +21,10 @@ import { faLeaf } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import { faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
-import { SET_COVER } from '../store/reducers/reducerConstants';
-import { connect } from 'react-redux';
+import { SET_COVER } from '../../store/reducers/reducerConstants';
+import { connect, useDispatch } from 'react-redux';
+import { setCover } from '../../store/reducers/userPreferences/userPreferencesActions';
+import { fetchCovers } from './store/coversDataActions';
 const { Storage } = Plugins;
 //
 /*  document.addEventListener('ionBackButton', (ev) => {
@@ -38,7 +40,6 @@ const Home = (props) => {
   const cartContext = useContext(CartContext);
   const [posterListsState, setPosterListsState] = useState(null);
   const [bannersState, setBannersState] = useState([]);
-  const [coversState, setCoversState] = useState(undefined);
   const [widgetDataState, setWidgetDataState] = useState(undefined);
   const [showCoverOptions, setShowCoverOptions] = useState(false);
   const [checkoutResetAlertState, setCheckoutResetAlertState] = useState({show: false, msg: clientConfig.cityChangeCheckoutResetAlertMsg, coverId: undefined});
@@ -54,7 +55,8 @@ const Home = (props) => {
   }, []);
   
   const initializeData = async () => {
-    loadCovers().then(async (covers)=>{ //Ensure covers are loaded before we possibly prompt user to select a cover city
+    // console.log(props.fetchCovers() instanceof Promise);
+    props.fetchCovers().then(async (covers)=>{ //Ensure covers are loaded before we possibly prompt user to select a cover city
       if (!props.selectedCover){ //Do we have the user's selected cover in the redux store already? If so, do not prompt user to choose again
         let storedCover = await retrieveCover();
         // alert(JSON.stringify(storedCover));
@@ -82,27 +84,27 @@ const Home = (props) => {
     // }
   }
 
-  const loadCovers = async () => {
-    const client = new Client(serviceBaseURL+'/stores/covers');
-    const resource = client.go();
-    console.log("Making service call: "+resource.uri);
-    let receivedData;
-    try{
-        receivedData = await resource.get();
-    }
-    catch(e)
-    {
-        console.log("Service call failed with - "+e);
-        return;
-    }
-    // alert(JSON.stringify(receivedData));
-    console.log("Received response from service call: "+resource.uri);
-    const covers = receivedData.getEmbedded().map((coverState) => coverState.data);
-    // alert(JSON.stringify(covers[0]));
-    // console.log(images);
-    setCoversState(covers);
-    return covers;
-  }
+  // const loadCovers = async () => {
+  //   const client = new Client(serviceBaseURL+'/stores/covers');
+  //   const resource = client.go();
+  //   console.log("Making service call: "+resource.uri);
+  //   let receivedData;
+  //   try{
+  //       receivedData = await resource.get();
+  //   }
+  //   catch(e)
+  //   {
+  //       console.log("Service call failed with - "+e);
+  //       return;
+  //   }
+  //   // alert(JSON.stringify(receivedData));
+  //   console.log("Received response from service call: "+resource.uri);
+  //   const covers = receivedData.getEmbedded().map((coverState) => coverState.data);
+  //   // alert(JSON.stringify(covers[0]));
+  //   // console.log(images);
+  //   setCoversState(covers);
+  //   return covers;
+  // }
 
   const retrieveCover = async () => {
     const ret = await Storage.get({key: "cover"});
@@ -159,7 +161,7 @@ const Home = (props) => {
   }
   
   const changeCity = (coverId) => {
-    let cover = coversState.find((cover) => cover.coverId === coverId);
+    let cover = props.covers.find((cover) => cover.coverId === coverId);
     storeCover(cover);
     props.setDeliveryCover(cover);
     history.go();
@@ -303,9 +305,9 @@ const Home = (props) => {
     return Promise.resolve(newPosterLists);  
   }
 
-  const CoversColumn = coversState ? {
+  const CoversColumn = props.covers ? {
     name: "coverpicker",
-    options: coversState.map((cover) => {return {text: cover.coverCity, value: cover.coverId}})
+    options: props.covers.map((cover) => {return {text: cover.coverCity, value: cover.coverId}})
     // [
     //     { text: "Name: Ascending", value: "itemname-asc" },
     //     { text: "Name: Descending", value: "itemname-desc" },
@@ -499,13 +501,15 @@ const Home = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-      selectedCover: state.userPrefs.cover
+      selectedCover: state.userPrefs.cover,
+      covers: state.coversData.covers
   }
 }
 
 const mapActionsToProps = (dispatch) => {
   return {
-      setDeliveryCover: (cover) => dispatch({type: SET_COVER, value: cover}),
+      setDeliveryCover: (cover) => dispatch(setCover(cover)),
+      fetchCovers: () => dispatch(fetchCovers())
   }
 }
 

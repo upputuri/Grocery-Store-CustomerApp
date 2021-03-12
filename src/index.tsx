@@ -4,22 +4,24 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import GrocApp from './App';
-import {createStore, combineReducers} from 'redux';
+import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
 import {Provider} from 'react-redux';
-import orderStateReducer from './store/reducers/orderStateReducer';
-import userPreferencesReducer from './store/reducers/userPreferencesReducer';
+import orderStateReducer from './store/reducers/orderState/orderContextReducer';
+import userPreferencesReducer from './store/reducers/userPreferences/userPreferencesReducer';
+import coversDataReducer from './pages/home/store/coversDataReducer';
 import { devToolsEnhancer } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
 
 const { SplashScreen } = Plugins;
 const rootReducer = combineReducers({
     orderState: orderStateReducer,
-    userPrefs: userPreferencesReducer
+    userPrefs: userPreferencesReducer,
+    coversData: coversDataReducer
 });
-const store = createStore(rootReducer, devToolsEnhancer({name: 'Srikanth'}));
+
+const store = createStore(rootReducer, compose(applyMiddleware(thunk), devToolsEnhancer({name: 'Srikanth'})));
 ReactDOM.render(<Provider store={store}><GrocApp /></Provider>, document.getElementById('root'));
 SplashScreen.hide();
-
-
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

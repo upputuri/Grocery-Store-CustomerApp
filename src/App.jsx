@@ -35,7 +35,7 @@ import FAQ from './pages/general/FAQ';
 import OrderPlaced from './pages/general/OrderPlaced';
 import Policies from './pages/general/Policies';
 import Support from './pages/general/Support';
-import Home from './pages/Home';
+import Home from './pages/home/Home';
 import Membership from './pages/membership/Membership';
 import MPlanMemberForm from './pages/membership/MPlanMemberForm';
 import MPlanDetail from './pages/membership/MPlanDetail';
@@ -55,6 +55,8 @@ import MembershipForm from './pages/membership/MembershipForm';
 import MemberRegistered from './pages/membership/MemberRegistered';
 import { connect } from 'react-redux';
 import { RESET_ORDER_CONTEXT, SET_COVER } from './store/reducers/reducerConstants';
+import { setCover } from './store/reducers/userPreferences/userPreferencesActions';
+import { resetOrderContext } from './store/reducers/orderState/orderStateActions';
 
 const { Storage, Device, App } = Plugins;
 const LoginContext = React.createContext(
@@ -693,8 +695,8 @@ const mapStateToProps = (state) => {
 
 const mapActionsToProps = (dispatch) => {
   return {
-      setDeliveryCover: (cover) => dispatch({type: SET_COVER, value: cover}),
-      resetOrderContext: () => dispatch({type: RESET_ORDER_CONTEXT})
+      setDeliveryCover: (cover) => dispatch(setCover(cover)),
+      resetOrderContext: () => dispatch(resetOrderContext())
   }
 }
 

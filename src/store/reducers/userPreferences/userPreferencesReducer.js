@@ -1,4 +1,4 @@
-import { SET_COVER } from "./reducerConstants"
+import { SET_COVER } from "../reducerConstants"
 
 const initialState = {
     cover: undefined

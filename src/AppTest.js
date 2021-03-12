@@ -6,7 +6,7 @@ import { BrowserRouter, Link } from 'react-router-dom';
 import { LoginContext } from './App';
 import { GrocMenu } from './components/Menu/Menu';
 import AppPages from './components/Utilities/AppPages';
-import Home from './pages/Home';
+import Home from './pages/home/Home';
 import Login from './pages/auth/Login';
 
 const appPages = AppPages;
